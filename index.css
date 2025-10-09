@@ -1,0 +1,132 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+a:not(.button),
+a:not(.button):link,
+a:not(.button):visited,
+a:not(.button):active {
+    color: #ff4747;
+    text-decoration: none;
+}
+
+a:not(.button):hover {
+    color: #610101;
+    text-shadow: 0 0 8px #93c47d;
+}
+
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Contact info links */
+p a {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #202020;
+    color: #000000;
+    /* cursor: none; */
+}
+
+.container {
+    max-width: 800px;
+    padding: 20px;
+    background: #2d2c2c;
+    border-radius: 8px;
+    text-align: center;
+    color: #418b6f;
+    animation: anim 2s linear infinite alternate;
+}
+
+@keyframes anim {
+    from { box-shadow: 0px 0px 20px #ff0000; }
+    to { box-shadow: 0px 0px 35px #610101; }
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #ff4747;
+    margin-bottom: 1rem;
+}
+
+p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #ff4747;
+    margin-bottom: 2rem;
+}
+
+/* Buttons */
+.button {
+    text-decoration: none;
+    color: #2d2c2c;
+    background-color: #ff4747;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #ff4747;
+}
+
+/* Footer */
+footer {
+    color: #cccccc;
+    font-size: 0.9rem;
+    position: absolute;
+    bottom: 10px; 
+    right: 10px;
+}
+
+/* Icons */
+.icon-size {
+    font-size: 40px;
+    padding: 0px 10px;
+    vertical-align: middle;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.itch-icon {
+    width: 46px;
+    height: 46px;
+    vertical-align: middle;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* Hover glow */
+.social a:hover .icon-size,
+.social a:hover .itch-icon {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px #ff4747);
+}
+
+/* Optional glowing cursor */
+.cursor {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: deepskyblue;
+    mix-blend-mode: difference;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, background-color 0.3s;
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 10px 5px #8a0808; }
+    100% { box-shadow: 0 0 20px 10px #8a0808; }
+}
