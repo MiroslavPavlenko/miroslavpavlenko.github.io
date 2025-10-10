@@ -191,4 +191,24 @@ main {
   box-shadow: 0 0 25px #ff4747;
 }
 
-    
+.preview-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 12px auto 28px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px #610101;
+}
+
+.preview-image.hero {
+  max-height: 480px;        
+  width: 100%;
+  object-fit: cover;         
+  object-position: center;   
+}
+
+.preview-gallery {
+  display: grid;
+  gap: 18px;
+}
+  
