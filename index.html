@@ -5,24 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Miroslav Pavlenko</title>
 
-  <!-- Fonts & Icons -->
+  <!-- Fonts & Icons (PINNED VERSIONS) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <!-- Devicon pinned (avoid @latest) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/devicon.min.css" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="index.css" />
+  
+  <style>
+    /* Extra rules to support font-based devicons */
+    :root { --skill-size: 44px; }
+    .icon i { font-size: var(--skill-size) !important; line-height: 1; display: inline-block; }
+  </style>
 </head>
 
 <body>
@@ -30,132 +28,158 @@
     <!-- Main Info + Skills -->
     <div class="container">
       <h1>Miroslav Pavlenko</h1>
-      <p>
-        <a href="mailto:miroslavpavlenko@yahoo.com"
-          >miroslavpavlenko@yahoo.com</a
-        >
-      </p>
+      <p><a href="mailto:miroslavpavlenko@yahoo.com">miroslavpavlenko@yahoo.com</a></p>
       <p><a href="tel:+19362304921">+1 936 230 4921</a></p>
 
       <!-- Social Links -->
       <p class="social">
-        <a
-          href="https://www.linkedin.com/in/miroslav-pavlenko-500364310/"
-          target="_blank"
-          aria-label="LinkedIn"
-        >
+        <a href="https://www.linkedin.com/in/miroslav-pavlenko-500364310/" target="_blank" aria-label="LinkedIn">
           <i class="devicon-linkedin-plain icon-size"></i>
         </a>
-        <a
-          href="https://github.com/MiroslavPavlenko"
-          target="_blank"
-          aria-label="GitHub"
-        >
+        <a href="https://github.com/MiroslavPavlenko" target="_blank" aria-label="GitHub">
           <i class="devicon-github-original icon-size"></i>
         </a>
-        <a
-          href="https://breadsoftgame.itch.io/"
-          target="_blank"
-          aria-label="Itch.io"
-        >
-          <img
-            src="https://cdn.simpleicons.org/itchdotio/FF4747"
-            alt="Itch.io"
-            class="icon-size itch-icon"
-          />
+        <a href="https://breadsoftgame.itch.io/" target="_blank" aria-label="Itch.io">
+          <!-- Pinned SimpleIcons path -->
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@11/icons/itchdotio.svg" alt="Itch.io" class="icon-size itch-icon" />
         </a>
       </p>
 
-      <!-- Resume Buttons -->
+      <!-- Resume Button -->
       <a href="RESUME.pdf" class="button">Résumé</a>
-      
 
-      <!-- SKILLS SECTION BELOW -->
+      <!-- SKILLS -->
       <h1>Skills</h1>
 
       <p>Languages</p>
       <div class="icons">
-        <span class="icon" data-name="C++">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg"
-          />
-        </span>
-        <span class="icon" data-name="C#">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg"
-          />
-        </span>
-        <span class="icon" data-name="Java">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg"
-          />
-        </span>
+        <span class="icon" data-name="C++"><i class="devicon-cplusplus-plain colored"></i></span>
+        <span class="icon" data-name="C#"><i class="devicon-csharp-plain colored"></i></span>
+        <span class="icon" data-name="Java"><i class="devicon-java-plain colored"></i></span>
       </div>
 
       <p>Web</p>
       <div class="icons">
-        <span class="icon" data-name="HTML">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg"
-          />
-        </span>
-        <span class="icon" data-name="CSS">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg"
-          />
-        </span>
-        <span class="icon" data-name="JavaScript">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"
-          />
-        </span>
+        <span class="icon" data-name="HTML"><i class="devicon-html5-plain colored"></i></span>
+        <span class="icon" data-name="CSS"><i class="devicon-css3-plain colored"></i></span>
+        <span class="icon" data-name="JavaScript"><i class="devicon-javascript-plain colored"></i></span>
       </div>
 
       <p>APIs / Tools</p>
       <div class="icons">
-        <span class="icon" data-name="IntelliJ"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/intellij/intellij-original.svg" /></span>
-        <span class="icon" data-name="VSCode"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" /></span>
-        <span class="icon" data-name="Visual Studio"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-original.svg" /></span>
-        <span class="icon" data-name="Unity"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" /></span>
-        <span class="icon" data-name="Docker"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" /></span>
-        <span class="icon" data-name="Git"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" /></span>
-        <span class="icon" data-name="PowerShell"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/powershell/powershell-original.svg" /></span>
+        <span class="icon" data-name="IntelliJ"><i class="devicon-intellij-plain colored"></i></span>
+        <span class="icon" data-name="VSCode"><i class="devicon-vscode-plain colored"></i></span>
+        <span class="icon" data-name="Visual Studio"><i class="devicon-visualstudio-plain colored"></i></span>
+        <span class="icon" data-name="Unity"><i class="devicon-unity-original"></i></span>
+        <span class="icon" data-name="Docker"><i class="devicon-docker-plain colored"></i></span>
+        <span class="icon" data-name="Git"><i class="devicon-git-plain colored"></i></span>
+        <span class="icon" data-name="PowerShell"><i class="devicon-powershell-plain colored"></i></span>
       </div>
 
       <p>Operating Systems</p>
       <div class="icons">
-        <span class="icon" data-name="Windows 11/10/7/XP">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows8/windows8-original.svg"
-          />
-        </span>
-        <span class="icon" data-name="iOS / macOS">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apple/apple-original.svg"
-          />
-        </span>
+        <span class="icon" data-name="Windows 11/10/7/XP"><i class="devicon-windows8-original"></i></span>
+        <span class="icon" data-name="iOS / macOS"><i class="devicon-apple-original"></i></span>
       </div>
     </div>
 
-    <!-- Portfolio Section (aligned below with spacing) -->
+    <!-- Portfolio Section -->
     <div class="container portfolio">
-  <h1>Portfolio</h1>
-
-  <div class="dropdown">
-    <button class="button">Projects ▼</button>
-    <div class="dropdown-content">
-      <a href="webdevelopment.html">Web Development</a>
-      <!--<a href="backend.html">Backend Development</a>-->
-      <!--<a href="unity.html">Unity Games</a>-->
-      <!--<a href="design.html">UI / UX Design</a>-->
+      <h1>Portfolio</h1>
+      <div class="dropdown">
+        <button class="button">Projects ▼</button>
+        <div class="dropdown-content">
+          <a href="webdevelopment.html">Web Development</a>
+          <!-- <a href="backend.html">Backend Development</a> -->
+          <!-- <a href="unity.html">Unity Games</a> -->
+          <!-- <a href="design.html">UI / UX Design</a> -->
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
   </main>
 
-  
+  <footer>&copy; Miroslav Pavlenko 2025. All rights reserved.</footer>
 </body>
+</html>
 
-<footer>&copy; Miroslav Pavlenko 2025. All rights reserved.</footer>
+
+<!-- ===================== webdevelopment.html ===================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Miroslav Pavlenko</title>
+
+  <!-- Fonts & Icons (PINNED) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/devicon.min.css" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="webdevelopmen.css" />
+  <style>
+    :root { --skill-size: 44px; }
+    .icon i { font-size: var(--skill-size) !important; line-height: 1; display: inline-block; }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="container portfolio">
+      <a href="index.html" class="button"><span class="material-symbols-outlined">home</span></a>
+      <h1>Web Development</h1>
+    </div>
+
+    <div class="container portfolio">
+      <h2>See The Future Contracting - Website Design</h2>
+      <p>
+        This repository contains the website I designed and developed for See The Future Contracting,
+        a licensed and bonded remodeling and handyman company serving Seattle, King, and Snohomish counties.
+      </p>
+
+      <h2>Role</h2>
+      <p>Front-End Developer & Designer</p>
+
+      <h2>Project Overview</h2>
+      <p>
+        The website was created to showcase the company’s professional remodeling, handyman, and deck construction services.
+        It included pages for service descriptions, completed projects, testimonials, and a built-in estimate request form.
+      </p>
+
+      <dl style="color:#b0b0b0;">
+        Note: The live website is no longer active. This repository serves as a portfolio example of my front-end development and design work.
+      </dl>
+
+      <h2>Website Preview</h2>
+      <h3>Home Page</h3>
+      <img src="./images/seethefuture1.jpg" alt="See The Future Contracting Home Page" class="preview-image"/>
+      <h3>Handyman & Remodeling Services</h3>
+      <img src="./images/remodeling.png" alt="See The Future Contracting - Remodeling" class="preview-image"/>
+      <h3>Deck Services</h3>
+      <img src="./images/decks.png" alt="See The Future Contracting - Decks" class="preview-image"/>
+      <h3>Estimate Request Form</h3>
+      <img src="./images/estimateform.png" alt="See The Future - Estimate Form" class="preview-image"/>
+      <h3>Project Gallery</h3>
+      <img src="./images/gallery.png" alt="See The Future - Gallery" class="preview-image"/>
+
+      <h2>Technologies Used</h2>
+      <div class="icons">
+        <span class="icon" data-name="HTML"><i class="devicon-html5-plain colored"></i></span>
+        <span class="icon" data-name="CSS"><i class="devicon-css3-plain colored"></i></span>
+        <span class="icon" data-name="JavaScript"><i class="devicon-javascript-plain colored"></i></span>
+      </div>
+
+      <h2>Purpose</h2>
+      <p>
+        This website was built to give See The Future Contracting a professional and trustworthy online presence — helping clients explore
+        services, view past projects, and easily request estimates.
+      </p>
+    </div>
+  </main>
+
+  <footer>&copy; Miroslav Pavlenko 2025. All rights reserved.</footer>
+</body>
 </html>
