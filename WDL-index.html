@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Washington Driver License Study Deck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="WDL-styles.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="topline">
+      <div class="kicker"><span class="dot"></span><span id="kicker-text"></span></div>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+        <button class="lang-btn" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <h1 id="deck-title"></h1>
+    <p class="sub" id="deck-sub"></p>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-mode="quiz" id="tab-quiz"></button>
+    <button class="tab" role="tab" aria-selected="false" data-mode="flash" id="tab-flash"></button>
+    <button class="tab" role="tab" aria-selected="false" data-mode="match" id="tab-match"></button>
+  </div>
+
+  <section id="quiz-mode">
+    <div class="controls">
+      <div class="pills" id="ch-pills"></div>
+      <div class="spacer"></div>
+      <button class="ghost" id="shuffle-btn"></button>
+    </div>
+    <div id="quiz-live">
+      <div class="meta-row"><span id="qcount"></span><span class="score"><span id="score-label"></span> <b id="qscore">0</b> / <span id="qtotal">0</span></span></div>
+      <div class="bar" id="qbar"></div>
+      <div id="card-slot"></div>
+    </div>
+    <div id="results-slot" class="hidden"></div>
+  </section>
+
+  <section id="flash-mode" class="hidden">
+    <div class="controls">
+      <div class="fc-count" id="fc-count"></div><div class="spacer"></div>
+      <button class="ghost" id="fc-reset"></button>
+    </div>
+    <div class="fc-stage"><div class="fc" id="fc-card">
+      <div class="fc-face fc-front"><div class="tagstrip" id="fc-tag"></div><div class="fc-term" id="fc-term"></div><div class="fc-hint" id="fc-front-hint"></div></div>
+      <div class="fc-face fc-back"><div class="tagstrip"><span class="ttype" id="def-label"></span></div><div class="fc-def" id="fc-def"></div><div class="fc-hint" id="fc-back-hint"></div></div>
+    </div></div>
+    <div class="fc-nav">
+      <button class="arrowbtn" id="fc-prev" aria-label="Previous">‹</button>
+      <button class="btn line mini" id="fc-known-btn"></button>
+      <div class="spacer"></div>
+      <button class="arrowbtn" id="fc-next" aria-label="Next">›</button>
+    </div>
+  </section>
+
+  <section id="match-mode" class="hidden">
+    <div class="setpills" id="set-pills"></div>
+    <div class="match-status"><span><span id="matched-label"></span> <b id="m-matched">0</b> / <span id="m-total">0</span></span><span><span id="moves-label"></span> <b id="m-moves">0</b></span></div>
+    <div class="board" id="board"></div>
+    <div id="win-slot"></div>
+  </section>
+
+  <footer><b id="foot-text"></b><br><span id="foot-sub"></span></footer>
+</div>
+<script src="WDL-data.js"></script>
+<script src="WDL-app.js"></script>
+</body>
+</html>
