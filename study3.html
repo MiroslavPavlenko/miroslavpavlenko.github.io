@@ -1,0 +1,1628 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CSS 343 Quiz 3 Cram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column with a sticky three-way switch (Learn / Mock quiz / Cram sheet); lessons sit above a one-question-at-a-time practice card. */
+:root {
+  --bg: #edf0f4;
+  --surface: #ffffff;
+  --ink: #142030;
+  --muted: #586678;
+  --rule: #d4dae3;
+  --accent: #2b55c7;
+  --on-accent: #ffffff;
+  --accent-soft: #e2e8f9;
+  --good: #1d7549;
+  --good-soft: #def1e6;
+  --bad: #b23a31;
+  --bad-soft: #f8e2df;
+  --code-bg: #f2f4f8;
+  --pad-hatch: #c9d0da;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1219; --surface: #161d27; --ink: #e2e7ee; --muted: #94a1b2; --rule: #29333f;
+    --accent: #85a2ff; --on-accent: #0d1219; --accent-soft: #1d2945;
+    --good: #5ec891; --good-soft: #15301f; --bad: #f28479; --bad-soft: #3b1d1a;
+    --code-bg: #10161f; --pad-hatch: #3a4554; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1219; --surface: #161d27; --ink: #e2e7ee; --muted: #94a1b2; --rule: #29333f;
+  --accent: #85a2ff; --on-accent: #0d1219; --accent-soft: #1d2945;
+  --good: #5ec891; --good-soft: #15301f; --bad: #f28479; --bad-soft: #3b1d1a;
+  --code-bg: #10161f; --pad-hatch: #3a4554; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 64px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 750; letter-spacing: -0.01em; }
+h2 { font-size: 1.6rem; font-weight: 750; }
+h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.6em; }
+p { margin: 0.7em 0; }
+ul { margin: 0.6em 0; padding-left: 1.2em; }
+li { margin: 0.3em 0; }
+sup, sub { line-height: 0; }
+code, pre, .m { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; }
+pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; overflow-x: auto; line-height: 1.5; margin: 0.8em 0; }
+pre code { background: none; padding: 0; font-size: 1em; }
+.eyebrow { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 6px; font-weight: 500; }
+.lede { color: var(--muted); max-width: 60ch; }
+
+header.top { display: grid; gap: 10px; margin-bottom: 20px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { font-size: 0.8rem; border: 1px solid var(--rule); background: var(--surface); padding: 3px 10px; border-radius: 999px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.switch { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 8px; margin-bottom: 18px; }
+.switch-inner { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 4px; gap: 4px; }
+.switch button { font: 600 0.92rem var(--body); border: 0; background: transparent; color: var(--muted); padding: 8px 4px; border-radius: 7px; cursor: pointer; }
+.switch button[aria-selected="true"] { background: var(--accent); color: var(--on-accent); }
+button:focus-visible, .choice:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 8px; margin-bottom: 22px; }
+.mod { text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; cursor: pointer; display: grid; gap: 2px; min-width: 0; }
+.mod.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.mod-tag { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.mod-t { font-weight: 600; line-height: 1.3; }
+.mod-s { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mod-s.full { color: var(--good); font-weight: 600; }
+
+.lesson { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 18px; }
+.lesson > p, .lesson > ul { max-width: 65ch; }
+.formula { font-family: var(--mono); font-size: 0.95rem; background: var(--accent-soft); border-radius: 8px; padding: 10px 14px; overflow-x: auto; }
+.example { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; margin: 1.2em 0; }
+.ex-h { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 600; margin: 0; }
+.defs { display: grid; gap: 8px; margin: 1em 0; }
+.def { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; }
+.def b { font-family: var(--mono); }
+.tablewrap { overflow-x: auto; margin: 0.8em 0; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; }
+table.num td { font-variant-numeric: tabular-nums; }
+td code { white-space: nowrap; }
+.yes { color: var(--good); font-weight: 600; }
+.no { color: var(--bad); font-weight: 600; }
+
+.bytes { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 3px; margin: 0.6em 0 0.2em; max-width: 420px; }
+.byte { aspect-ratio: 1.5 / 1; max-width: 100%; border-radius: 3px; display: grid; place-items: center; font: 600 0.72rem var(--mono); }
+.byte.mem { background: var(--accent-soft); color: var(--accent); }
+.byte.pad { background: repeating-linear-gradient(135deg, var(--pad-hatch) 0 2px, transparent 2px 6px); border: 1px solid var(--pad-hatch); }
+.bytes-cap { font-size: 0.82rem; color: var(--muted); margin: 0 0 1em; }
+
+.practice { margin-top: 18px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 18px; }
+.p-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.dots { display: flex; flex-wrap: wrap; gap: 6px; }
+.dot { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule); background: var(--code-bg); font: 600 0.72rem var(--mono); color: var(--muted); cursor: pointer; padding: 0; }
+.dot.ok { background: var(--good); border-color: var(--good); color: var(--on-accent); }
+.dot.bad { background: var(--bad); border-color: var(--bad); color: var(--on-accent); }
+.dot.cur { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stem { font-weight: 500; margin: 14px 0 10px; }
+.choices { display: grid; gap: 8px; }
+.choice { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 9px; padding: 10px 12px; cursor: pointer; }
+.choice:hover:not(:disabled) { border-color: var(--accent); }
+.choice:disabled { cursor: default; color: var(--ink); }
+.choice.picked { border-color: var(--accent); background: var(--accent-soft); }
+.choice.right { border-color: var(--good); background: var(--good-soft); }
+.choice.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.choice.dim { opacity: 0.55; }
+.letter { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; font: 600 0.8rem var(--mono); background: var(--code-bg); border: 1px solid var(--rule); }
+.ctext { min-width: 0; overflow-wrap: anywhere; }
+.fb { margin-top: 12px; border-radius: 9px; padding: 10px 12px; font-size: 0.95rem; }
+.fb.ok { background: var(--good-soft); }
+.fb.no { background: var(--bad-soft); }
+.fb strong { display: block; margin-bottom: 2px; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin-top: 14px; }
+.btn { font: 600 0.92rem var(--body); border-radius: 8px; padding: 9px 14px; cursor: pointer; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.ghost { border-color: transparent; color: var(--muted); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+
+.mockbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+.clock { font: 600 1.6rem var(--mono); font-variant-numeric: tabular-nums; }
+.clock.low { color: var(--bad); }
+.grid10 { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); border: 1px solid var(--ink); border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
+.cell { display: grid; text-align: center; border-right: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+.cell:last-child { border-right: 0; }
+.cell .n { font-size: 0.72rem; color: var(--muted); border-bottom: 1px solid var(--rule); padding: 2px 0; }
+.cell .l { font: 600 1rem var(--mono); padding: 6px 0; min-height: 2.1em; }
+.cell.ok .l { color: var(--good); }
+.cell.bad .l { color: var(--bad); }
+.mq { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.mq .stem { margin-top: 4px; }
+.mq-n { font: 600 0.78rem var(--mono); color: var(--muted); }
+.score { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+.score-big { font: 750 2.2rem var(--display); }
+
+.cram { display: grid; gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.card h3 { margin-top: 0; font-size: 1.02rem; }
+.card ul { padding-left: 1.1em; font-size: 0.94rem; }
+.card p { font-size: 0.94rem; }
+@media (min-width: 720px) { .cram { grid-template-columns: 1fr 1fr; } .card.wide { grid-column: 1 / -1; } }
+@media (prefers-reduced-motion: no-preference) { .choice, .dot, .mod { transition: border-color .15s, background-color .15s; } }
+
+.big { background: var(--accent-soft); border-radius: 10px; padding: 12px 16px; font-size: 1.05rem; }
+.big p { margin: 0.35em 0; }
+.label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 600; margin: 1.5em 0 0.4em; }
+ol.steps { padding-left: 1.4em; }
+ol.steps li { margin: 0.4em 0; padding-left: 0.2em; }
+ul.traps li::marker { color: var(--bad); }
+.example { background: var(--code-bg); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 10px 14px; }
+.example p { margin: 0.4em 0; }
+.lesson h2 { margin-bottom: 12px; }
+.mods { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+
+.track { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 6px; margin-bottom: 4px; }
+.tk { display: flex; align-items: center; gap: 8px; text-align: left; font: 500 0.82rem var(--body); color: var(--muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 9px; padding: 7px 9px; cursor: pointer; min-width: 0; }
+.tk-n { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font: 600 0.75rem var(--mono); background: var(--code-bg); border: 1px solid var(--rule); }
+.tk-t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tk.done .tk-n { background: var(--good); border-color: var(--good); color: var(--on-accent); }
+.tk.cur { border-color: var(--accent); color: var(--ink); box-shadow: inset 0 0 0 1px var(--accent); }
+.big { background: var(--accent-soft); border-radius: 10px; padding: 12px 16px; font-size: 1.05rem; }
+.big p { margin: 0.35em 0; }
+.label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 600; margin: 1.5em 0 0.4em; }
+ol.steps { padding-left: 1.4em; }
+ol.steps li { margin: 0.4em 0; }
+ul.traps li::marker { color: var(--bad); }
+.example { background: var(--code-bg); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 10px 14px; }
+.example p { margin: 0.4em 0; }
+.big-btn { margin-top: 18px; width: 100%; padding: 13px; font-size: 1rem; }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 18px; }
+.panel h2 { margin: 4px 0 8px; }
+.qhead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.segbar { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; margin: 10px 0 4px; }
+.seg { height: 6px; border-radius: 3px; background: var(--rule); }
+.seg.ok { background: var(--good); }
+.seg.bad { background: var(--bad); }
+.seg.fixed { background: repeating-linear-gradient(90deg, var(--good) 0 6px, var(--bad) 6px 12px); }
+.seg.cur { outline: 2px solid var(--accent); outline-offset: 1px; }
+.topic { font-size: 0.8rem; color: var(--accent); font-weight: 600; margin: 12px 0 0; }
+.retry-tag { font-size: 0.85rem; color: var(--bad); font-weight: 600; margin: 10px 0 0; }
+.fb-h { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; margin: 12px 0 2px; color: var(--muted); }
+.fb p { margin: 0.3em 0; }
+.fb ol { margin: 0.3em 0; padding-left: 1.3em; }
+.fb ol li { margin: 0.25em 0; }
+.fb-note { font-size: 0.88rem; color: var(--muted); margin-top: 10px !important; }
+.relearn { margin-top: 12px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 10px 16px; }
+.relearn summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+.relearn-body { padding-top: 6px; }
+.score-sub { font: 400 0.95rem var(--body); color: var(--muted); }
+.toc { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 0.85rem var(--body); color: var(--accent); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.rlist { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px 12px; font-size: 0.9rem; }
+.r-ok { color: var(--good); }
+.r-bad { color: var(--bad); font-weight: 600; }
+
+.shorthand { font-size: 0.88rem; color: var(--muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 8px 12px; margin: 0; max-width: 70ch; }
+.shorthand strong { color: var(--ink); }
+.tree { display: block; margin: 8px 0; max-width: 100%; }
+.trow .tree { display: inline-block; margin: 4px 0; }
+.tree-svg { max-width: 100%; }
+.tree svg { display: block; max-width: 100%; height: auto; }
+.tree-cap { font-size: 0.8rem; color: var(--muted); margin-top: 2px; max-width: 30ch; }
+.trow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin: 6px 0; }
+.trow > * { min-width: 0; }
+.tarrow { display: flex; flex-direction: column; align-items: center; font: 500 0.78rem var(--mono); color: var(--muted); text-align: center; max-width: 12ch; }
+.tarrow-a { font-size: 1.5rem; line-height: 1; color: var(--accent); }
+.t-edge { stroke: var(--muted); stroke-width: 1.5; }
+.t-node { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; }
+.t-key { fill: var(--ink); font-family: var(--mono); font-weight: 600; text-anchor: middle; }
+.t-node.t-bad { fill: var(--bad-soft); stroke: var(--bad); stroke-width: 2; }
+.t-node.t-new { fill: var(--good-soft); stroke: var(--good); stroke-width: 2; }
+.t-node.t-hi { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.t-sub { fill: var(--code-bg); stroke: var(--muted); stroke-width: 1.5; }
+.t-sub.t-hi { fill: var(--accent-soft); stroke: var(--accent); }
+.t-subl { fill: var(--ink); font: 600 12px var(--body); text-anchor: middle; }
+.t-note { fill: var(--accent); font: 600 10px var(--mono); text-anchor: middle; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; }
+.t-note.t-note-bad { fill: var(--bad); }
+.stem .tree { margin-top: 10px; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">CSS 343 · Quiz 3 · Mon Oct 19, 1:15 PM</p>
+    <h1>Quiz 3 cram</h1>
+    <p class="lede">Lectures 4 and 5 plus Homework 3, split into ten topics. Each topic is a short lesson, then its questions right away. Miss one and you'll see why your pick was wrong and how to get the right answer, and it comes back at the end of the topic. After all ten, a final check of 10 mixed questions. Score 9 or 10 and you're ready.</p>
+    <p class="shorthand"><strong>Tree shorthand used in some answers:</strong> 25(10, 50) means root 25, left child 10, right child 50. An underscore marks an empty spot, so 20(_, 30) is 20 with only a right child.</p>
+  </header>
+  <div class="track" id="track"></div>
+  <nav class="switch" aria-label="Sections">
+    <div class="switch-inner" role="tablist" style="grid-template-columns:repeat(2,1fr)">
+      <button role="tab" id="tab-study" data-view="study" aria-selected="true">Study</button>
+      <button role="tab" id="tab-cram" data-view="cram" aria-selected="false">Cram sheet</button>
+    </div>
+  </nav>
+  <section id="view-study"></section>
+  <section id="view-cram" hidden>
+    <div class="cram">
+      <div class="card">
+        <h3>1. Vocabulary and height</h3>
+        <ul>
+          <li>Depth = links from the root (root 0). Height = deepest depth.</li>
+          <li>Leaf height 0, empty tree −1.</li>
+          <li>⌊log₂ n⌋ ≤ height ≤ n − 1. Height h holds at most 2<sup>h+1</sup> − 1.</li>
+          <li>full: 0 or 2 kids · perfect: full + all leaves on one level · complete: packed left · balanced: heights differ ≤ 1.</li>
+          <li>Perfect ⇒ complete ⇒ balanced, not backwards.</li>
+          <li>Every BST op is Θ(height).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>2. Traversals</h3>
+        <ul>
+          <li>pre: node L R (root first) · in: L node R (BST sorted) · post: L R node (root last) · level: rows, queue.</li>
+          <li>Outline trick: pass left side = pre, under = in, right side = post.</li>
+          <li>Rebuild from pre + in: pre's first = root, split in-order around it, repeat.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>3. Expression trees</h3>
+        <ul>
+          <li>Operators inside, numbers at leaves. Root = applied last = lowest precedence.</li>
+          <li>Evaluate in post-order: both children, then the operator.</li>
+          <li>pre → prefix, in → infix, post → postfix (RPN).</li>
+          <li>toInfix: "(" left op right ")" around every operator.</li>
+          <li>Left child first for − and ÷.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>4. BST insert and in-order</h3>
+        <ul>
+          <li>The rule covers every key in each subtree, at every node.</li>
+          <li>Insert: search, hang new node at the null link. Equal key → update value.</li>
+          <li>First key = root. Sorted input → path (height n − 1).</li>
+          <li>In-order of any BST = sorted.</li>
+          <li>Compares = depth + 1. Random BST avg ~1.39 log₂ n, avg height ~2.99 log₂ n.</li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>5. Floor, ceiling, ordered ops</h3>
+        <ul>
+          <li>Write the sorted list. floor(k) = at or just below k. ceiling(k) = at or just above. None → null.</li>
+          <li>Code: k > node → node is a candidate, look right; keep candidate if right finds nothing (floor(55) on the 10-key tree = 50).</li>
+          <li>rank(k) = # keys smaller. select(i) = key with rank i, 0-based. Inverses.</li>
+          <li>range(lo, hi) is inclusive. Cost height + output.</li>
+          <li>LCA: both smaller → left, both larger → right, else stop here.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>6. Hibbard deletion</h3>
+        <ul>
+          <li>Leaf → remove. One child → splice the child up.</li>
+          <li>Two children → successor = right once, then left to the end. Copy it up, deleteMin it out.</li>
+          <li>Successor has no left child; its right child slides into its spot.</li>
+          <li>Predecessor = left once, then right to the end.</li>
+          <li>Always-successor → avg path ~√n.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>7. Balance factors</h3>
+        <ul>
+          <li>bf = h(left) − h(right). Null = −1, leaf = 0.</li>
+          <li>Allowed −1, 0, +1. ±2 → rotate.</li>
+          <li>Check every node. A fine root proves nothing.</li>
+          <li>Only the insert/delete path can change.</li>
+          <li>isAVL: return heights from the recursion, linear.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>8. Rotations</h3>
+        <ul>
+          <li>Right at y: left child x rises, y drops right, x's right subtree moves to y's left.</li>
+          <li>Left is the mirror.</li>
+          <li>Only the middle subtree changes parent. In-order unchanged.</li>
+          <li>O(1). Fix the lower node's height first.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>9. AVL insertion cases</h3>
+        <ul>
+          <li>Fix the <strong>lowest</strong> ±2 node.</li>
+          <li>Same signs (LL / RR) → one rotation toward the light side.</li>
+          <li>Opposite signs (LR / RL) → rotate the child first, then the node.</li>
+          <li>Double shortcut: middle key of the three goes on top.</li>
+          <li>Insert: ≤ 1 rotation. Delete: up to one per level.</li>
+          <li>1…7 in order → 4(2(1,3),6(5,7)).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>10. Height bound</h3>
+        <ul>
+          <li>N(h) = 1 + N(h−1) + N(h−2).</li>
+          <li>1, 2, 4, 7, 12, 20, 33, 54, 88, 143.</li>
+          <li>N(h) + 1 is Fibonacci.</li>
+          <li>Max height with n nodes = largest h with N(h) ≤ n.</li>
+          <li>log₂ n ≤ h ≤ 1.44 log₂ n. 10⁹ keys → ≤ 43.</li>
+          <li>Red-black ≤ 2 log₂ n, fewer rotations.</li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>In the room</h3>
+        <ul>
+          <li>Draw the tree for every tree question, even if one is printed. Label heights next to nodes before computing bf.</li>
+          <li>Floor/ceiling: write the sorted keys in the margin first.</li>
+          <li>Rotation questions: find the lowest ±2 node, write its bf and its heavy child's bf, then pick the case.</li>
+          <li>Only the letter grid at the top gets graded. Copy every letter there.</li>
+        </ul>
+      </div>
+    </div>
+    <button class="btn ghost" data-act="reset" style="margin-top:14px">Start over (erase progress)</button>
+  </section>
+</div>
+<script>
+const T10 = "50(30(20,40(35,_)),70(60(_,65),80(_,90)))";
+const TREE = (t, cap) => `<div class="tree" data-t="${t}"${cap ? ` data-cap="${cap}"` : ""}></div>`;
+const ROW = (...items) => `<div class="trow">${items.join("")}</div>`;
+const ARROW = label => `<div class="tarrow"><span>${label}</span><span class="tarrow-a">→</span></div>`;
+
+const TOPICS = [
+{
+  id: "basics", title: "Tree vocabulary, height and shapes",
+  learn: `
+<div class="big"><p>A tree is either empty, or a node with subtrees under it. A <strong>binary</strong> tree gives each node at most two children: a left one and a right one.</p></div>
+<p class="label">Words you need</p>
+<ul>
+<li><strong>Root</strong>: the one node with no parent. <strong>Leaf</strong>: a node with no children. <strong>Internal</strong>: has at least one child.</li>
+<li><strong>Parent, child, sibling</strong>, and further up and down, <strong>ancestor</strong> and <strong>descendant</strong>.</li>
+<li><strong>Subtree</strong>: a node plus everything below it.</li>
+</ul>
+<p class="label">Depth and height (count links, not nodes)</p>
+<ul>
+<li><strong>Depth</strong> of a node = number of links from the root. The root is depth 0.</li>
+<li><strong>Height</strong> of a tree = the biggest depth of any node (the longest root-to-leaf path, in links).</li>
+<li>Course convention: a single node has height <strong>0</strong>, the empty tree has height <strong>−1</strong>.</li>
+</ul>
+<div class="example"><p class="ex-h">The 10-key tree used all through Lecture 4</p>
+${TREE(T10)}
+<p>Root 50. Leaves 20, 35, 65, 90. The deepest nodes (35, 65, 90) sit 3 links down, so the <strong>height is 3</strong>. Depth of 70 is 1.</p></div>
+<p class="label">Shapes</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Shape</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td>full</td><td>every node has 0 or 2 children (never exactly 1)</td></tr>
+<tr><td>perfect</td><td>full, and every leaf at the same depth</td></tr>
+<tr><td>complete</td><td>every level full except maybe the last, which is packed to the left</td></tr>
+<tr><td>balanced</td><td>at every node, the two subtree heights differ by at most 1</td></tr>
+</tbody></table></div>
+<p>Perfect ⇒ complete ⇒ balanced. The arrows don't go backwards: a balanced tree doesn't have to be complete.</p>
+${ROW(TREE("1(2(4,5),3(6,_))", "complete, balanced, not full"), TREE("1(2(_,4),3)", "balanced, not complete"))}
+<p class="label">How tall can n nodes be?</p>
+<p class="formula">⌊log₂ n⌋ ≤ height ≤ n − 1</p>
+<ul>
+<li>Shortest: every level packed. A tree of height h holds at most <strong>2<sup>h+1</sup> − 1</strong> nodes (height 2 → 7, height 3 → 15).</li>
+<li>Tallest: a <strong>path</strong>, one node per level.</li>
+</ul>
+<p class="label">Why height is the whole game</p>
+<p>Every BST operation walks one root-to-leaf path, so it costs <strong>Θ(height)</strong>. A bushy tree costs about log n. A path costs n.</p>
+<p class="label">Watch out</p>
+<ul class="traps">
+<li>Height counts <strong>links</strong>. The path 50 → 30 → 40 → 35 has 4 nodes but height 3.</li>
+<li>Minimum height uses the <strong>floor</strong>: 100 nodes → ⌊6.64⌋ = 6, not 7.</li>
+</ul>`,
+  qs: [
+    { q: `What is the height of this tree?${TREE(T10)}`,
+      c: ["2", "3", "4", "9"], a: 1,
+      e: "The deepest nodes (35, 65, 90) are 3 links below the root.",
+      x: ["2 is the depth of 20, 40, 60 and 80. Three nodes sit one level lower.", null, "4 counts the nodes on the longest path (50, 30, 40, 35). Height counts the links between them.", "9 would be a path of 10 nodes. This tree is bushy."],
+      d: ["Height = the biggest depth of any node.", "Root 50 is depth 0. Walk to the deepest node: 50 → 30 → 40 → 35.", "That's 3 links, so the height is 3."] },
+    { q: "Using the course's convention, what are the heights of a single node and of the empty tree?",
+      c: ["1 and 0", "1 and −1", "0 and 0", "0 and −1"], a: 3,
+      e: "Leaf = 0, null = −1. AVL balance factors use exactly these numbers.",
+      x: ["That counts nodes instead of links.", "A single node has no links below it, so its height is 0, not 1.", "Then a leaf and an empty tree would look the same. The empty tree is one less: −1."],
+      d: ["Height counts links on the longest root-to-leaf path.", "A single node has 0 links: height 0.", "The empty tree is defined as −1, so that a leaf = 1 + max(−1, −1) = 0 works out."] },
+    { q: "What is the minimum possible height of a binary tree with 100 nodes?",
+      c: ["6", "7", "50", "99"], a: 0,
+      e: "⌊log₂ 100⌋ = 6. Height 6 holds up to 127 nodes; height 5 holds only 63.",
+      x: [null, "log₂ 100 ≈ 6.64. The bound uses the floor, not the ceiling.", "There's no rule that gives n/2.", "99 is the maximum height, a path."],
+      d: ["Shortest tree = every level packed.", "Height 5 holds at most 2⁶ − 1 = 63 nodes, too few. Height 6 holds up to 127.", "So the minimum height is 6 = ⌊log₂ 100⌋."] },
+    { q: "What is the maximum possible height of a binary tree with 100 nodes?",
+      c: ["6", "50", "99", "100"], a: 2,
+      e: "A path puts one node on each level: heights 0 to 99.",
+      x: ["6 is the minimum height.", "Nothing stops every node from having just one child.", null, "Height 100 would need 101 levels, so 101 nodes."],
+      d: ["The tallest tree is a path: each node has one child.", "100 nodes on a path fill depths 0, 1, …, 99.", "Height = n − 1 = 99."] },
+    { q: `Which statement about this tree is true?${TREE("1(2(4,5),3(6,_))")}`,
+      c: ["It is full", "It is complete", "It is perfect", "It is not balanced"], a: 1,
+      e: "The top two levels are full and the last level (4, 5, 6) is packed to the left.",
+      x: ["Node 3 has exactly one child, so it isn't full.", null, "Perfect needs every level full. The last level is missing one spot.", "Every node's subtree heights differ by at most 1 (node 3: 0 vs −1, node 1: 1 vs 1)."],
+      d: ["Levels 0 and 1 are full: 1, then 2 and 3.", "The last level holds 4, 5, 6 with no gap from the left.", "That's complete. Complete trees are always balanced too."] },
+    { q: "Every complete tree is balanced. Is every balanced tree complete?",
+      c: ["Yes, the two words mean the same thing", "Yes, as long as it's also full", "No: a balanced tree can have height n − 1", "No: balanced only limits height differences, the last level can have gaps"], a: 3,
+      e: "Example: 1(2(_,4),3) is balanced but 4 is a right child with an empty spot to its left.",
+      x: ["They're different rules. One is about packing levels, the other about height differences.", "Being full doesn't force the last level to be packed left.", "A balanced tree has height Θ(log n), never a long path."],
+      d: ["Balanced: at every node the subtree heights differ by at most 1.", "Complete: every level full except the last, which is packed left.", "Tree 1(2(_,4),3) passes the first rule but has a gap on the last level. So no."] },
+    { q: "What is the most nodes a binary tree of height 3 can hold?",
+      c: ["7", "15", "16", "8"], a: 1,
+      e: "2³⁺¹ − 1 = 15: levels hold 1 + 2 + 4 + 8.",
+      x: ["7 is the most for height 2.", null, "16 = 2⁴. You need to subtract 1.", "8 is just the bottom level."],
+      d: ["Level d holds at most 2^d nodes.", "Heights 0 through 3: 1 + 2 + 4 + 8.", "Total 15 = 2⁴ − 1."] },
+    { q: "Why does the course say every BST question comes down to the tree's height?",
+      c: ["Every operation walks one root-to-leaf path, so it costs Θ(height)", "Height equals the number of nodes", "Taller trees use more memory per node", "Height decides whether keys are sorted"], a: 0,
+      e: "Search, insert, delete, floor, ceiling all walk down one path (delete walks two).",
+      x: [null, "Height can be anywhere from log n to n − 1.", "Every node costs the same memory regardless of shape.", "In-order is sorted for every BST shape."],
+      d: ["Each BST operation compares at a node and moves down one level.", "The longest it can walk is the height.", "So every operation is Θ(height): log n if bushy, n if a path."] }
+  ]
+},
+{
+  id: "trav", title: "Traversals",
+  learn: `
+<div class="big"><p>A traversal visits every node once. Three orders are one recursion with the <code>visit</code> line moved. The fourth uses a queue.</p></div>
+<div class="tablewrap"><table>
+<thead><tr><th>Order</th><th>Rule</th><th>Tell-tale</th></tr></thead>
+<tbody>
+<tr><td>pre-order</td><td>node, left, right</td><td>root comes <strong>first</strong></td></tr>
+<tr><td>in-order</td><td>left, node, right</td><td>a BST comes out <strong>sorted</strong></td></tr>
+<tr><td>post-order</td><td>left, right, node</td><td>root comes <strong>last</strong></td></tr>
+<tr><td>level-order</td><td>top to bottom, left to right (a queue, like BFS)</td><td>reads the tree row by row</td></tr>
+</tbody></table></div>
+<pre><code>void traverse(Node* t) {
+    if (!t) return;
+    // visit(t);   PRE: before the subtrees
+    traverse(t-&gt;left);
+    // visit(t);   IN: between them
+    traverse(t-&gt;right);
+    // visit(t);   POST: after them
+}</code></pre>
+<div class="example"><p class="ex-h">Lecture 4's tree</p>
+${TREE("H(C(A,E),R(P,X))")}
+<p>pre: H C A E R P X<br>in: A C E H P R X (sorted, it's a BST)<br>post: A E C P X R H<br>level: H C R A E P X</p></div>
+<p class="label">Doing it by hand without mistakes</p>
+<p>Trace a line around the outside of the tree, starting left of the root. Each node gets passed three times:</p>
+<ul>
+<li>write it when you pass its <strong>left</strong> side → pre-order</li>
+<li>write it when you pass <strong>under</strong> it → in-order</li>
+<li>write it when you pass its <strong>right</strong> side → post-order</li>
+</ul>
+<p class="label">Rebuilding a tree from pre-order + in-order (chapter exercise)</p>
+<ol class="steps">
+<li>The first key in pre-order is the root.</li>
+<li>Find it in the in-order list. Everything before it is the left subtree, everything after is the right.</li>
+<li>Repeat on each side with the matching part of the pre-order list.</li>
+</ol>
+<div class="example"><p class="ex-h">Example</p><p>pre H C A E R P X, in A C E H P R X. Root H. Left part A C E (pre order C A E → root C, children A and E). Right part P R X (pre R P X → root R). That's the tree above, so post-order = A E C P X R H.</p></div>
+<p class="label">Watch out</p>
+<ul class="traps">
+<li>Level-order and pre-order both start with the root. Level-order finishes a whole row first; pre-order goes down the left side first.</li>
+<li>Sorted output only comes from in-order <strong>of a BST</strong>. On any other tree, in-order is just left-node-right.</li>
+</ul>`,
+  qs: [
+    { q: `Pre-order of this tree?${TREE(T10)}`,
+      c: ["50 30 70 20 40 60 80 35 65 90", "20 30 35 40 50 60 65 70 80 90", "50 30 20 40 35 70 60 65 80 90", "50 30 20 35 40 70 60 65 80 90"], a: 2,
+      e: "Node, then the whole left subtree, then the whole right subtree.",
+      x: ["That's level-order: row by row.", "That's in-order (sorted).", null, "35 is 40's left child, so 40 is visited before 35 in pre-order."],
+      d: ["Start at 50. Then the left subtree of 50 in pre-order: 30, 20, then 40, 35.", "Then the right subtree: 70, then 60, 65, then 80, 90.", "50 30 20 40 35 70 60 65 80 90."] },
+    { q: `Post-order of the same tree?${TREE(T10)}`,
+      c: ["20 35 40 30 65 60 90 80 70 50", "90 80 65 60 70 35 40 20 30 50", "20 40 35 30 60 65 80 90 70 50", "50 70 80 90 60 65 30 40 35 20"], a: 0,
+      e: "Left subtree, right subtree, then the node. The root 50 comes last.",
+      x: [null, "That's level-order backwards, not post-order.", "Each node comes after its children: 35 before 40, 65 before 60, 90 before 80.", "That starts with the root, which post-order never does."],
+      d: ["Left subtree of 50: 20, then (35, then 40), then 30.", "Right subtree: (65, then 60), then (90, then 80), then 70.", "Root last: 20 35 40 30 65 60 90 80 70 50."] },
+    { q: `Level-order of the same tree?${TREE(T10)}`,
+      c: ["50 30 20 40 35 70 60 65 80 90", "20 30 35 40 50 60 65 70 80 90", "50 30 70 20 60 40 80 35 65 90", "50 30 70 20 40 60 80 35 65 90"], a: 3,
+      e: "Row by row, left to right.",
+      x: ["That's pre-order.", "That's in-order.", "Within a row, go left to right: 20, 40, 60, 80."],
+      d: ["Row 0: 50. Row 1: 30, 70.", "Row 2: 20, 40, 60, 80. Row 3: 35, 65, 90.", "Read them in order."] },
+    { q: `In-order of this tree (it is <em>not</em> a BST)?${TREE("A(B(D,E),C(_,F))")}`,
+      c: ["A B D E C F", "D B E A C F", "D E B F C A", "A B C D E F"], a: 1,
+      e: "Left subtree, node, right subtree. C has no left child, so C comes right before F.",
+      x: ["That's pre-order.", null, "That's post-order.", "That's level-order. The letters only look sorted by coincidence."],
+      d: ["In-order of B's subtree: D, B, E.", "Then the root A.", "Then C's subtree: C has no left, so C, then F. Result D B E A C F."] },
+    { q: "Pre-order H C A E R P X and in-order A C E H P R X. What is the post-order?",
+      c: ["A C E P R X H", "A E C P X R H", "H R X P C E A", "A E C H P X R"], a: 1,
+      e: "Rebuild the tree (root H, left C(A,E), right R(P,X)), then read left, right, node.",
+      x: ["That's the in-order list with H moved to the end. Post-order isn't that simple.", null, "That's the post-order written backwards.", "In post-order the root H must be last."],
+      d: ["Pre-order starts with H, so H is the root. In in-order, A C E is left of H and P R X is right.", "Left part, pre-order C A E: root C with A, E. Right part, pre-order R P X: root R with P, X.", "Post-order: A E C, then P X R, then H."] },
+    { q: "A tree has pre-order 8 3 1 6 4 7 10 14 13 and in-order 1 3 4 6 7 8 10 13 14. What is its post-order?",
+      c: ["1 3 4 6 7 13 14 10 8", "1 4 6 7 3 13 10 14 8", "1 4 7 6 3 13 14 10 8", "8 10 14 13 3 6 7 4 1"], a: 2,
+      e: "The tree is 8(3(1, 6(4,7)), 10(_, 14(13))).",
+      x: ["That's mostly the in-order list. Post-order puts each node after its children.", "6 must come after both 4 and 7, and 14 after 13.", null, "Post-order ends with the root, it doesn't start with it."],
+      d: ["Root 8. In-order left part: 1 3 4 6 7. Right part: 10 13 14.", "Left, pre-order 3 1 6 4 7: root 3, left 1, right 6 with 4 and 7. Right, pre-order 10 14 13: 10 with right child 14, whose left is 13.", "Post-order: 1 4 7 6 3, then 13 14 10, then 8."] },
+    { q: "Pre-order of a tree starts with 40. What does its post-order end with?",
+      c: ["The smallest key", "The last key in pre-order", "40", "The deepest leaf"], a: 2,
+      e: "Pre-order puts the root first, post-order puts it last.",
+      x: ["That's how in-order of a BST starts.", "Pre-order's last key is usually a leaf, not the end of post-order.", null, "The deepest leaf is never last in post-order unless the tree is a single node."],
+      d: ["Pre-order visits the node before its subtrees, so the root is first: 40.", "Post-order visits the node after its subtrees, so the root is last.", "Post-order ends with 40."] },
+    { q: "Which traversal needs a queue instead of recursion?",
+      c: ["pre-order", "in-order", "post-order", "level-order"], a: 3,
+      e: "Level-order is breadth-first: dequeue a node, visit it, enqueue its children.",
+      x: ["Pre-order is the recursion with the visit first.", "In-order is the recursion with the visit in the middle.", "Post-order is the recursion with the visit last.", null],
+      d: ["The three recursive orders differ only in where visit goes.", "Row-by-row needs to hold the next row's nodes while finishing this one.", "That's a queue: level-order."] },
+    { q: "You want to print a BST's keys from smallest to largest. Which traversal?",
+      c: ["pre-order", "in-order", "post-order", "level-order"], a: 1,
+      e: "In-order visits everything smaller (left) before the node and everything larger (right) after.",
+      x: ["Pre-order starts at the root, which is usually not the smallest key.", null, "Post-order ends with the root, so it isn't sorted.", "Level-order goes row by row, which mixes small and large keys."],
+      d: ["In a BST, everything left of a node is smaller and everything right is larger.", "In-order visits left, node, right.", "So keys come out sorted, for any BST shape."] }
+  ]
+},
+{
+  id: "expr", title: "Expression trees",
+  learn: `
+<div class="big"><p>Operators are internal nodes, numbers are leaves. The <strong>shape</strong> decides the order of operations, so no precedence rules are needed once the tree exists.</p></div>
+${ROW(TREE("×(+(2,3),4)", "(2 + 3) × 4 = 20"), TREE("+(2,×(3,4))", "2 + (3 × 4) = 14"))}
+<p class="label">Reading the shape</p>
+<ul>
+<li>The operator applied <strong>last</strong> sits at the <strong>root</strong>.</li>
+<li>Lower precedence sits closer to the root. In 2 + 3 × 4 the × binds tighter, so it sits lower and + is the root.</li>
+<li>Left to right: 8 − 3 − 2 means (8 − 3) − 2, so the first − sits lower, in the left subtree.</li>
+</ul>
+<p class="label">Evaluating: post-order</p>
+<p>A leaf is its own value. An operator node evaluates its left subtree, then its right subtree, then combines them. Children before parent is post-order.</p>
+<pre><code>double eval(Node* t) {
+    if (isLeaf(t)) return t-&gt;value;
+    double a = eval(t-&gt;left);
+    double b = eval(t-&gt;right);
+    return apply(t-&gt;op, a, b);
+}</code></pre>
+<div class="example"><p class="ex-h">Worked example</p>
+${TREE("×(−(8,3),+(2,4))")}
+<p>Left: 8 − 3 = 5. Right: 2 + 4 = 6. Root: 5 × 6 = <strong>30</strong>.</p></div>
+<p class="label">Traversals give the three notations</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Traversal</th><th>Notation</th><th>For the tree above</th></tr></thead>
+<tbody>
+<tr><td>pre-order</td><td>prefix (Polish)</td><td>× − 8 3 + 2 4</td></tr>
+<tr><td>in-order</td><td>infix (needs parentheses)</td><td>((8−3)×(2+4))</td></tr>
+<tr><td>post-order</td><td>postfix (reverse Polish)</td><td>8 3 − 2 4 + ×</td></tr>
+</tbody></table></div>
+<p>HW3's <code>toInfix</code> wraps <strong>every</strong> operator in parentheses: a leaf prints as itself, an operator node prints "(" + left + op + right + ")". So 2 + 3 × 4 → (2+(3*4)).</p>
+<p class="label">Watch out</p>
+<ul class="traps">
+<li>Don't read the leaves left to right and apply normal precedence. The tree decides, and it can disagree with what the flat expression would give.</li>
+<li>For − and ÷, order matters: left child first. 10 − (4 − 3) = 9 but (10 − 4) − 3 = 3.</li>
+</ul>`,
+  qs: [
+    { q: `What does this tree evaluate to?${TREE("×(−(8,3),+(2,4))")}`,
+      c: ["11", "30", "6", "−10"], a: 1,
+      e: "(8 − 3) × (2 + 4) = 5 × 6 = 30.",
+      x: ["11 adds the two subtree values instead of multiplying at the root.", null, "6 reads the leaves as 8 − 3 × 2 + 4 with normal precedence. The tree decides the order, not precedence.", "−10 groups it as 8 − (3 × (2 + 4)). That's a different tree."],
+      d: ["Evaluate the left subtree: 8 − 3 = 5.", "Evaluate the right subtree: 2 + 4 = 6.", "Apply the root: 5 × 6 = 30."] },
+    { q: "In the expression tree for 2 + 3 × 4, which operator is the root?",
+      c: ["×, since it has higher precedence", "Either one, both trees give 14", "+, since it's applied last", "The root is the number 2"], a: 2,
+      e: "× binds tighter, so it's done first and sits lower. + is applied last, at the root.",
+      x: ["Higher precedence means applied earlier, which puts it lower, not at the root.", "The tree with × at the root is (2 + 3) × 4 = 20.", null, "Numbers are always leaves."],
+      d: ["2 + 3 × 4 means 2 + (3 × 4).", "3 × 4 happens first, so it's a subtree.", "The + combines 2 with that result, so + is the root."] },
+    { q: `Post-order of this tree?${TREE("×(−(8,3),+(2,4))")}`,
+      c: ["× − 8 3 + 2 4", "8 − 3 × 2 + 4", "8 3 2 4 − + ×", "8 3 − 2 4 + ×"], a: 3,
+      e: "Post-order gives postfix (reverse Polish): operands first, operator after.",
+      x: ["That's pre-order (prefix).", "That's in-order without parentheses (infix).", "Each operator comes right after its own two operands: 8 3 −, not 8 3 2 4."],
+      d: ["Left subtree in post-order: 8 3 −.", "Right subtree: 2 4 +.", "Then the root: 8 3 − 2 4 + ×."] },
+    { q: `Pre-order of the same tree?${TREE("×(−(8,3),+(2,4))")}`,
+      c: ["8 3 − 2 4 + ×", "− 8 3 × + 2 4", "× − 8 3 + 2 4", "× − + 8 3 2 4"], a: 2,
+      e: "Pre-order gives prefix (Polish) notation: operator first.",
+      x: ["That's post-order.", "The root × must come first.", null, "Pre-order finishes the whole left subtree (− 8 3) before starting the right one."],
+      d: ["Visit the root: ×.", "Then the left subtree: − 8 3.", "Then the right subtree: + 2 4."] },
+    { q: `HW3's <code>toInfix</code> on this tree returns what?${TREE("−(10,−(4,3))")}`,
+      c: ["((10-4)-3)", "(10-(4-3))", "10-4-3", "(10-4-3)"], a: 1,
+      e: "The right child is the subtree 4 − 3, so it gets its own parentheses on the right.",
+      x: ["That's the tree with the subtraction 10 − 4 in the LEFT subtree.", null, "toInfix wraps every operator in parentheses.", "Each operator gets its own pair of parentheses, so there are two pairs."],
+      d: ["Leaves print as themselves: 10, 4, 3.", "The lower − node prints (4-3).", "The root prints \"(\" + \"10\" + \"-\" + \"(4-3)\" + \")\" = (10-(4-3))."] },
+    { q: "Evaluating an expression tree visits nodes in which order?",
+      c: ["pre-order", "in-order", "level-order", "post-order"], a: 3,
+      e: "An operator needs both children's values first, so children come before the parent.",
+      x: ["Pre-order reaches the operator before its operands are known.", "In-order reaches the operator after only the left operand is known.", "Level-order handles the root first."],
+      d: ["A leaf's value is just its number.", "An operator needs both subtrees evaluated first.", "Left, right, then node is post-order."] },
+    { q: "8 − 3 − 2 is read left to right. What does its tree look like, and what's the value?",
+      c: ["Root −, left child is (8 − 3), right child is 2. Value 3", "Root −, left child 8, right child is (3 − 2). Value 7", "Root −, left child is (8 − 3), right child is 2. Value 7", "Root −, left child 8, right child is (3 − 2). Value 3"], a: 0,
+      e: "(8 − 3) − 2: the first subtraction happens first, so it's the lower node in the left subtree.",
+      x: [null, "That tree is 8 − (3 − 2) = 7, which groups the wrong way.", "The tree is right but (8 − 3) − 2 = 5 − 2 = 3.", "That tree gives 8 − 1 = 7, not 3."],
+      d: ["Left to right means (8 − 3) − 2.", "8 − 3 happens first, so it's a subtree: the left child of the root.", "Value: 5 − 2 = 3."] },
+    { q: `What does this tree evaluate to?${TREE("+(×(2,−(7,4)),÷(9,3))")}`,
+      c: ["13", "6", "9", "15"], a: 2,
+      e: "2 × (7 − 4) + 9 ÷ 3 = 6 + 3 = 9.",
+      x: ["13 reads the leaves as 2 × 7 − 4 + 9 ÷ 3 with normal precedence. The tree puts 7 − 4 inside the multiply.", "6 is only the left subtree.", null, "15 would need the right subtree to be 9, but 9 ÷ 3 = 3."],
+      d: ["Deepest first: 7 − 4 = 3.", "Then 2 × 3 = 6 on the left and 9 ÷ 3 = 3 on the right.", "Root: 6 + 3 = 9."] }
+  ]
+},
+{
+  id: "bst", title: "BST insertion and the in-order property",
+  learn: `
+<div class="big"><p><strong>BST rule:</strong> at <strong>every</strong> node, every key in the left subtree is smaller and every key in the right subtree is larger. It's a rule about whole subtrees. Checking a node against its two children isn't enough.</p></div>
+<p class="label">Search: a guided walk down</p>
+<p>Compare with the node. Equal → hit. Smaller → go left. Larger → go right. Fall off a null link → miss. A search for a node at depth d uses <strong>d + 1</strong> compares; a miss ending below a node at depth d also uses d + 1.</p>
+<p class="label">Insert: search, then hang the new node where the miss ended</p>
+<ol class="steps">
+<li>Search for the key. If it's already there, update its value (no new node).</li>
+<li>The search ends at a null link. Put the new node there.</li>
+<li>On the way back up, reset each parent's link and its <code>size</code> count.</li>
+</ol>
+<div class="example"><p class="ex-h">Chapter trace: insert 30, 20, 40, 10, 25</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Insert</th><th>Compares</th><th>Lands as</th></tr></thead>
+<tbody>
+<tr><td>30</td><td>empty</td><td>root</td></tr>
+<tr><td>20</td><td>20 &lt; 30</td><td>left of 30</td></tr>
+<tr><td>40</td><td>40 &gt; 30</td><td>right of 30</td></tr>
+<tr><td>10</td><td>10 &lt; 30, 10 &lt; 20</td><td>left of 20</td></tr>
+<tr><td>25</td><td>25 &lt; 30, 25 &gt; 20</td><td>right of 20</td></tr>
+</tbody></table></div>
+${TREE("30(20(10,25),40)")}</div>
+<p class="label">Order decides shape</p>
+<ul>
+<li>The <strong>first key inserted is always the root</strong>, forever (unless deleted).</li>
+<li>50, 30, 70, 20, 40, 60, 80 → perfect tree, height 2. The same keys sorted (20, 30, …, 80) → a path, height 6.</li>
+<li>Different orders can give the same tree: 4, 2, 6, 1, 3, 5, 7 and 4, 6, 2, 7, 5, 3, 1 both make the perfect tree.</li>
+</ul>
+${ROW(TREE("50(30(20,40),70(60,80))", "50, 30, 70, 20, 40, 60, 80"), TREE("20(_,30(_,40(_,50(_,60(_,70(_,80))))))", "sorted: a path"))}
+<p class="label">The in-order property</p>
+<p>In-order of <strong>any</strong> BST is the keys in sorted order, whatever the shape. (Left subtree is all smaller, then the node, then the right subtree is all larger.)</p>
+<p class="label">The isBST trap (chapter exercise, HW3 TODO 1)</p>
+${TREE("20(10,30(!5,_))")}
+<p>Every node is fine with its own children (5 &lt; 30), but 5 sits in 20's <strong>right</strong> subtree and 5 &lt; 20. <strong>Not a BST.</strong> In-order gives 10, 20, 5, 30, which isn't sorted. The right check carries a range (lo, hi) down from the ancestors.</p>
+<p class="label">Cost</p>
+<ul>
+<li>Every operation is <strong>Θ(height)</strong> (Proposition E).</li>
+<li>Random insertion order: average search costs <strong>~1.39 log₂ n</strong> compares (= 2 ln n, Propositions C and D). Average height is larger, ~2.99 log₂ n.</li>
+<li>Sorted input: a path, Θ(n) per operation. Random is a hope, not a guarantee.</li>
+<li>A sorted array finds the spot in log n but then shifts up to n keys, so its insert is Θ(n). A BST just hangs the node on the null link.</li>
+</ul>`,
+  qs: [
+    { q: "Insert 30, 20, 40, 10, 25 into an empty BST. Where does 25 end up?",
+      c: ["Left child of 30", "Right child of 20", "Left child of 40", "Right child of 10"], a: 1,
+      e: "25 < 30 → left to 20. 25 > 20 → right of 20, which is empty.",
+      x: ["That spot is already taken by 20.", null, "25 < 30, so it never goes right of 30.", "At 20, 25 > 20 sends it right, so it never reaches 10."],
+      d: ["Compare with the root 30: 25 < 30, go left to 20.", "Compare with 20: 25 > 20, go right.", "20's right link is null, so 25 becomes 20's right child."] },
+    { q: `Insert 45 into this BST. Where does it go?${TREE(T10)}`,
+      c: ["Left child of 50", "Right child of 35", "Left child of 60", "Right child of 40"], a: 3,
+      e: "50 → left to 30 → right to 40 → right link of 40 is null.",
+      x: ["30 already holds that spot.", "45 > 40 sends it right at 40, so it never reaches 35.", "45 < 50 sends it left at the root."],
+      d: ["45 < 50: go left to 30.", "45 > 30: go right to 40.", "45 > 40: go right. 40 has no right child, so 45 goes there."] },
+    { q: "Insert 50, 30, 70, 20, 40, 60, 80 into one empty BST, and 20, 30, 40, 50, 60, 70, 80 into another. What are the two heights?",
+      c: ["2 and 2", "2 and 6", "3 and 7", "6 and 2"], a: 1,
+      e: "The first order builds a perfect tree. Sorted order builds a path.",
+      x: ["Same keys but a different order gives a different shape.", null, "Height counts links. 7 nodes: perfect is 2, path is 6.", "That's backwards: sorted input is the path."],
+      d: ["First order: 50 root, 30 and 70 children, then 20, 40, 60, 80 below. Height 2.", "Sorted order: each key is bigger than all before, so each goes right. A path.", "7 nodes on a path → height 6."] },
+    { q: "Which insertion order builds the same BST as 4, 2, 6, 1, 3, 5, 7?",
+      c: ["4, 6, 2, 7, 5, 3, 1", "2, 4, 6, 1, 3, 5, 7", "1, 2, 3, 4, 5, 6, 7", "7, 6, 5, 4, 3, 2, 1"], a: 0,
+      e: "4 is still first, and each key still lands in the same spot.",
+      x: [null, "The first key is the root. Starting with 2 puts 2 at the root.", "Sorted order builds a path.", "Reverse sorted order builds a path going left."],
+      d: ["The first key is always the root, so the order must start with 4.", "4, 6, 2 puts 6 right and 2 left, same as before.", "7, 5, 3, 1 then fill the same four leaf spots."] },
+    { q: `Is this a BST?${TREE("20(10,30(5,_))")}`,
+      c: ["Yes, every node is in the right order with its own children", "Yes, the in-order is sorted", "No: 5 is in 20's right subtree but 5 < 20", "No: 30 has only one child"], a: 2,
+      e: "The rule covers whole subtrees. Everything right of 20 must be bigger than 20.",
+      x: ["Checking only parent and child isn't enough. That's the trap from the chapter and HW3.", "In-order is 10, 20, 5, 30, which is not sorted.", null, "A BST node can have one child."],
+      d: ["5 < 30, so the 30-5 link alone looks fine.", "But 5 is in the right subtree of 20, where every key must be > 20.", "5 < 20 breaks the rule, so it's not a BST. A search for 5 would go right at 20 and miss it."] },
+    { q: `How many compares does a search for 66 (a miss) make in this tree?${TREE(T10)}`,
+      c: ["3", "4", "5", "10"], a: 1,
+      e: "It compares with 50, 70, 60, 65, then falls off 65's null right link.",
+      x: ["It compares with 4 nodes, not 3.", null, "Falling off a null link isn't a compare.", "Search only walks one path."],
+      d: ["66 > 50 → right. 66 < 70 → left.", "66 > 60 → right. 66 > 65 → right.", "65's right link is null: miss after 4 compares."] },
+    { q: "You insert S E A R C H E X A M P L E (13 inserts) into an empty BST. How many nodes does it have?",
+      c: ["13", "11", "10", "9"], a: 2,
+      e: "E shows up 3 times and A twice. Repeats update the value instead of adding a node.",
+      x: ["A BST map keeps keys unique. Repeats don't add nodes.", "There are 10 distinct letters, not 11.", null, "Count the distinct letters: S E A R C H X M P L is 10."],
+      d: ["A put with an existing key just updates its value.", "Distinct keys: S, E, A, R, C, H, X, M, P, L.", "That's 10 nodes from 13 inserts."] },
+    { q: "Seven keys go into an empty BST in some unknown order. What can you say for sure about its in-order traversal?",
+      c: ["It matches the insertion order", "It's the keys in sorted order", "It starts with the root", "It depends on the shape"], a: 1,
+      e: "In-order of any BST is sorted, whatever the shape.",
+      x: ["Insertion order changes the shape, not the in-order.", null, "In-order starts with the smallest key.", "Shape changes pre- and post-order, but not in-order."],
+      d: ["In-order visits the left subtree, then the node, then the right subtree.", "Left keys are all smaller, right keys all larger.", "By induction the whole output is sorted, for any shape."] },
+    { q: "A BST is built from n keys in random order. About how many compares does an average search hit cost?",
+      c: ["~2.99 log₂ n", "~n / 2", "exactly ⌊log₂ n⌋", "~1.39 log₂ n"], a: 3,
+      e: "Proposition C: ~2 ln n ≈ 1.39 log₂ n, only 39% more than a perfect tree.",
+      x: ["2.99 log₂ n is the average height (the deepest node), not the average depth.", "That's a path, which random order almost never builds.", "A random BST isn't perfectly balanced."],
+      d: ["A search hit costs 1 + the node's depth.", "Averaged over all nodes of a random BST, depth is ~2 ln n.", "2 ln n ≈ 1.39 log₂ n."] },
+    { q: "Why is inserting into a sorted array Θ(n) on average, but into a random BST Θ(log n)?",
+      c: ["The array can't use binary search", "The array has to shift larger keys right; the BST just hangs the node on a null link", "The BST doesn't compare keys", "They're both Θ(log n)"], a: 1,
+      e: "Both find the spot in about log n compares. Only the array has to move things.",
+      x: ["Binary search works fine on a sorted array. Finding the spot isn't the slow part.", null, "BST insert compares at every node on the path.", "The array insert is linear from the shifting."],
+      d: ["Both locate the position in ~log n compares.", "The array then moves every larger key one slot right: up to n moves.", "The BST attaches the new node where the search ended: nothing moves."] }
+  ]
+},
+{
+  id: "floor", title: "Floor, ceiling and other ordered operations",
+  learn: `
+<div class="big"><p><strong>floor(k)</strong> = largest key ≤ k. <strong>ceiling(k)</strong> = smallest key ≥ k. If k is in the tree, both are k.</p></div>
+<p class="label">Quickest way on paper</p>
+<ol class="steps">
+<li>Write the in-order (sorted) list of keys.</li>
+<li>Find where k fits.</li>
+<li>floor = the key at k or just below it. ceiling = the key at k or just above it. Nothing there → null.</li>
+</ol>
+<div class="example"><p class="ex-h">The 10-key tree</p>
+${TREE(T10)}
+<div class="tablewrap"><table class="num">
+<thead><tr><th>rank</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+<tbody><tr><td>key</td><td>20</td><td>30</td><td>35</td><td>40</td><td>50</td><td>60</td><td>65</td><td>70</td><td>80</td><td>90</td></tr></tbody></table></div>
+<p>floor(45) = 40, ceiling(45) = 50. floor(68) = 65, ceiling(68) = 70. floor(10) = null (below the minimum). ceiling(95) = null.</p></div>
+<p class="label">How the code walks the tree</p>
+<pre><code>Node* floor(Node* t, Key k) {      // largest key ≤ k
+    if (!t) return nullptr;
+    if (k == t-&gt;key) return t;
+    if (k &lt; t-&gt;key) return floor(t-&gt;left, k);
+    Node* r = floor(t-&gt;right, k);  // something closer on the right?
+    return r ? r : t;              // if not, this node is the floor
+}</code></pre>
+<p>When k is bigger than a node, that node becomes a <strong>candidate</strong>. You go right to look for something closer, and fall back to the candidate if nothing turns up. Ceiling mirrors it (swap left/right, ≤/≥).</p>
+<div class="example"><p class="ex-h">The trap: floor(55)</p><p>55 > 50 → candidate 50, go right. 55 &lt; 70 → left. 55 &lt; 60 → left, null. Nothing found on the right side, so the answer falls back to <strong>50</strong>, the root, not anything near the bottom of the path.</p></div>
+<p class="label">min, max, rank, select, range</p>
+<ul>
+<li><strong>min / max</strong>: follow left / right links to the end. min = 20, max = 90.</li>
+<li><strong>rank(k)</strong> = how many keys are <strong>smaller</strong> than k. rank(65) = 6.</li>
+<li><strong>select(i)</strong> = the key with rank i (0-based). select(6) = 65. They're inverses.</li>
+<li>Both use the <code>size</code> field, so they're Θ(height).</li>
+<li><strong>range(lo, hi)</strong> = in-order walk that skips subtrees that can't hold in-range keys. range(35, 65) = 35, 40, 50, 60, 65. Cost: height + number of keys reported.</li>
+</ul>
+<p class="label">HW3 extras</p>
+<ul>
+<li><strong>countInRange</strong>: go left only if lo &lt; key, count the node if lo ≤ key ≤ hi, go right only if key &lt; hi.</li>
+<li><strong>lowestCommonAncestor(a, b)</strong>: start at the root. Both smaller → go left. Both larger → go right. Otherwise (they split, or one equals the node) → this node is the answer. A node counts as its own ancestor.</li>
+</ul>
+<p class="label">Why a BST and not a hash table</p>
+<p>"Most recent event at or before time t" is floor(t). "All events between two dates" is range. A hash table can't answer either without scanning every key.</p>`,
+  qs: [
+    { q: `floor(45) in this tree?${TREE(T10)}`,
+      c: ["35", "40", "50", "45"], a: 1,
+      e: "Largest key ≤ 45. Sorted: … 35, 40 | 50 … so 40.",
+      x: ["35 ≤ 45, but 40 is a larger key that's still ≤ 45.", null, "50 > 45. That's the ceiling.", "45 isn't in the tree. Floor returns a key that exists."],
+      d: ["Sorted keys: 20 30 35 40 50 60 65 70 80 90.", "45 fits between 40 and 50.", "The largest key at or below 45 is 40."] },
+    { q: `ceiling(68) in this tree?${TREE(T10)}`,
+      c: ["65", "70", "80", "68"], a: 1,
+      e: "Smallest key ≥ 68. 68 fits between 65 and 70.",
+      x: ["65 < 68. That's the floor.", null, "80 ≥ 68, but 70 is smaller and still ≥ 68.", "68 isn't in the tree."],
+      d: ["Sorted keys: … 60 65 | 70 80 …", "68 sits between 65 and 70.", "Smallest key ≥ 68 is 70."] },
+    { q: `floor(55) in this tree?${TREE(T10)}`,
+      c: ["60", "65", "null", "50"], a: 3,
+      e: "Nothing between 50 and 55 exists, so the floor is 50, back at the root.",
+      x: ["60 > 55, so it can't be a floor.", "65 > 55.", "There are smaller keys than 55, like 50, so it isn't null."],
+      d: ["At 50: 55 > 50, so 50 is a candidate. Go right to look for something closer.", "At 70: 55 < 70, go left. At 60: 55 < 60, go left: null.", "The right side found nothing ≤ 55, so the candidate 50 is the floor."] },
+    { q: `floor(10) in this tree?${TREE(T10)}`,
+      c: ["20", "10", "null", "the root"], a: 2,
+      e: "10 is smaller than the minimum 20, so there's no key ≤ 10.",
+      x: ["20 > 10. That's ceiling(10).", "10 isn't in the tree.", null, "The root 50 > 10."],
+      d: ["Floor needs a key ≤ 10.", "The smallest key is 20.", "No key qualifies, so floor(10) is null."] },
+    { q: `ceiling(36) in this tree?${TREE(T10)}`,
+      c: ["35", "40", "50", "37"], a: 1,
+      e: "Smallest key ≥ 36. Sorted: 35 | 40.",
+      x: ["35 < 36. That's the floor.", null, "50 ≥ 36 but 40 is smaller.", "37 isn't in the tree."],
+      d: ["Sorted keys: … 30 35 | 40 50 …", "36 fits between 35 and 40.", "Smallest key ≥ 36 is 40."] },
+    { q: `rank(65) in this tree?${TREE(T10)}`,
+      c: ["5", "6", "7", "3"], a: 1,
+      e: "rank = how many keys are smaller: 20, 30, 35, 40, 50, 60.",
+      x: ["5 is rank(60).", null, "7 counts 65 itself. Rank counts keys strictly smaller.", "3 is 65's depth, not its rank."],
+      d: ["rank(k) counts keys < k.", "Keys smaller than 65: 20, 30, 35, 40, 50, 60.", "That's 6."] },
+    { q: `select(3) in this tree (0-based)?${TREE(T10)}`,
+      c: ["35", "50", "40", "30"], a: 2,
+      e: "Ranks 0, 1, 2, 3 are 20, 30, 35, 40.",
+      x: ["35 has rank 2.", "50 has rank 4.", null, "30 has rank 1."],
+      d: ["select(i) is the key with exactly i keys below it.", "Sorted: 20 (0), 30 (1), 35 (2), 40 (3).", "select(3) = 40."] },
+    { q: `How many keys does range(35, 65) report in this tree?${TREE(T10)}`,
+      c: ["4", "5", "6", "3"], a: 1,
+      e: "35, 40, 50, 60, 65. Both ends count.",
+      x: ["That leaves out one end. The range [35, 65] includes both 35 and 65.", null, "30 and 70 are outside the range.", "Five keys fall between 35 and 65 inclusive."],
+      d: ["Range is inclusive: lo ≤ key ≤ hi.", "Sorted keys in [35, 65]: 35, 40, 50, 60, 65.", "5 keys."] },
+    { q: `HW3 tree. What is lowestCommonAncestor(35, 40)?${TREE("50(30(20,40(35,_)),70(60,80(_,90)))")}`,
+      c: ["30", "35", "50", "40"], a: 3,
+      e: "35 is in 40's subtree, and a node counts as its own ancestor.",
+      x: ["30 holds both, but 40 is deeper and holds both too.", "35's subtree doesn't contain 40.", "50 holds both, but it isn't the deepest such node."],
+      d: ["At 50: both smaller, go left. At 30: both larger, go right.", "At 40: 40 equals one of the keys, so the paths split here.", "Answer 40."] },
+    { q: `HW3 tree. What is lowestCommonAncestor(60, 90)?${TREE("50(30(20,40(35,_)),70(60,80(_,90)))")}`,
+      c: ["50", "70", "80", "60"], a: 1,
+      e: "At 70, 60 goes left and 90 goes right.",
+      x: ["At 50 both keys are larger, so keep going right.", null, "60 isn't in 80's subtree.", "90 isn't in 60's subtree."],
+      d: ["At 50: both larger, go right.", "At 70: 60 < 70 but 90 > 70. They split.", "Answer 70."] }
+  ]
+}
+];
+
+TOPICS.push(
+{
+  id: "del", title: "Hibbard deletion",
+  learn: `
+<div class="big"><p>Find the node, then handle one of three cases. Only the two-child case needs a trick: replace the node with its <strong>in-order successor</strong>, the smallest key in its right subtree.</p></div>
+<div class="tablewrap"><table>
+<thead><tr><th>The node has</th><th>Do this</th></tr></thead>
+<tbody>
+<tr><td>0 children (leaf)</td><td>remove it: the parent's link becomes null</td></tr>
+<tr><td>1 child</td><td>splice it out: the parent's link jumps to the lone child, which brings its whole subtree</td></tr>
+<tr><td>2 children</td><td>Hibbard: copy the successor's key up into the node, then delete the old successor from the right subtree</td></tr>
+</tbody></table></div>
+<p class="label">Finding the successor</p>
+<p>Go right once, then left as far as you can. That node is the minimum of the right subtree. It never has a left child (anything there would be smaller), so removing it is always an easy case: splice in its right child.</p>
+<div class="example"><p class="ex-h">Chapter exercise: delete the root 50</p>
+${ROW(TREE("!50(30(20,40(35,_)),70(^60(_,65),80(_,90)))", "successor of 50 is 60"), ARROW("copy 60 up, remove old 60"), TREE("^60(30(20,40(35,_)),70(65,80(_,90)))", "65 slides into 60's old spot"))}
+<p>Right of 50 is 70. Left from 70 is 60, and 60 has no left child, so 60 is the successor. 60 moves up to the root. The old 60 node had a right child 65, which takes its place as 70's left child.</p></div>
+<div class="example"><p class="ex-h">The easy cases on the same tree</p>
+<p><strong>Delete 35</strong> (leaf): 40's left link becomes null. <strong>Delete 80</strong> (one child): 70's right link jumps to 90.</p></div>
+<p class="label">deleteMin, the building block</p>
+<pre><code>Node* deleteMin(Node* t) {
+    if (!t-&gt;left) {            // found the min
+        Node* r = t-&gt;right;
+        delete t;              // free it
+        return r;              // splice in its right child
+    }
+    t-&gt;left = deleteMin(t-&gt;left);
+    t-&gt;size = 1 + size(t-&gt;left) + size(t-&gt;right);
+    return t;
+}</code></pre>
+<p class="label">Successor or predecessor?</p>
+<ul>
+<li>The <strong>predecessor</strong> (largest key in the left subtree: go left once, then right to the end) works just as well. It never has a right child.</li>
+<li>Always using the successor skews the tree. After a long mix of random inserts and deletes, average path length grows to about <strong>√n</strong> instead of log n. Alternating sides, or taking from the taller side, avoids it.</li>
+</ul>
+<p class="label">Why order survives</p>
+<p>No key lies between a node and its successor. The successor is bigger than everything on the left and smaller than everything left on the right, so it fits exactly where the deleted node was. In-order stays sorted with just that one key gone.</p>
+<p class="label">Watch out</p>
+<ul class="traps">
+<li>The successor is the min of the <strong>right subtree</strong>, not the right child itself (unless the right child has no left child).</li>
+<li>Copying the key up and deleting the duplicate frees exactly one node: no leak.</li>
+</ul>`,
+  qs: [
+    { q: `Delete 50 using Hibbard (successor). Which key becomes the new root?${TREE(T10)}`,
+      c: ["40", "60", "65", "70"], a: 1,
+      e: "The successor is the smallest key in 50's right subtree: 60.",
+      x: ["40 is the predecessor. Hibbard uses the successor.", null, "65 is bigger than 60, so it isn't the smallest on the right.", "70 is the right child, but the successor is the leftmost node below it."],
+      d: ["Go right once: 70.", "Go left as far as you can: 60 (it has no left child).", "Copy 60 up into the root. New root 60."] },
+    { q: `After deleting 50 from this tree (successor), where is 65?${TREE(T10)}`,
+      c: ["Right child of the new root 60", "Left child of 80", "Left child of 70", "It's removed too"], a: 2,
+      e: "Removing the old 60 node splices its right child 65 into 60's old spot, under 70.",
+      x: ["The new root's right child is 70, not 65.", "65 < 70, so it stays left of 70.", null, "Only one node is removed: the old copy of 60."],
+      d: ["The old 60 node had no left child and a right child 65.", "deleteMin removes it and returns 65 to take its place.", "So 65 becomes 70's left child."] },
+    { q: `Delete 30 (successor). Which key takes 30's place?${TREE(T10)}`,
+      c: ["20", "35", "40", "50"], a: 1,
+      e: "Right of 30 is 40; left from 40 is 35, with no left child. 35 is the successor.",
+      x: ["20 is the predecessor.", null, "40 is the right child, but 35 is smaller and still in the right subtree.", "50 is 30's parent, not in its subtree."],
+      d: ["30 has two children, so use Hibbard.", "Go right to 40, then left to 35. 35 has no left child: that's the min.", "35 replaces 30, and 40's left becomes null."] },
+    { q: `Delete 80 from this tree. What happens?${TREE(T10)}`,
+      c: ["90 becomes 70's right child", "65 takes 80's place", "70's right link becomes null and 90 is lost", "80 has two children, so its successor replaces it"], a: 0,
+      e: "80 has one child (90), so it's a splice: 70's right link jumps to 90.",
+      x: [null, "65 isn't in 80's subtree.", "A splice keeps the lone child: 90 comes along with the link. Nothing is lost.", "80's left link is null, so it has one child, not two."],
+      d: ["80's left is null and its right is 90: one child.", "Splice: the parent's link skips 80 and points at 90.", "90 becomes 70's right child."] },
+    { q: `Delete 50 using the <em>predecessor</em> instead. Which key replaces 50, and where does 35 go?${TREE(T10)}`,
+      c: ["40 replaces 50; 35 becomes 30's right child", "35 replaces 50; 40 stays put", "30 replaces 50; 35 stays under 40", "60 replaces 50; 35 stays under 40"], a: 0,
+      e: "The predecessor is the largest key on the left: 40. Removing the old 40 splices its left child 35 up.",
+      x: [null, "35 isn't the largest key on the left. 40 is.", "30 is the left child, but 40 is larger and still on the left.", "60 is the successor, not the predecessor."],
+      d: ["Go left once to 30, then right as far as you can: 40.", "Copy 40 up to the root.", "The old 40 had only a left child 35, which takes its place as 30's right child."] },
+    { q: `Delete 70 (successor). Which key now sits where 70 was?${TREE(T10)}`,
+      c: ["60", "65", "80", "90"], a: 2,
+      e: "Right of 70 is 80, and 80 has no left child, so 80 is the successor.",
+      x: ["60 is in 70's left subtree. That would be the predecessor side, and 65 is the predecessor.", "65 is 70's predecessor, not its successor.", null, "90 is bigger than 80."],
+      d: ["Go right from 70: 80.", "80 has no left child, so 80 is the min of the right subtree.", "80 moves up into 70's spot and its old right child 90 stays as the new node's right child."] },
+    { q: "Why does the in-order successor of a two-child node never have a left child?",
+      c: ["Deletion removes it first", "It's the smallest key in the right subtree; a left child would be smaller still", "Successors are always leaves", "BSTs don't allow left children below the root's right side"], a: 1,
+      e: "That's why removing it afterwards is always an easy (0 or 1 child) case.",
+      x: ["Nothing is removed before you find it.", null, "It can have a right child, like 60 having 65.", "There's no such rule."],
+      d: ["You find it by going left until you can't.", "If it had a left child, that child would be smaller and still in the right subtree.", "So it has no left child, at most a right one."] },
+    { q: "Always deleting with the successor, over a long mix of random inserts and deletes, makes average path length grow like:",
+      c: ["~√n", "~log₂ n", "~1.39 log₂ n", "~n"], a: 0,
+      e: "Hibbard's asymmetry: always pulling from the right side drains it.",
+      x: [null, "That's what you'd hope for, but the one-sided deletes skew the shape.", "That's a random BST with inserts only.", "It isn't that bad, it's between log n and n."],
+      d: ["Each two-child delete takes a key from the right subtree.", "Over many deletes the tree leans left.", "Sedgewick and Wayne report average path length ~√n. Alternating sides fixes it."] },
+    { q: `Delete E (two children) from this tree. Which key replaces E?${TREE("S(E(A(_,C),R(H(_,M(L,P)),_)),X)")}`,
+      c: ["C", "M", "L", "H"], a: 3,
+      e: "Right of E is R; left from R is H, which has no left child. H is the successor.",
+      x: ["C is E's predecessor.", "M is below H, so it's bigger than H.", "L is bigger than H too.", null],
+      d: ["Go right from E: R.", "Go left from R: H. H has no left child, so H is the min.", "H moves up into E's spot, and H's right child M slides into H's old place."] }
+  ]
+},
+{
+  id: "bf", title: "AVL balance factors",
+  learn: `
+<div class="big"><p><strong>AVL rule:</strong> at every node, the two subtree heights differ by at most 1. Adelson-Velsky and Landis, 1962: the first self-balancing BST.</p></div>
+<p class="formula">bf(x) = height(left) − height(right)</p>
+<ul>
+<li>Allowed: <strong>−1, 0, +1</strong>. A <strong>+2 or −2</strong> means a rotation is needed.</li>
+<li>Positive = left-heavy. Negative = right-heavy.</li>
+<li>height(null) = <strong>−1</strong>, leaf = 0. So a node with just one leaf child has bf ±1.</li>
+</ul>
+<p class="label">Computing balance factors by hand</p>
+<ol class="steps">
+<li>Start at the leaves: height 0, bf 0.</li>
+<li>Move up: height = 1 + the taller child. A missing child counts as −1.</li>
+<li>bf = left height − right height.</li>
+</ol>
+<div class="example"><p class="ex-h">Chapter exercise: 8(4(2,6),9)</p>
+${TREE("8[+1](4[0](2[0],6[0]),9[0])")}
+<p>4 has height 1. 9 has height 0. bf(8) = 1 − 0 = <strong>+1</strong>. Every bf is in {−1, 0, +1}, so it's AVL. Insert 1 under 2 and bf(8) tips to +2.</p></div>
+<div class="example"><p class="ex-h">The 10-key tree with its balance factors</p>
+${TREE("50[0](30[−1](20[0],40[+1](35[0],_)),70[0](60[−1](_,65[0]),80[−1](_,90[0])))")}
+<p>All within ±1: it's AVL.</p></div>
+<p class="label">Only the path changes</p>
+<p>An insert or delete changes heights only on the root-to-leaf path it walked. Nodes off that path keep their balance factors. So you only check (and fix) on the way back up that one path.</p>
+<p class="label">The node stores its height</p>
+<pre><code>int height(Node* t) { return t ? t-&gt;height : -1; }
+int bf(Node* t) { return height(t-&gt;left) - height(t-&gt;right); }
+void fix(Node* t) { t-&gt;height = 1 + max(height(t-&gt;left), height(t-&gt;right)); }</code></pre>
+<p>One extra int per node is the whole space cost.</p>
+<p class="label">HW3's isAVL in linear time</p>
+<p>Calling a separate <code>height()</code> at every node recomputes the same heights over and over: quadratic on a path. Instead, have the recursion <strong>return</strong> the height (or a sentinel like −2 for "already unbalanced"), so each height is computed once.</p>
+<p class="label">Watch out</p>
+<ul class="traps">
+<li>A balanced root doesn't mean a balanced tree. Check <strong>every</strong> node (HW3's test: root bf +1, but a node below has +2).</li>
+<li>AVL is balanced, not perfectly balanced. The ±1 slack is what makes it cheap to maintain.</li>
+<li>A short tree isn't automatically AVL. Height under 1.44 log₂ n doesn't prove the rule holds at each node (chapter exercise).</li>
+</ul>`,
+  qs: [
+    { q: `What is bf(8)?${TREE("8(4(2,6),9)")}`,
+      c: ["0", "+1", "−1", "+2"], a: 1,
+      e: "Left subtree (rooted at 4) has height 1, right (9) has height 0. 1 − 0 = +1.",
+      x: ["8's two subtrees have different heights.", null, "bf is left minus right, and the left side is taller, so it's positive.", "That would need the left side 2 taller."],
+      d: ["2, 6, 9 are leaves: height 0.", "4 = 1 + max(0, 0) = 1.", "bf(8) = height(4) − height(9) = 1 − 0 = +1."] },
+    { q: `Which node in this tree has bf = +1?${TREE(T10)}`,
+      c: ["30", "40", "60", "80"], a: 1,
+      e: "40 has a left child (35, height 0) and no right child (−1): 0 − (−1) = +1.",
+      x: ["30: left 20 is height 0, right 40 is height 1. bf = −1.", null, "60 has only a right child: bf = −1 − 0 = −1.", "80 has only a right child: bf = −1."],
+      d: ["Look for a node whose left side is 1 taller.", "40 has left child 35 and nothing on the right.", "bf(40) = 0 − (−1) = +1."] },
+    { q: `Is this tree AVL?${TREE("50(30(20(10,_),_),70(60,_))")}`,
+      c: ["Yes, the root's bf is only +1", "No: node 30 has bf +2", "No: node 70 has bf +1", "Yes, every leaf is within one level of the others"], a: 1,
+      e: "30's left subtree has height 1, its right is empty (−1): 1 − (−1) = +2.",
+      x: ["The rule applies at every node, and node 30 breaks it. This is exactly HW3's T3 test.", null, "bf +1 is allowed.", "That isn't the AVL rule. The rule is about subtree heights at each node."],
+      d: ["10 and 60 are leaves (height 0). 20 has height 1. 70 has height 1.", "30: left 20 (height 1), right null (−1). bf = +2.", "+2 breaks the rule, so it isn't AVL."] },
+    { q: `This 7-node tree has height 3, under the bound 1.44 · log₂ 7 ≈ 4. Is it AVL?${TREE("8(4(2,6),12(_,14(_,16)))")}`,
+      c: ["Yes, its height is under the AVL bound", "Yes, the root's bf is −1", "No: bf(12) = −2", "No: bf(14) = −2"], a: 2,
+      e: "12 has no left child (−1) and a right subtree of height 1: −1 − 1 = −2.",
+      x: ["The bound is a result of the rule, not a test for it. A short tree can still break the rule at one node.", "The rule must hold at every node.", null, "14 has only a leaf on the right: bf = −1 − 0 = −1."],
+      d: ["16 is a leaf (0). 14 = 1. 12 = 2.", "bf(12) = height(null) − height(14) = −1 − 1 = −2.", "One bad node is enough: not AVL."] },
+    { q: "You insert a key into an AVL tree. Which nodes can have their balance factor change?",
+      c: ["Any node in the tree", "Only the new leaf", "Only the nodes on the path from the root to the new leaf", "Only the root"], a: 2,
+      e: "Heights change only along the path the insert walked. Everything off to the side is untouched.",
+      x: ["Subtrees off the path don't change at all, so neither do their bfs.", "The new leaf always has bf 0. It's the ancestors that change.", null, "Any node on the path can change, not only the root."],
+      d: ["The insert adds one leaf at the end of a search path.", "Only that leaf's ancestors gain any height.", "So only nodes on that path can reach ±2, which is why one upward pass is enough."] },
+    { q: "A node has a leaf as its left child and no right child. What is its bf?",
+      c: ["0", "−1", "+2", "+1"], a: 3,
+      e: "0 − (−1) = +1. The empty side counts as −1.",
+      x: ["That treats the missing child like a leaf (height 0). Null is −1.", "bf is left − right, and the left side is taller.", "+2 would need the left side to have height 1."],
+      d: ["Left child is a leaf: height 0.", "Right child is null: height −1.", "bf = 0 − (−1) = +1, which is allowed."] },
+    { q: `Insert 1 into this AVL tree (it lands as 2's left child). Which node is the first to reach ±2 on the way up?${TREE("8(4(2,6),9)")}`,
+      c: ["2", "4", "8", "9"], a: 2,
+      e: "2 becomes +1, 4 becomes +1, and 8 becomes 2 − 0 = +2.",
+      x: ["2 gets one child: bf +1.", "4 now has left height 1 and right height 0: bf +1.", null, "9 isn't on the insert path."],
+      d: ["After the insert, 2 has height 1 (bf +1).", "4 has height 2 (left 1, right 0, bf +1).", "8: left height 2, right height 0, bf +2. That's the first violation."] },
+    { q: "Why can't HW3's isAVL just call a separate height() at every node?",
+      c: ["height() doesn't work on empty trees", "It would recompute the same subtree heights again and again: quadratic on a path", "It would return the wrong answer", "It's fine, it's already linear"], a: 1,
+      e: "Return the height from the recursion instead, so each height is computed once.",
+      x: ["height(null) is just −1.", null, "The answer would be right, just slow.", "Each height() call walks the whole subtree, so total work is far more than n."],
+      d: ["height(t) itself visits every node in t's subtree.", "Calling it at every node visits deep nodes many times: Θ(n²) on a path.", "Fix: one recursion that returns the height (or −2 for unbalanced), visiting each node once."] },
+    { q: "Why doesn't AVL just keep the tree perfectly balanced?",
+      c: ["Perfect balance would make height worse", "Keeping every leaf at the same depth could force rebuilding a big chunk on one insert", "Perfect trees can't hold an even number of nodes", "AVL is perfectly balanced"], a: 1,
+      e: "The ±1 slack is loose enough to fix with O(1) work per level, tight enough to keep height Θ(log n).",
+      x: ["Perfect balance gives the shortest possible height. The problem is maintaining it.", null, "Perfect isn't the issue there. The issue is the cost of keeping it.", "AVL allows a lean of 1, so it's balanced but not perfect."],
+      d: ["Perfect balance means every leaf at depth ~log₂ n.", "One insert could break that in a way only a big rebuild fixes: Θ(n).", "AVL relaxes it to ±1, which rotations fix in O(1) per level."] }
+  ]
+},
+{
+  id: "rot", title: "Rotations",
+  learn: `
+<div class="big"><p>A rotation re-hangs a parent and one child. The child rises, the parent drops, and exactly <strong>one</strong> subtree changes parent. In-order stays the same, so it's still a valid BST.</p></div>
+<p class="label">Right rotation at y (fixes a left-heavy lean)</p>
+${ROW(TREE("y(x(~A,@~B),~C)", "before"), ARROW("rotateRight(y)"), TREE("x(~A,y(@~B,~C))", "after"))}
+<p>x rises. y becomes x's right child. <strong>B</strong> (the keys between x and y) moves from x's right to y's left. In-order is <strong>A x B y C</strong> both times.</p>
+<pre><code>Node* rotateRight(Node* y) {
+    Node* x = y-&gt;left;
+    y-&gt;left = x-&gt;right;   // B re-hangs under y
+    x-&gt;right = y;
+    fix(y); fix(x);       // y is lower now, so fix it first
+    return x;             // new subtree root
+}</code></pre>
+<p class="label">Left rotation at x (the mirror, fixes a right-heavy lean)</p>
+${ROW(TREE("x(~A,y(@~B,~C))", "before"), ARROW("rotateLeft(x)"), TREE("y(x(~A,@~B),~C)", "after"))}
+<pre><code>Node* rotateLeft(Node* x) {
+    Node* y = x-&gt;right;
+    x-&gt;right = y-&gt;left;   // B re-hangs under x
+    y-&gt;left = x;
+    fix(x); fix(y);
+    return y;
+}</code></pre>
+<p class="label">Doing one by hand</p>
+<ol class="steps">
+<li>The child on the side you rotate from moves up into the parent's spot.</li>
+<li>The parent drops to the other side of that child.</li>
+<li>The child's <strong>inner</strong> subtree (the one between the two keys) crosses over and hangs on the parent.</li>
+<li>Everything else stays attached where it was.</li>
+</ol>
+<div class="example"><p class="ex-h">Lecture 5: right-rotate at 50</p>
+${ROW(TREE("50(30(20(10,_),@40(35,45)),75)"), ARROW("rotateRight(50)"), TREE("30(20(10,_),50(@40(35,45),75))"))}
+<p>30 rises. The subtree 40(35, 45) swings from 30's right to 50's left. That's the single line <code>y-&gt;left = x-&gt;right</code>.</p></div>
+<p class="label">Facts</p>
+<ul>
+<li>A rotation is <strong>O(1)</strong>: three pointer writes and two height updates.</li>
+<li>The lower node's height is fixed first, since the upper node's height reads it.</li>
+<li>Rotations change heights (that's how they repair balance) but never in-order.</li>
+</ul>`,
+  qs: [
+    { q: `Right-rotate at 50. Which key becomes the subtree root?${TREE("50(30(20(10,_),40(35,45)),75)")}`,
+      c: ["40", "20", "30", "75"], a: 2,
+      e: "In a right rotation the left child rises.",
+      x: ["40 is the subtree that moves, not the new root.", "20 stays as 30's left child.", null, "75 is on the right. A right rotation lifts the left child."],
+      d: ["rotateRight(y) lifts y's left child x.", "Here y = 50 and x = 30.", "30 becomes the root of this subtree."] },
+    { q: `Right-rotate at 50. Which subtree changes parent?${TREE("50(30(20(10,_),40(35,45)),75)")}`,
+      c: ["40 (with 35 and 45) moves from 30 to 50", "20 (with 10) moves from 30 to 50", "75 moves from 50 to 30", "None, only 30 and 50 swap"], a: 0,
+      e: "The middle subtree B, the keys between 30 and 50, re-hangs as 50's left child.",
+      x: [null, "20 is the outer subtree A. It stays under 30.", "75 is C. It stays under 50.", "Exactly one subtree moves: the one between the two keys."],
+      d: ["Keys between 30 and 50 are 35, 40, 45: the subtree rooted at 40.", "It was 30's right child.", "After the rotation it's 50's left child: y->left = x->right."] },
+    { q: `Left-rotate at 30. What's the result?${TREE("30(20,40(35,50))")}`,
+      c: ["Root 40; left child 30 with children 20 and 35; right child 50", "Root 40; left child 30 with child 20; 35 under 50", "Root 35; left 30, right 40", "Root 50; left 40, which has 30 below it"], a: 0,
+      e: "40 rises, 30 drops left, and 35 (between 30 and 40) crosses over to become 30's right child.",
+      x: [null, "35 < 40, so it can't sit under 50. It moves to 30.", "A single rotation lifts the right child 40, not the grandchild 35.", "Only one level changes. 50 stays as 40's right child."],
+      d: ["rotateLeft(30) lifts the right child 40.", "30 becomes 40's left child.", "40's old left subtree 35 becomes 30's right child. 50 stays on 40's right."] },
+    { q: "After any rotation, what happens to the in-order sequence of the keys?",
+      c: ["It reverses", "It stays exactly the same", "It changes, but stays sorted", "The rotated pair swaps places"], a: 1,
+      e: "A x B y C before and after. Rotations move structure, never order.",
+      x: ["Nothing reverses.", null, "It doesn't change at all, which is a stronger statement.", "x and y keep their relative order: x is still before y."],
+      d: ["Before a right rotation: A, x, B, y, C.", "After: A, x, B, y, C.", "Same sequence, so the BST rule still holds and search still works."] },
+    { q: "In rotateRight(y), which line moves the middle subtree B?",
+      c: ["Node* x = y->left;", "x->right = y;", "y->left = x->right;", "return x;"], a: 2,
+      e: "B was x's right subtree. This line hangs it as y's left.",
+      x: ["That only names x.", "That makes y the child of x.", null, "That returns the new root."],
+      d: ["Before, B is x->right.", "After, B must be y->left.", "y->left = x->right does exactly that, and the whole subtree follows one pointer."] },
+    { q: "In rotateRight(y), why is fix(y) called before fix(x)?",
+      c: ["y is now below x, and x's height is computed from y's", "y is the new root", "The order doesn't matter", "fix(x) would crash first"], a: 0,
+      e: "fix reads the children's cached heights, so the child must be updated first.",
+      x: [null, "x is the new root, not y.", "If x were fixed first it would read y's old height.", "Nothing crashes; the height would just be wrong."],
+      d: ["After the rotation, y is x's right child.", "fix(x) = 1 + max(height(x->left), height(y)).", "So y's height must already be correct: fix(y) first."] },
+    { q: "What does one rotation cost?",
+      c: ["O(log n)", "O(1)", "O(height of the subtree)", "O(n)"], a: 1,
+      e: "Three pointer writes and two height updates, whatever the size of the subtrees.",
+      x: ["That's the cost of walking a path, not of one rotation.", null, "The subtrees move by a single pointer each. Nothing inside them is touched.", "No rotation looks at the whole tree."],
+      d: ["A rotation changes three links.", "It recomputes two cached heights.", "That's constant work: O(1)."] },
+    { q: `Left-rotate at 4. Where does 5 end up?${TREE("4(2,6(5,7))")}`,
+      c: ["Left child of 6", "Right child of 4", "Right child of 7", "Left child of 2"], a: 1,
+      e: "5 is the middle subtree (between 4 and 6). It moves from 6's left to 4's right.",
+      x: ["That's where it started. The middle subtree always switches parent.", null, "5 < 6, so it can't go right of 7.", "5 > 4, so it can't be left of 2."],
+      d: ["rotateLeft(4): 6 rises, 4 drops to 6's left.", "6's old left subtree (5) is the keys between 4 and 6.", "It becomes 4's right child. Result 6(4(2,5),7)."] }
+  ]
+},
+{
+  id: "ins", title: "AVL insertion: single and double rotations",
+  learn: `
+<div class="big"><p>Insert like a plain BST. On the way back up, recompute heights. At the <strong>lowest</strong> node that hits ±2, do one rotation (single or double). Done.</p></div>
+<p class="label">Naming the case</p>
+<p>From the ±2 node z, take two steps toward the taller side. The two directions name the case.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Case</th><th>Balance factors</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>LL</td><td>bf(z) = +2, bf(z.left) ≥ 0</td><td>rotateRight(z)</td></tr>
+<tr><td>RR</td><td>bf(z) = −2, bf(z.right) ≤ 0</td><td>rotateLeft(z)</td></tr>
+<tr><td>LR</td><td>bf(z) = +2, bf(z.left) &lt; 0</td><td>rotateLeft(z.left), then rotateRight(z)</td></tr>
+<tr><td>RL</td><td>bf(z) = −2, bf(z.right) &gt; 0</td><td>rotateRight(z.right), then rotateLeft(z)</td></tr>
+</tbody></table></div>
+<p>Straight (same sign) → one rotation. Kinked (opposite signs) → two.</p>
+<div class="example"><p class="ex-h">The four cases on three keys</p>
+${ROW(TREE("!3(1(_,2),_)", "LR: insert 3, 1, 2"), TREE("!1(_,3(2,_))", "RL: insert 1, 3, 2"), TREE("!3(2(1,_),_)", "LL: insert 3, 2, 1"), TREE("!1(_,2(_,3))", "RR: insert 1, 2, 3"))}
+<p>All four end as 2(1, 3).</p></div>
+<p class="label">Shortcut for a double rotation</p>
+<p>Look at z, its child, and the grandchild on the kinked path. The <strong>middle key of the three</strong> ends up on top, with the other two as its children. The grandchild's old subtrees get split between them, in order.</p>
+<div class="example"><p class="ex-h">Chapter example (LR): insert 25 into 30(10(5,20),40)</p>
+${ROW(TREE("!30[+2](10[−1](5,20(_,^25)),40)", "bf(30)=+2, bf(10)=−1"), ARROW("rotateLeft(10), rotateRight(30)"), TREE("20(10(5,_),30(^25,40))"))}
+<p>The three keys on the kink are 30, 10, 20. Middle key 20 goes on top. 20's old right subtree (25) goes to 30's left.</p></div>
+<div class="example"><p class="ex-h">Chapter example (RL): insert 35 into 30(20,50(40,55))</p>
+${ROW(TREE("!30[−2](20,50[+1](40(^35,_),55))"), ARROW("rotateRight(50), rotateLeft(30)"), TREE("40(30(20,^35),50(_,55))"))}</div>
+<p class="label">Why one rotation is enough for an insert</p>
+<p>The insert made the subtree under z one taller. The rotation brings it back to its height from <strong>before</strong> the insert, so no ancestor sees a change. That's why only the lowest ±2 node is fixed.</p>
+<p class="label">Most inserts rotate nothing</p>
+<p>Insert 45 into 30(20(10,25),40): 40 becomes bf −1, the root stays 0. No ±2 anywhere.</p>
+<p class="label">Inserting 1 to 7 in order</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Insert</th><th>Rotation</th><th>Tree after</th></tr></thead>
+<tbody>
+<tr><td>3</td><td>RR at 1</td><td>2(1, 3)</td></tr>
+<tr><td>5</td><td>RR at 3</td><td>2(1, 4(3, 5))</td></tr>
+<tr><td>6</td><td>RR at 2 (the root)</td><td>4(2(1, 3), 5(_, 6))</td></tr>
+<tr><td>7</td><td>RR at 5</td><td>4(2(1, 3), 6(5, 7))</td></tr>
+</tbody></table></div>
+<p>Four rotations, height 2. A plain BST would be a path of height 6.</p>
+<p class="label">Deletion is different</p>
+<p>Delete like a BST (Hibbard), then rebalance on the way up with the same four cases. A delete makes a subtree shorter, and the rotation can make it shorter still, so the parent may break next. Deletion can rotate at <strong>every level</strong>: up to O(log n) rotations, still O(log n) total.</p>
+${ROW(TREE("3(1,4(_,5))", "delete 1"), ARROW("RR at 3"), TREE("4(3,5)"))}`,
+  qs: [
+    { q: "Insert 50, 25, 10 into an empty AVL tree. Which case, and what's the result?",
+      c: ["RR; rotateLeft(50); 25(10, 50)", "LL; rotateRight(50); 25(10, 50)", "LR; two rotations; 10(25, 50)", "No rotation; a path"], a: 1,
+      e: "50 has bf +2 and its left child 25 has bf +1: left then left.",
+      x: ["The lean is to the left, so it's LL and needs a right rotation.", null, "There's no kink: 10 is the left child of 25.", "bf(50) reaches +2, which must be fixed."],
+      d: ["After inserting 10: 50 → 25 → 10, all on the left.", "bf(50) = +2, bf(25) = +1: same direction, LL.", "rotateRight(50): 25 rises, giving 25(10, 50)."] },
+    { q: "Insert 10, 20, 15 into an empty AVL tree. What happens?",
+      c: ["RL: rotateRight(20), then rotateLeft(10); result 15(10, 20)", "RR: rotateLeft(10); result 20(10, 15)", "LR: rotateLeft(20), then rotateRight(10); result 15(10, 20)", "No rotation is needed"], a: 0,
+      e: "bf(10) = −2, but its right child 20 leans left (+1): a right-then-left kink.",
+      x: [null, "20 leans left, so this isn't a straight RR. Also 20(10, 15) puts 15 on 20's right, which breaks the BST rule. A single left rotation only moves the kink.", "The heavy side is the right, so it's RL, and the rotation order is right first.", "10 reaches bf −2."],
+      d: ["15 goes right of 10, then left of 20.", "bf(10) = −2 and bf(20) = +1: opposite signs, so RL.", "rotateRight(20) straightens it, then rotateLeft(10). Middle key 15 ends on top: 15(10, 20)."] },
+    { q: `Insert 5 into this AVL tree. What does the tree look like after rebalancing?${TREE("30(20(10,25),40)")}`,
+      c: ["20(10(5, _), 30(25, 40))", "30(10(5, 20(_, 25)), 40)", "25(10(5, 20), 30(_, 40))", "No rotation, 5 just goes left of 10"], a: 0,
+      e: "5 lands under 10. bf(30) = +2, bf(20) = +1: LL, so rotateRight(30).",
+      x: [null, "That rotates the wrong node. The fix happens at 30, the lowest ±2 node.", "That's a double rotation, but this case is straight (LL).", "bf(30) becomes 2 − 0 = +2, so a rotation is required."],
+      d: ["5 goes 30 → 20 → 10 → left of 10. Heights: 10 = 1, 20 = 2.", "bf(30) = 2 − 0 = +2, bf(20) = 1 − 0 = +1: LL.", "rotateRight(30): 20 rises, 30 drops right, 25 moves to 30's left. Result 20(10(5), 30(25, 40))."] },
+    { q: `Insert 25 into this AVL tree. Which rotations happen, in order?${TREE("30(10(5,20),40)")}`,
+      c: ["rotateRight(30) only", "rotateLeft(10), then rotateRight(30)", "rotateRight(10), then rotateLeft(30)", "rotateLeft(20) only"], a: 1,
+      e: "bf(30) = +2 with its left child 10 at −1: LR. Straighten at 10, then finish at 30.",
+      x: ["A single right rotation can't fix a kink. It just moves the kink to the other side.", null, "That's the RL recipe, mirrored the wrong way.", "20 isn't unbalanced (bf −1)."],
+      d: ["25 lands as 20's right child. bf(20) = −1, bf(10) = −1, bf(30) = +2.", "Left-heavy at 30, but 10 leans right: LR.", "rotateLeft(10) then rotateRight(30). Result 20(10(5), 30(25, 40))."] },
+    { q: `Insert 35 into this AVL tree. What is the new root?${TREE("30(20,50(40,55))")}`,
+      c: ["30", "35", "50", "40"], a: 3,
+      e: "RL at 30. The middle key of 30, 50, 40 is 40, so 40 ends on top.",
+      x: ["30 has bf −2 and gets rotated down.", "35 is the new leaf. It ends as 30's right child.", "A single left rotation would lift 50, but this is a kink (RL)."],
+      d: ["35 lands as 40's left child. bf(50) = +1, bf(30) = −2.", "Right-heavy, right child leans left: RL.", "rotateRight(50), then rotateLeft(30). Result 40(30(20, 35), 50(_, 55))."] },
+    { q: `Insert 45 into this AVL tree. How many rotations?${TREE("30(20(10,25),40)")}`,
+      c: ["0", "1", "2", "3"], a: 0,
+      e: "40 becomes bf −1 and the root stays 0. No node reaches ±2.",
+      x: [null, "Nothing reaches ±2, so nothing rotates.", "There's no kink to fix.", "An insert never needs more than one single or double rotation."],
+      d: ["45 goes right of 40. 40's left is empty (−1) and its right is 45 (0): bf = −1.", "Root: left height 1, right height 1, bf 0.", "No ±2, so no rotation. Most inserts are like this."] },
+    { q: "Insert 1, 2, 3, 4, 5, 6, 7 in order into an empty AVL tree. What is the final tree?",
+      c: ["A path of height 6", "4(2(1, 3), 6(5, 7)), height 2", "2(1, 4(3, 6(5, 7))), height 3", "3(2(1, _), 5(4, 6(_, 7))), height 3"], a: 1,
+      e: "Four left rotations (at 1, 3, 2, 5) keep it perfectly balanced at the end.",
+      x: ["That's a plain BST. AVL rotates as it goes.", null, "After 6 the root itself rotates (RR at 2), so 4 ends up on top.", "That tree isn't what the four RR rotations produce."],
+      d: ["After 3: 2(1, 3). After 5: 2(1, 4(3, 5)).", "Insert 6: bf(2) = −2 → rotateLeft(2) → 4(2(1, 3), 5(_, 6)).", "Insert 7: bf(5) = −2 → rotateLeft(5) → 4(2(1, 3), 6(5, 7))."] },
+    { q: `Insert 37 into this AVL tree. Which node is the lowest to hit ±2?${TREE("50(30(20,40(35,_)),70(60,80(_,90)))")}`,
+      c: ["30", "35", "50", "40"], a: 3,
+      e: "37 lands as 35's right child. bf(35) = −1, then bf(40) = +2.",
+      x: ["30 does reach −2 too, but it's higher up. The fix happens at the lowest ±2 node, 40, and that repairs 30 as well.", "35 gets one child: bf −1.", "The root doesn't change height after the fix below."],
+      d: ["37: 50 → 30 → 40 → 35 → right of 35.", "35: bf −1, height 1. 40: left 1, right −1, bf +2.", "40 is the lowest ±2 node. It's LR (bf(35) = −1), so 37 ends on top: 37(35, 40)."] },
+    { q: `Insert 85 into this AVL tree. What case is it, and which key ends on top of that subtree?${TREE("50(30(20,40(35,_)),70(60,80(_,90)))")}`,
+      c: ["RR at 80; 90 on top", "RL at 80; 85 on top", "RL at 70; 80 on top", "LR at 90; 85 on top"], a: 1,
+      e: "85 lands left of 90. bf(80) = −2 with bf(90) = +1: right then left.",
+      x: ["The path from 80 goes right to 90, then left to 85. That's a kink, not straight.", null, "70 also reaches −2, but it's above 80. The lowest ±2 node is 80, and fixing it repairs 70 too.", "90 has bf +1, which is allowed."],
+      d: ["85: 50 → 70 → 80 → 90 → left of 90.", "bf(90) = +1, bf(80) = −1 − 1 = −2.", "RL at 80. Middle of 80, 90, 85 is 85: 85(80, 90)."] },
+    { q: "Insert 10, 20, 30, 40, 50, then 25. The last insert triggers which case, at which node?",
+      c: ["RR at 30", "RL at 20, the root", "LR at 40", "No rotation"], a: 1,
+      e: "Before 25 the tree is 20(10, 40(30, 50)). 25 lands under 30, making bf(20) = −2 and bf(40) = +1.",
+      x: ["That rotation happened earlier, when 50 was inserted.", null, "40 leans left (+1) but is still legal.", "The root reaches −2."],
+      d: ["After 10…50: 20(10, 40(30, 50)).", "25 goes right of 20, left of 40, left of 30. bf(40) = +1, bf(20) = 0 − 2 = −2.", "RL at the root: rotateRight(40), then rotateLeft(20). Result 30(20(10, 25), 40(_, 50))."] },
+    { q: "How many rotations can one AVL insertion and one AVL deletion need?",
+      c: ["Insert: at most one (single or double). Delete: up to one per level, O(log n)", "Both: at most one", "Both: up to O(log n)", "Insert: up to O(log n). Delete: at most one"], a: 0,
+      e: "An insert rotation restores the old height, so it stops. A delete can keep shortening subtrees on the way up.",
+      x: [null, "Deletion can cascade: a rotation can shorten a subtree and unbalance its parent.", "Insertion always stops after the first fix.", "That's backwards."],
+      d: ["Insert: the rotation brings the subtree back to its pre-insert height, so ancestors see no change.", "Delete: the subtree got shorter, and rotating can shorten it more.", "So the parent may break next, all the way up: O(log n) rotations."] },
+    { q: `Delete 1 from this AVL tree. What happens?${TREE("3(1,4(_,5))")}`,
+      c: ["Nothing else, it's still AVL", "RR at 3: rotateLeft(3) gives 4(3, 5)", "RL at 3: two rotations", "LL at 4: rotateRight(4)"], a: 1,
+      e: "With 1 gone, bf(3) = −1 − 1 = −2 and bf(4) = −1: right then right.",
+      x: ["bf(3) becomes −2, so it isn't AVL anymore.", null, "4 leans right, the same way as 3: straight, one rotation.", "4 is fine (bf −1). The problem is at 3."],
+      d: ["Remove leaf 1. 3's left is now empty (−1), right subtree 4 has height 1.", "bf(3) = −2 and bf(4) = −1: RR.", "rotateLeft(3): 4(3, 5)."] }
+  ]
+},
+{
+  id: "bound", title: "The minimal AVL tree and the height bound",
+  learn: `
+<div class="big"><p>Flip the question. Instead of "how tall can n nodes get?", ask "what's the <strong>fewest</strong> nodes an AVL tree of height h can have?" Call it <strong>N(h)</strong>.</p></div>
+<p class="label">The minimal tree</p>
+<p>To be height h, one subtree must have height h − 1. To use as few nodes as possible, make the other subtree as short as the rule allows: <strong>h − 2</strong>. Both subtrees are minimal too.</p>
+<p class="formula">N(h) = 1 + N(h − 1) + N(h − 2),&nbsp;&nbsp; N(−1) = 0,&nbsp; N(0) = 1</p>
+${ROW(TREE("1", "h=0, N=1"), TREE("2(1,_)", "h=1, N=2"), TREE("3(2(1,_),4)", "h=2, N=4"), TREE("5(3(2(1,_),4),7(6,_))", "h=3, N=7"))}
+<p class="label">Memorize this table</p>
+<div class="tablewrap"><table class="num">
+<thead><tr><th>h</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+<tbody>
+<tr><td>N(h)</td><td>1</td><td>2</td><td>4</td><td>7</td><td>12</td><td>20</td><td>33</td><td>54</td><td>88</td><td>143</td></tr>
+<tr><td>N(h)+1</td><td>2</td><td>3</td><td>5</td><td>8</td><td>13</td><td>21</td><td>34</td><td>55</td><td>89</td><td>144</td></tr>
+</tbody></table></div>
+<p>Quick way to build it: each N is the previous two added, plus 1 (7 + 12 + 1 = 20). The bottom row is Fibonacci: <strong>N(h) = F(h+3) − 1</strong>. These minimal trees are called Fibonacci trees.</p>
+<p class="label">Max height for n nodes</p>
+<p>Find the <strong>largest h with N(h) ≤ n</strong>.</p>
+<ul>
+<li>n = 20: N(5) = 20 ≤ 20, N(6) = 33 > 20 → max height <strong>5</strong>.</li>
+<li>n = 54: N(7) = 54 → max height <strong>7</strong>.</li>
+<li>n = 11: N(4) = 12 > 11 → max height <strong>3</strong>.</li>
+</ul>
+<p class="label">The height bound</p>
+<ul>
+<li>Fibonacci grows like φ<sup>h</sup> (φ ≈ 1.618), so n ≥ N(h) ≥ φ<sup>h</sup>.</li>
+<li>Take logs: <strong>h ≤ log<sub>φ</sub> n ≈ 1.44 log₂ n</strong>.</li>
+<li>Every binary tree has h ≥ log₂ n. So <strong>log₂ n ≤ h ≤ 1.44 log₂ n</strong>: Θ(log n).</li>
+<li>n = 10⁹: a plain BST can take a billion compares; an AVL tree at most 1.44 · log₂ 10⁹ ≈ <strong>43</strong>.</li>
+</ul>
+<p class="label">Why φ<sup>h</sup> and not 2<sup>h</sup></p>
+<p>The minimal tree is lopsided on purpose (heights h − 1 and h − 2). A perfect tree would give 2<sup>h</sup> and the constant 1.00, but perfect balance can't be kept cheaply. The 1.44 is the price of the ±1 slack.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Worst case</th><th>plain BST</th><th>AVL</th></tr></thead>
+<tbody>
+<tr><td>search, insert, delete</td><td>Θ(n)</td><td>Θ(log n)</td></tr>
+</tbody></table></div>
+<p class="label">AVL vs red-black</p>
+<p>Red-black trees allow height up to 2 log₂ n: taller, but fewer rotations per update. AVL is stricter (1.44 log₂ n): shorter, quicker searches, more rotations. Search-heavy → AVL. Update-heavy → red-black (std::map).</p>
+<p class="label">Watch out</p>
+<ul class="traps">
+<li>1.39 log₂ n is a <em>random BST's average depth</em>. 1.44 log₂ n is the <em>AVL worst-case height</em>. Don't mix them up.</li>
+<li>For "max height with n nodes", use ≤ n. If n is one short of N(h), you can't reach height h.</li>
+</ul>`,
+  qs: [
+    { q: "What is N(4), the fewest nodes in an AVL tree of height 4?",
+      c: ["8", "12", "15", "13"], a: 1,
+      e: "N(4) = 1 + N(3) + N(2) = 1 + 7 + 4 = 12.",
+      x: ["8 is N(3) + 1, a Fibonacci number, not N(4).", null, "15 is the most nodes at height 3 (a perfect tree), not the fewest at height 4.", "13 is N(4) + 1."],
+      d: ["N(h) = 1 + N(h − 1) + N(h − 2).", "N(2) = 4, N(3) = 7.", "N(4) = 1 + 7 + 4 = 12."] },
+    { q: "Which recurrence gives the minimum number of nodes in an AVL tree of height h?",
+      c: ["N(h) = 2N(h − 1) + 1", "N(h) = N(h − 1) + N(h − 2)", "N(h) = 1 + N(h − 1) + N(h − 2)", "N(h) = 1 + 2N(h − 2)"], a: 2,
+      e: "A root, plus a minimal subtree of height h − 1, plus a minimal subtree of height h − 2.",
+      x: ["That's a perfect tree (both subtrees h − 1). It gives the most nodes, not the fewest.", "It's missing the root's +1. That's plain Fibonacci, which N(h) + 1 follows.", null, "One subtree must be h − 1, or the tree wouldn't reach height h."],
+      d: ["One subtree must have height h − 1.", "The other can be as short as h − 2 under the ±1 rule.", "Add the root: N(h) = 1 + N(h − 1) + N(h − 2)."] },
+    { q: "What is the maximum height of an AVL tree with 20 nodes?",
+      c: ["4", "5", "6", "19"], a: 1,
+      e: "N(5) = 20 ≤ 20, but N(6) = 33 > 20.",
+      x: ["N(5) = 20 fits exactly, so height 5 is possible.", null, "Height 6 needs at least 33 nodes.", "19 is a path, which AVL never allows."],
+      d: ["Table: N(4) = 12, N(5) = 20, N(6) = 33.", "Largest h with N(h) ≤ 20 is 5.", "Max height 5 (the minimal tree of height 5 itself)."] },
+    { q: "What is the maximum height of an AVL tree with 11 nodes?",
+      c: ["3", "4", "5", "10"], a: 0,
+      e: "Height 4 needs at least N(4) = 12 nodes, one more than you have.",
+      x: [null, "N(4) = 12 > 11, so height 4 can't be reached.", "Height 5 needs 20 nodes.", "10 would be a path."],
+      d: ["N(3) = 7 ≤ 11.", "N(4) = 12 > 11.", "Largest h with N(h) ≤ 11 is 3."] },
+    { q: "What is the maximum height of an AVL tree with 100 nodes?",
+      c: ["6", "7", "8", "9"], a: 2,
+      e: "N(8) = 88 ≤ 100 < N(9) = 143.",
+      x: ["log₂ 100 ≈ 6.6 is the minimum height, not the max.", "N(7) = 54, but 100 nodes can reach height 8.", null, "Height 9 needs 143 nodes."],
+      d: ["Extend the table: 54, 88, 143 for h = 7, 8, 9.", "88 ≤ 100 but 143 > 100.", "Max height 8."] },
+    { q: "Which bound holds for the height of every AVL tree with n nodes?",
+      c: ["h ≤ 1.00 log₂ n", "h ≤ 1.39 log₂ n", "h ≤ 2 log₂ n is the tightest", "h ≤ 1.44 log₂ n"], a: 3,
+      e: "From n ≥ N(h) ≥ φ^h: h ≤ log_φ n ≈ 1.44 log₂ n.",
+      x: ["Only a perfect tree is that short. AVL allows some lean.", "1.39 log₂ n is a random BST's average depth, a different quantity.", "2 log₂ n is the red-black bound. AVL's is tighter.", null],
+      d: ["The thinnest height-h AVL tree has N(h) ≥ φ^h nodes.", "So n ≥ φ^h, which gives h ≤ log_φ n.", "log_φ n = log₂ n / log₂ φ ≈ 1.44 log₂ n."] },
+    { q: "About how many nodes can one search touch in an AVL tree with a billion keys?",
+      c: ["about 30", "about 43", "about 1,000", "up to 1,000,000,000"], a: 1,
+      e: "1.44 · log₂ 10⁹ ≈ 1.44 · 30 ≈ 43.",
+      x: ["log₂ 10⁹ ≈ 30 is a perfect tree. AVL can be up to 1.44 times taller.", null, "There's no square-root bound here.", "That's a plain BST built from sorted keys."],
+      d: ["log₂ 10⁹ ≈ 30 (since 2¹⁰ ≈ 10³).", "AVL height ≤ 1.44 · 30 ≈ 43.", "So any search touches at most about 43 nodes."] },
+    { q: "Why does the minimal AVL tree of height h use subtrees of heights h − 1 and h − 2?",
+      c: ["One side must be h − 1 to reach height h, and the ±1 rule lets the other be one shorter", "Both sides must be h − 1", "That's what Fibonacci trees look like by definition, not from the rule", "The left side is always taller in AVL"], a: 0,
+      e: "Making the short side as short as allowed is what makes it minimal.",
+      x: [null, "Both at h − 1 is allowed but uses more nodes. That's not minimal.", "The shape comes straight from the AVL rule. Fibonacci shows up as a result.", "Either side can be the taller one."],
+      d: ["Height h means some child subtree has height h − 1.", "The rule allows the other to differ by 1: height h − 2.", "Using the fewest nodes on both sides gives N(h) = 1 + N(h − 1) + N(h − 2)."] },
+    { q: "True or false: a BST with height ≤ 1.44 log₂ n must be an AVL tree.",
+      c: ["True, that's the AVL definition", "True, any tree that short is balanced", "False: one node can still have bf ±2 in a short tree", "False: AVL trees can be taller than that"], a: 2,
+      e: "The bound follows from the rule, but the rule is checked node by node. Example: 8(4(2,6), 12(_, 14(_, 16))) has height 3 but bf(12) = −2.",
+      x: ["The definition is bf ∈ {−1, 0, +1} at every node, not a height bound.", "Short overall doesn't mean every node is balanced.", null, "Every AVL tree satisfies h ≤ 1.44 log₂ n."],
+      d: ["AVL is a per-node rule.", "A tree can be short overall and still have one lopsided node.", "So the statement is false."] },
+    { q: "A workload does mostly searches and few updates. Which balanced tree fits better, and why?",
+      c: ["Red-black: it's shorter", "AVL: it's stricter (≤ 1.44 log₂ n), so searches are shorter; it costs more rotations per update", "Plain BST: no rotations at all", "They're identical"], a: 1,
+      e: "AVL trades extra rotations on updates for shorter trees.",
+      x: ["Red-black allows height up to 2 log₂ n, so it's taller.", null, "A plain BST can become a path.", "The bounds and the rotation counts differ."],
+      d: ["AVL height ≤ 1.44 log₂ n, red-black ≤ 2 log₂ n.", "Shorter trees mean fewer compares per search.", "With few updates, the extra rotations barely cost anything: AVL."] }
+  ]
+}
+);
+
+function parseTree(str) {
+  let i = 0;
+  function p() {
+    if (str[i] === "_") { i++; return null; }
+    const j = i;
+    while (i < str.length && !"(),".includes(str[i])) i++;
+    let tok = str.slice(j, i), mark = "", note = "";
+    if ("!^@".includes(tok[0]) && tok.length > 1) { mark = tok[0]; tok = tok.slice(1); }
+    const m = tok.match(/^(.*)\[(.*)\]$/);
+    if (m) { tok = m[1]; note = m[2]; }
+    const n = { tok, mark, note, l: null, r: null, sub: tok[0] === "~" };
+    if (n.sub) n.tok = tok.slice(1);
+    if (str[i] === "(") { i++; n.l = p(); i++; n.r = p(); i++; }
+    return n;
+  }
+  return p();
+}
+
+function treeSVG(str) {
+  const root = parseTree(str);
+  const nodes = [];
+  let idx = 0, maxD = 0;
+  (function walk(n, d) {
+    if (!n) return;
+    walk(n.l, d + 1);
+    n.x = idx++; n.d = d; maxD = Math.max(maxD, d + (n.sub ? 0.6 : 0));
+    nodes.push(n);
+    walk(n.r, d + 1);
+  })(root, 0);
+  const DX = 38, DY = 52, R = 15, PAD = 22;
+  const hasNote = nodes.some(n => n.note);
+  const W = Math.max(1, idx - 1) * DX + PAD * 2;
+  const H = maxD * DY + PAD * 2 + (hasNote ? 12 : 0) + 8;
+  const X = n => PAD + n.x * DX + (idx === 1 ? (W - PAD * 2) / 2 : 0);
+  const Y = n => PAD + n.d * DY;
+  let edges = "", body = "";
+  nodes.forEach(n => {
+    [n.l, n.r].forEach(c => {
+      if (c) edges += `<line class="t-edge" x1="${X(n)}" y1="${Y(n)}" x2="${X(c)}" y2="${Y(c) - (c.sub ? 2 : 0)}"/>`;
+    });
+  });
+  nodes.forEach(n => {
+    const x = X(n), y = Y(n);
+    const cls = n.mark === "!" ? "t-bad" : n.mark === "^" ? "t-new" : n.mark === "@" ? "t-hi" : "";
+    if (n.sub) {
+      body += `<polygon class="t-sub ${cls}" points="${x},${y - 4} ${x - 17},${y + 30} ${x + 17},${y + 30}"/>`;
+      body += `<text class="t-subl" x="${x}" y="${y + 23}">${n.tok}</text>`;
+    } else {
+      body += `<circle class="t-node ${cls}" cx="${x}" cy="${y}" r="${R}"/>`;
+      const fs = n.tok.length > 2 ? 10 : 12;
+      body += `<text class="t-key" x="${x}" y="${y + 4}" style="font-size:${fs}px">${n.tok}</text>`;
+    }
+    if (n.note) body += `<text class="t-note ${n.note.includes("2") ? "t-note-bad" : ""}" x="${x}" y="${y + R + 12}">${n.note}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="tree ${str.replace(/[!^@~]/g, "")}">${edges}${body}</svg>`;
+}
+
+function fillTrees(root) {
+  root.querySelectorAll(".tree:not([data-done])").forEach(el => {
+    el.dataset.done = "1";
+    try {
+      el.innerHTML = `<div class="tree-svg">${treeSVG(el.dataset.t)}</div>` + (el.dataset.cap ? `<div class="tree-cap">${el.dataset.cap}</div>` : "");
+    } catch (e) {
+      el.textContent = el.dataset.t;
+    }
+  });
+}
+
+function seeded(str) { let h = 2166136261; for (const ch of str) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return (h >>> 0) / 4294967296; }; }
+TOPICS.forEach(t => t.qs.forEach((q, i) => {
+  const x = [0, 1, 2, 3].map(k => q.x[k] == null ? null : q.x[k]);
+  const order = [0, 1, 2, 3];
+  const r = seeded("2197:" + t.id + ":" + i);
+  for (let k = 3; k > 0; k--) { const j = Math.floor(r() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; }
+  q.c = order.map(k => q.c[k]); q.x = order.map(k => x[k]); q.a = order.indexOf(q.a);
+}));
+const L = "ABCD";
+const PASS = 9, ROUND = 10;
+const POOL = [];
+TOPICS.forEach((t, ti) => t.qs.forEach((q, i) => POOL.push(Object.assign({}, q, { t: t.id, ti, key: t.id + "-" + i }))));
+const BY = {}; POOL.forEach(q => { BY[q.key] = q; });
+const FINAL = TOPICS.length;
+
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const KEY = "q3v1-state";
+function fresh() { return { step: 0, phase: "learn", queue: [], pick: null, first: {}, scores: {}, hist: {}, fin: { round: [], picks: [], pos: 0, results: [], last: [] }, passed: false, view: "study" }; }
+let S = store.get(KEY);
+if (!S || typeof S.step !== "number" || !S.fin) S = fresh();
+S.queue = (S.queue || []).filter(k => BY[k]);
+function save() { store.set(KEY, S); }
+
+const $ = s => document.querySelector(s);
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function renderTrack() {
+  const items = TOPICS.map((t, i) => {
+    const done = S.scores[t.id] != null;
+    const cur = S.step === i;
+    return `<button class="tk ${done ? "done" : ""} ${cur ? "cur" : ""}" data-step="${i}" title="${t.title}"><span class="tk-n">${done ? "✓" : i + 1}</span><span class="tk-t">${t.title}</span></button>`;
+  }).join("");
+  const fdone = S.passed;
+  $("#track").innerHTML = items + `<button class="tk final ${fdone ? "done" : ""} ${S.step >= FINAL ? "cur" : ""}" data-step="${FINAL}"><span class="tk-n">${fdone ? "✓" : "★"}</span><span class="tk-t">Final check</span></button>`;
+}
+
+function choiceHTML(q, a) {
+  const locked = a != null;
+  return q.c.map((t, k) => {
+    let cls = "choice";
+    if (locked) cls += k === q.a ? " right" : (k === a ? " wrong" : " dim");
+    return `<button class="${cls}" data-pick="${k}" ${locked ? "disabled" : ""}><span class="letter">${L[k]}</span><span class="ctext">${t}</span></button>`;
+  }).join("");
+}
+
+function feedbackHTML(q, a, retryNote) {
+  if (a == null) return "";
+  if (a === q.a) return `<div class="fb ok"><strong>Correct.</strong>${q.e}</div>`;
+  return `<div class="fb no">
+    <strong>Not quite. You picked ${L[a]}. The answer is ${L[q.a]}.</strong>
+    <p class="fb-h">Why ${L[a]} is wrong</p><p>${q.x[a]}</p>
+    <p class="fb-h">How to get ${L[q.a]}</p><ol>${q.d.map(s => `<li>${s}</li>`).join("")}</ol>
+    ${retryNote ? `<p class="fb-note">${retryNote}</p>` : ""}
+  </div>`;
+}
+
+function lessonDetails(t, open) {
+  return `<details class="relearn" ${open ? "open" : ""}><summary>Reread the lesson</summary><div class="relearn-body">${t.learn}</div></details>`;
+}
+
+function renderStudy() {
+  renderTrack();
+  const v = $("#view-study");
+  if (S.step < FINAL) {
+    const t = TOPICS[S.step];
+    if (S.phase === "learn") {
+      v.innerHTML = `<article class="lesson"><p class="eyebrow">Topic ${S.step + 1} of ${TOPICS.length} · Learn</p><h2>${t.title}</h2>${t.learn}
+        <button class="btn primary big-btn" data-act="quiz">Got it, quiz me on this (${t.qs.length} questions)</button></article>`;
+    } else if (S.phase === "quiz") {
+      const key = S.queue[0];
+      const q = BY[key];
+      const isRetry = !!S.curRetry;
+      const answered = Object.keys(S.first).filter(k => k.startsWith(t.id + "-")).length;
+      const shownNum = S.pick == null ? answered + 1 : answered;
+      const segs = t.qs.map((qq, i) => {
+        const k = t.id + "-" + i, f = S.first[k];
+        const fixed = f === false && S.hist[k] === "right";
+        return `<span class="seg ${f === true ? "ok" : f === false ? (fixed ? "fixed" : "bad") : ""} ${k === key ? "cur" : ""}"></span>`;
+      }).join("");
+      const willRetry = S.pick != null && S.pick !== q.a;
+      v.innerHTML = `<div class="panel">
+        <div class="qhead"><span class="eyebrow" style="margin:0">Topic ${S.step + 1} · ${t.title}</span><span class="eyebrow" style="margin:0">${isRetry ? "Retry" : `Question ${shownNum} of ${t.qs.length}`}</span></div>
+        <div class="segbar" style="grid-template-columns:repeat(${t.qs.length},minmax(0,1fr))">${segs}</div>
+        ${isRetry ? `<p class="retry-tag">You missed this one earlier. Try it again.</p>` : ""}
+        <div class="stem">${q.q}</div>
+        <div class="choices">${choiceHTML(q, S.pick)}</div>
+        ${feedbackHTML(q, S.pick, willRetry ? "This question comes back at the end of the topic." : "")}
+        ${S.pick != null ? `<div class="nav"><span></span><button class="btn primary" data-act="next">Next</button></div>` : ""}
+      </div>${lessonDetails(t, false)}`;
+    } else {
+      const sc = S.scores[t.id] || 0;
+      const missed = t.qs.map((qq, i) => t.id + "-" + i).filter(k => S.first[k] === false);
+      const nextT = TOPICS[S.step + 1];
+      v.innerHTML = `<div class="panel">
+        <p class="eyebrow">Topic ${S.step + 1} done</p>
+        <h2>${t.title} ✓</h2>
+        <div class="score-big">${sc} / ${t.qs.length} <span class="score-sub">on the first try</span></div>
+        <p>${missed.length ? `You fixed ${missed.length === 1 ? "the one you missed" : `all ${missed.length} you missed`} on the retry. They'll show up again in the final check.` : "Clean sweep."}</p>
+        <div class="nav">
+          <button class="btn" data-act="redo">Redo this topic</button>
+          <button class="btn primary" data-act="advance">${nextT ? `Next topic: ${nextT.title}` : "Go to the final check"}</button>
+        </div>
+      </div>`;
+    }
+  } else {
+    renderFinal(v);
+  }
+}
+
+function buildRound() {
+  const last = new Set(S.fin.last || []);
+  const res = [];
+  const add = k => { if (!res.includes(k) && res.length < ROUND) res.push(k); };
+  shuffle(POOL.filter(q => S.hist[q.key] === "wrong" || S.first[q.key] === false || (S.fin.missed || []).includes(q.key)).map(q => q.key)).slice(0, 5).forEach(add);
+  shuffle(TOPICS.map(t => t.id)).forEach(t => {
+    if (res.some(k => BY[k].t === t)) return;
+    const c = POOL.filter(q => q.t === t && !res.includes(q.key));
+    const notLast = c.filter(q => !last.has(q.key));
+    const from = notLast.length ? notLast : c;
+    if (from.length) add(from[Math.floor(Math.random() * from.length)].key);
+  });
+  shuffle(POOL.filter(q => !res.includes(q.key) && !last.has(q.key))).forEach(q => add(q.key));
+  shuffle(POOL.filter(q => !res.includes(q.key))).forEach(q => add(q.key));
+  return shuffle(res);
+}
+
+function renderFinal(v) {
+  const F = S.fin;
+  if (!F.round.length) {
+    const notDone = TOPICS.filter(t => S.scores[t.id] == null);
+    v.innerHTML = `<div class="panel"><p class="eyebrow">Final check</p><h2>10 mixed questions</h2>
+      <p>All ${TOPICS.length} topics, shuffled, like the real quiz. You see the full explanation after each one. Score 9 or 10 to pass. If you don't, the ones you missed come back in the next round.</p>
+      ${notDone.length ? `<p class="fb-note">You haven't finished ${notDone.length} topic${notDone.length === 1 ? "" : "s"} yet. You can still start, but the topics come first for a reason.</p>` : ""}
+      <button class="btn primary big-btn" data-act="fstart">Start the final check</button></div>`;
+    return;
+  }
+  if (F.pos >= F.round.length) {
+    const right = F.picks.filter((p, i) => p === BY[F.round[i]].a).length;
+    const missed = F.round.filter((k, i) => F.picks[i] !== BY[k].a);
+    const pass = right >= PASS;
+    const list = F.round.map((k, i) => {
+      const ok = F.picks[i] === BY[k].a;
+      return `<li class="${ok ? "r-ok" : "r-bad"}">${ok ? "✓" : "✗"} ${TOPICS[BY[k].ti].title}</li>`;
+    }).join("");
+    const topics = [...new Set(missed.map(k => BY[k].ti))];
+    v.innerHTML = `<div class="panel">
+      <p class="eyebrow">Final check · round ${F.results.length}</p>
+      <div class="score-big">${right} / ${ROUND}</div>
+      <p>${pass ? "<strong>You passed.</strong> You know everything on the quiz list. Read the cram sheet once now and once before class, then sleep." : `You need ${PASS}. The ${missed.length} you missed come back next round.`}</p>
+      ${topics.length ? `<p class="fb-h">Reread before the next round</p><div class="toc">${topics.map(ti => `<button class="chip" data-step="${ti}" data-reread="1">${TOPICS[ti].title}</button>`).join("")}</div>` : ""}
+      <ul class="rlist">${list}</ul>
+      <div class="nav">${pass ? `<button class="btn" data-act="fstart">Another round</button><button class="btn primary" data-go="cram">Open the cram sheet</button>` : `<button class="btn primary" data-act="fstart">Start round ${F.results.length + 1}</button>`}</div>
+    </div>`;
+    return;
+  }
+  const key = F.round[F.pos], q = BY[key], a = F.picks[F.pos];
+  const right = F.picks.filter((p, i) => p != null && p === BY[F.round[i]].a).length;
+  const segs = F.round.map((k, i) => {
+    const p = F.picks[i];
+    return `<span class="seg ${p == null ? "" : p === BY[k].a ? "ok" : "bad"} ${i === F.pos ? "cur" : ""}"></span>`;
+  }).join("");
+  v.innerHTML = `<div class="panel">
+    <div class="qhead"><span class="eyebrow" style="margin:0">Final check · round ${F.results.length + 1} · question ${F.pos + 1} of ${ROUND}</span><span class="eyebrow" style="margin:0">${right} correct</span></div>
+    <div class="segbar">${segs}</div>
+    <p class="topic">${TOPICS[q.ti].title}</p>
+    <div class="stem">${q.q}</div>
+    <div class="choices">${choiceHTML(q, a)}</div>
+    ${feedbackHTML(q, a, a != null && a !== q.a ? "This one comes back next round." : "")}
+    ${a != null ? `<div class="nav"><span></span><button class="btn primary" data-act="fnext">${F.pos === ROUND - 1 ? "See my score" : "Next"}</button></div>` : ""}
+  </div>`;
+}
+
+function startTopic(i) {
+  S.step = i; S.phase = "learn"; S.queue = []; S.pick = null;
+  save(); renderStudy(); window.scrollTo({ top: 0 });
+}
+
+$("#view-study").addEventListener("click", e => {
+  const pick = e.target.closest("[data-pick]");
+  const act = e.target.closest("[data-act]");
+  const stepBtn = e.target.closest("[data-step]");
+  const go = e.target.closest("[data-go]");
+  if (pick && !pick.disabled) {
+    const k = +pick.dataset.pick;
+    if (S.step < FINAL) {
+      const key = S.queue[0];
+      S.pick = k;
+      if (S.first[key] == null) S.first[key] = k === BY[key].a;
+      S.hist[key] = k === BY[key].a ? "right" : "wrong";
+    } else {
+      const F = S.fin, key = F.round[F.pos];
+      F.picks[F.pos] = k;
+      S.hist[key] = k === BY[key].a ? "right" : "wrong";
+    }
+    save(); renderStudy();
+    return;
+  }
+  if (act) {
+    const a = act.dataset.act;
+    const t = TOPICS[S.step];
+    if (a === "quiz") {
+      S.phase = "quiz"; S.queue = t.qs.map((q, i) => t.id + "-" + i); S.pick = null; S.curRetry = false;
+      t.qs.forEach((q, i) => { delete S.first[t.id + "-" + i]; });
+      save(); renderStudy(); window.scrollTo({ top: 0 });
+    } else if (a === "next") {
+      const key = S.queue.shift();
+      if (S.pick !== BY[key].a) S.queue.push(key);
+      S.pick = null;
+      S.curRetry = S.queue.length ? S.first[S.queue[0]] != null : false;
+      if (!S.queue.length) {
+        S.phase = "done";
+        S.scores[t.id] = t.qs.filter((q, i) => S.first[t.id + "-" + i] === true).length;
+      }
+      save(); renderStudy(); window.scrollTo({ top: 0 });
+    } else if (a === "redo") {
+      startTopic(S.step);
+    } else if (a === "advance") {
+      startTopic(S.step + 1);
+    } else if (a === "fstart") {
+      const F = S.fin;
+      F.last = F.round.slice();
+      F.missed = F.round.filter((k, i) => F.picks[i] != null && F.picks[i] !== BY[k].a);
+      F.round = buildRound(); F.picks = Array(ROUND).fill(null); F.pos = 0;
+      save(); renderStudy(); window.scrollTo({ top: 0 });
+    } else if (a === "fnext") {
+      const F = S.fin;
+      F.pos++;
+      if (F.pos >= F.round.length) {
+        const right = F.picks.filter((p, i) => p === BY[F.round[i]].a).length;
+        F.results.push(right);
+        if (right >= PASS) S.passed = true;
+      }
+      save(); renderStudy(); window.scrollTo({ top: 0 });
+    }
+    return;
+  }
+  if (stepBtn) { startTopic(+stepBtn.dataset.step); return; }
+  if (go) show(go.dataset.go);
+});
+
+$("#track").addEventListener("click", e => {
+  const b = e.target.closest("[data-step]");
+  if (!b) return;
+  const i = +b.dataset.step;
+  if (i === FINAL) { S.step = FINAL; save(); show("study"); return; }
+  if (i === S.step && S.phase !== "done") { show("study"); return; }
+  startTopic(i); show("study");
+});
+
+function fillBytes(root) {
+  root.querySelectorAll(".bytes").forEach(el => {
+    if (el.dataset.filled) return;
+    let html = "";
+    el.dataset.layout.split(" ").forEach(part => {
+      const key = part[0], n = parseInt(part.slice(1), 10);
+      for (let j = 0; j < n; j++) html += key === "_" ? `<span class="byte pad"></span>` : `<span class="byte mem">${key}</span>`;
+    });
+    el.innerHTML = html; el.dataset.filled = "1";
+  });
+}
+new MutationObserver(() => fillTrees(document)).observe(document.body, { childList: true, subtree: true });
+
+function show(view) {
+  document.querySelectorAll(".switch button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === view ? "true" : "false"));
+  $("#view-study").hidden = view !== "study";
+  $("#view-cram").hidden = view !== "cram";
+  if (view === "study") renderStudy();
+  S.view = view; save();
+  window.scrollTo({ top: 0 });
+}
+document.querySelector(".switch").addEventListener("click", e => {
+  const b = e.target.closest("button[data-view]"); if (b) show(b.dataset.view);
+});
+$("#view-cram").addEventListener("click", e => {
+  const b = e.target.closest("[data-act='reset']");
+  if (!b) return;
+  if (b.dataset.armed) { S = fresh(); save(); show("study"); }
+  else { b.dataset.armed = "1"; b.textContent = "Tap again to erase all progress"; }
+});
+
+show(S.view === "cram" ? "cram" : "study");
+fillTrees(document);
+</script>
+
+</body></html>
