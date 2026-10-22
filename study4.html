@@ -1,0 +1,1880 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CSS 343 Quiz 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column with a sticky three-way switch (Study / Practice quizzes / Cram sheet); lessons sit above a one-question-at-a-time check, practice quizzes grade all ten at once. */
+:root {
+  --bg: #edf0f4;
+  --surface: #ffffff;
+  --ink: #142030;
+  --muted: #586678;
+  --rule: #d4dae3;
+  --accent: #2b55c7;
+  --on-accent: #ffffff;
+  --accent-soft: #e2e8f9;
+  --good: #1d7549;
+  --good-soft: #def1e6;
+  --bad: #b23a31;
+  --bad-soft: #f8e2df;
+  --code-bg: #f2f4f8;
+  --pad-hatch: #c9d0da;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1219; --surface: #161d27; --ink: #e2e7ee; --muted: #94a1b2; --rule: #29333f;
+    --accent: #85a2ff; --on-accent: #0d1219; --accent-soft: #1d2945;
+    --good: #5ec891; --good-soft: #15301f; --bad: #f28479; --bad-soft: #3b1d1a;
+    --code-bg: #10161f; --pad-hatch: #3a4554; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1219; --surface: #161d27; --ink: #e2e7ee; --muted: #94a1b2; --rule: #29333f;
+  --accent: #85a2ff; --on-accent: #0d1219; --accent-soft: #1d2945;
+  --good: #5ec891; --good-soft: #15301f; --bad: #f28479; --bad-soft: #3b1d1a;
+  --code-bg: #10161f; --pad-hatch: #3a4554; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 64px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 750; letter-spacing: -0.01em; }
+h2 { font-size: 1.6rem; font-weight: 750; }
+h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.6em; }
+p { margin: 0.7em 0; }
+ul { margin: 0.6em 0; padding-left: 1.2em; }
+li { margin: 0.3em 0; }
+sup, sub { line-height: 0; }
+code, pre, .m { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; }
+pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; overflow-x: auto; line-height: 1.5; margin: 0.8em 0; }
+pre code { background: none; padding: 0; font-size: 1em; }
+.eyebrow { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 6px; font-weight: 500; }
+.lede { color: var(--muted); max-width: 60ch; }
+
+header.top { display: grid; gap: 10px; margin-bottom: 20px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { font-size: 0.8rem; border: 1px solid var(--rule); background: var(--surface); padding: 3px 10px; border-radius: 999px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.switch { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 8px; margin-bottom: 18px; }
+.switch-inner { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 4px; gap: 4px; }
+.switch button { font: 600 0.92rem var(--body); border: 0; background: transparent; color: var(--muted); padding: 8px 4px; border-radius: 7px; cursor: pointer; }
+.switch button[aria-selected="true"] { background: var(--accent); color: var(--on-accent); }
+button:focus-visible, .choice:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 8px; margin-bottom: 22px; }
+.mod { text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; cursor: pointer; display: grid; gap: 2px; min-width: 0; }
+.mod.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.mod-tag { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.mod-t { font-weight: 600; line-height: 1.3; }
+.mod-s { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mod-s.full { color: var(--good); font-weight: 600; }
+
+.lesson { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 18px; }
+.lesson > p, .lesson > ul { max-width: 65ch; }
+.formula { font-family: var(--mono); font-size: 0.95rem; background: var(--accent-soft); border-radius: 8px; padding: 10px 14px; overflow-x: auto; }
+.example { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; margin: 1.2em 0; }
+.ex-h { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 600; margin: 0; }
+.defs { display: grid; gap: 8px; margin: 1em 0; }
+.def { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; }
+.def b { font-family: var(--mono); }
+.tablewrap { overflow-x: auto; margin: 0.8em 0; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; }
+table.num td { font-variant-numeric: tabular-nums; }
+td code { white-space: nowrap; }
+.yes { color: var(--good); font-weight: 600; }
+.no { color: var(--bad); font-weight: 600; }
+
+.bytes { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 3px; margin: 0.6em 0 0.2em; max-width: 420px; }
+.byte { aspect-ratio: 1.5 / 1; max-width: 100%; border-radius: 3px; display: grid; place-items: center; font: 600 0.72rem var(--mono); }
+.byte.mem { background: var(--accent-soft); color: var(--accent); }
+.byte.pad { background: repeating-linear-gradient(135deg, var(--pad-hatch) 0 2px, transparent 2px 6px); border: 1px solid var(--pad-hatch); }
+.bytes-cap { font-size: 0.82rem; color: var(--muted); margin: 0 0 1em; }
+
+.practice { margin-top: 18px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 18px; }
+.p-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.dots { display: flex; flex-wrap: wrap; gap: 6px; }
+.dot { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule); background: var(--code-bg); font: 600 0.72rem var(--mono); color: var(--muted); cursor: pointer; padding: 0; }
+.dot.ok { background: var(--good); border-color: var(--good); color: var(--on-accent); }
+.dot.bad { background: var(--bad); border-color: var(--bad); color: var(--on-accent); }
+.dot.cur { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stem { font-weight: 500; margin: 14px 0 10px; }
+.choices { display: grid; gap: 8px; }
+.choice { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 9px; padding: 10px 12px; cursor: pointer; }
+.choice:hover:not(:disabled) { border-color: var(--accent); }
+.choice:disabled { cursor: default; color: var(--ink); }
+.choice.picked { border-color: var(--accent); background: var(--accent-soft); }
+.choice.right { border-color: var(--good); background: var(--good-soft); }
+.choice.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.choice.dim { opacity: 0.55; }
+.letter { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; font: 600 0.8rem var(--mono); background: var(--code-bg); border: 1px solid var(--rule); }
+.ctext { min-width: 0; overflow-wrap: anywhere; }
+.fb { margin-top: 12px; border-radius: 9px; padding: 10px 12px; font-size: 0.95rem; }
+.fb.ok { background: var(--good-soft); }
+.fb.no { background: var(--bad-soft); }
+.fb strong { display: block; margin-bottom: 2px; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin-top: 14px; }
+.btn { font: 600 0.92rem var(--body); border-radius: 8px; padding: 9px 14px; cursor: pointer; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.ghost { border-color: transparent; color: var(--muted); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+
+.mockbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+.clock { font: 600 1.6rem var(--mono); font-variant-numeric: tabular-nums; }
+.clock.low { color: var(--bad); }
+.grid10 { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); border: 1px solid var(--ink); border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
+.cell { display: grid; text-align: center; border-right: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+.cell:last-child { border-right: 0; }
+.cell .n { font-size: 0.72rem; color: var(--muted); border-bottom: 1px solid var(--rule); padding: 2px 0; }
+.cell .l { font: 600 1rem var(--mono); padding: 6px 0; min-height: 2.1em; }
+.cell.ok .l { color: var(--good); }
+.cell.bad .l { color: var(--bad); }
+.mq { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.mq .stem { margin-top: 4px; }
+.mq-n { font: 600 0.78rem var(--mono); color: var(--muted); }
+.score { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+.score-big { font: 750 2.2rem var(--display); }
+
+.cram { display: grid; gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.card h3 { margin-top: 0; font-size: 1.02rem; }
+.card ul { padding-left: 1.1em; font-size: 0.94rem; }
+.card p { font-size: 0.94rem; }
+@media (min-width: 720px) { .cram { grid-template-columns: 1fr 1fr; } .card.wide { grid-column: 1 / -1; } }
+@media (prefers-reduced-motion: no-preference) { .choice, .dot, .mod { transition: border-color .15s, background-color .15s; } }
+
+.big { background: var(--accent-soft); border-radius: 10px; padding: 12px 16px; font-size: 1.05rem; }
+.big p { margin: 0.35em 0; }
+.label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 600; margin: 1.5em 0 0.4em; }
+ol.steps { padding-left: 1.4em; }
+ol.steps li { margin: 0.4em 0; padding-left: 0.2em; }
+ul.traps li::marker { color: var(--bad); }
+.example { background: var(--code-bg); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 10px 14px; }
+.example p { margin: 0.4em 0; }
+.lesson h2 { margin-bottom: 12px; }
+.mods { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+
+.track { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 6px; margin-bottom: 4px; }
+.tk { display: flex; align-items: center; gap: 8px; text-align: left; font: 500 0.82rem var(--body); color: var(--muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 9px; padding: 7px 9px; cursor: pointer; min-width: 0; }
+.tk-n { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font: 600 0.75rem var(--mono); background: var(--code-bg); border: 1px solid var(--rule); }
+.tk-t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tk.done .tk-n { background: var(--good); border-color: var(--good); color: var(--on-accent); }
+.tk.cur { border-color: var(--accent); color: var(--ink); box-shadow: inset 0 0 0 1px var(--accent); }
+.big { background: var(--accent-soft); border-radius: 10px; padding: 12px 16px; font-size: 1.05rem; }
+.big p { margin: 0.35em 0; }
+.label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 600; margin: 1.5em 0 0.4em; }
+ol.steps { padding-left: 1.4em; }
+ol.steps li { margin: 0.4em 0; }
+ul.traps li::marker { color: var(--bad); }
+.example { background: var(--code-bg); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 10px 14px; }
+.example p { margin: 0.4em 0; }
+.big-btn { margin-top: 18px; width: 100%; padding: 13px; font-size: 1rem; }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 18px; }
+.panel h2 { margin: 4px 0 8px; }
+.qhead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.segbar { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; margin: 10px 0 4px; }
+.seg { height: 6px; border-radius: 3px; background: var(--rule); }
+.seg.ok { background: var(--good); }
+.seg.bad { background: var(--bad); }
+.seg.fixed { background: repeating-linear-gradient(90deg, var(--good) 0 6px, var(--bad) 6px 12px); }
+.seg.cur { outline: 2px solid var(--accent); outline-offset: 1px; }
+.topic { font-size: 0.8rem; color: var(--accent); font-weight: 600; margin: 12px 0 0; }
+.retry-tag { font-size: 0.85rem; color: var(--bad); font-weight: 600; margin: 10px 0 0; }
+.fb-h { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; margin: 12px 0 2px; color: var(--muted); }
+.fb p { margin: 0.3em 0; }
+.fb ol { margin: 0.3em 0; padding-left: 1.3em; }
+.fb ol li { margin: 0.25em 0; }
+.fb-note { font-size: 0.88rem; color: var(--muted); margin-top: 10px !important; }
+.relearn { margin-top: 12px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 10px 16px; }
+.relearn summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+.relearn-body { padding-top: 6px; }
+.score-sub { font: 400 0.95rem var(--body); color: var(--muted); }
+.toc { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 0.85rem var(--body); color: var(--accent); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.rlist { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px 12px; font-size: 0.9rem; }
+.r-ok { color: var(--good); }
+.r-bad { color: var(--bad); font-weight: 600; }
+
+.shorthand { font-size: 0.88rem; color: var(--muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 8px 12px; margin: 0; max-width: 70ch; }
+.shorthand strong { color: var(--ink); }
+.tree { display: block; margin: 8px 0; max-width: 100%; }
+.trow .tree { display: inline-block; margin: 4px 0; }
+.tree-svg { max-width: 100%; }
+.tree svg { display: block; max-width: 100%; height: auto; }
+.tree-cap { font-size: 0.8rem; color: var(--muted); margin-top: 2px; max-width: 30ch; }
+.trow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin: 6px 0; }
+.trow > * { min-width: 0; }
+.tarrow { display: flex; flex-direction: column; align-items: center; font: 500 0.78rem var(--mono); color: var(--muted); text-align: center; max-width: 12ch; }
+.tarrow-a { font-size: 1.5rem; line-height: 1; color: var(--accent); }
+.t-edge { stroke: var(--muted); stroke-width: 1.5; }
+.t-node { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; }
+.t-key { fill: var(--ink); font-family: var(--mono); font-weight: 600; text-anchor: middle; }
+.t-node.t-bad { fill: var(--bad-soft); stroke: var(--bad); stroke-width: 2; }
+.t-node.t-new { fill: var(--good-soft); stroke: var(--good); stroke-width: 2; }
+.t-node.t-hi { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.t-sub { fill: var(--code-bg); stroke: var(--muted); stroke-width: 1.5; }
+.t-sub.t-hi { fill: var(--accent-soft); stroke: var(--accent); }
+.t-subl { fill: var(--ink); font: 600 12px var(--body); text-anchor: middle; }
+.t-note { fill: var(--accent); font: 600 10px var(--mono); text-anchor: middle; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; }
+.t-note.t-note-bad { fill: var(--bad); }
+.stem .tree { margin-top: 10px; }
+
+.ctrack { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.cdot { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 600 0.78rem var(--mono); background: var(--surface); border: 1px solid var(--rule); color: var(--muted); }
+.cdot.done { background: var(--good); border-color: var(--good); color: var(--on-accent); }
+.cdot.cur { border-color: var(--accent); color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.teach h3 { font-size: 1.05rem; }
+.dbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
+.dstats { display: flex; flex-wrap: wrap; gap: 6px; }
+.dprog { height: 6px; border-radius: 3px; background: var(--rule); margin: 10px 0 14px; overflow: hidden; }
+.dprog span { display: block; height: 100%; background: var(--good); }
+.fcard { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 18px; }
+.again { font-size: 0.78rem; font-weight: 600; color: var(--bad); }
+.hint { color: var(--muted); font-size: 0.9rem; margin: 14px 0 0; }
+.ans { margin-top: 14px; background: var(--good-soft); border-radius: 10px; padding: 12px 14px; }
+.ans .fb-h { margin-top: 0; }
+.ans-a { font: 600 1.05rem/1.5 var(--mono); overflow-wrap: anywhere; }
+.ans-w { margin: 8px 0 0; font-size: 0.92rem; }
+.rate { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.rate .btn { padding: 12px; font-size: 1rem; }
+.rate-no { border-color: var(--bad); color: var(--bad); }
+kbd { font: 500 0.72rem var(--mono); border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; margin-left: 6px; opacity: 0.7; }
+.dnote { font-size: 0.82rem; color: var(--muted); margin-top: 10px; }
+.rvlist { display: grid; gap: 10px; margin-top: 12px; }
+.rv { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
+.rv-t { font-size: 0.78rem; font-weight: 600; color: var(--bad); margin: 0 0 4px; }
+.rv-a { font: 600 0.95rem var(--mono); background: var(--good-soft); border-radius: 8px; padding: 8px 10px; margin-top: 6px; overflow-wrap: anywhere; }
+
+.t-edge.t-red { stroke: var(--bad); stroke-width: 3.2; }
+.t-node.t-rednode { stroke: var(--bad); }
+.t-div { stroke: var(--ink); stroke-width: 1; opacity: 0.5; }
+table.arr { width: auto; font: 600 0.9rem var(--mono); }
+table.arr th, table.arr td { text-align: center; padding: 4px 9px; border: 1px solid var(--rule); }
+table.arr th { font: 500 0.72rem var(--mono); text-transform: none; letter-spacing: 0; }
+table.arr .a-lab { color: var(--accent); }
+table.arr td.a-hi { background: var(--accent-soft); color: var(--accent); }
+table.arr td.a-bar { border-right: 3px solid var(--ink); }
+.t-key.t-k-new { fill: var(--good); }
+.t-key.t-k-bad { fill: var(--bad); }
+.t-key.t-k-hi { fill: var(--accent); }
+.grid10 a.cell { color: inherit; text-decoration: none; }
+.mq .qhead { align-items: baseline; }
+@media (max-width: 480px) { .grid10 .cell .l { font-size: 0.9rem; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">CSS 343 · Quiz 4 · Mon Oct 26, 1:15 PM · 10 MC · 20 min</p>
+    <h1>Quiz 4 study</h1>
+    <p class="lede">Lecture 6 (2-3 trees, red-black trees, B and B+ trees), Lecture 7 (priority queues, heaps, heapsort) and Homework 4, split into eleven topics. <strong>Study</strong> teaches each topic in full, then quizzes you on it right away. Miss a question and you get why your pick was wrong plus the steps to the right answer, and it comes back at the end of the topic. When you finish all eleven, take the two <strong>practice quizzes</strong>: ten mixed questions each, graded only at the end, the way Monday works. Then read the <strong>cram sheet</strong>.</p>
+    <p class="shorthand"><strong>Tree shorthand:</strong> [20|40] is a node with two keys. "[30] over [10], [50]" means root 30 with children 10 and 50. In red-black drawings, a <strong style="color:var(--bad)">thick red line</strong> is a red link. Heaps are 1-based arrays (a[1] is the root) unless a question says 0-based.</p>
+  </header>
+  <div class="track" id="track"></div>
+  <nav class="switch" aria-label="Sections">
+    <div class="switch-inner" role="tablist">
+      <button role="tab" id="tab-study" data-view="study" aria-selected="true">Study</button>
+      <button role="tab" id="tab-prac" data-view="prac" aria-selected="false">Practice quizzes</button>
+      <button role="tab" id="tab-cram" data-view="cram" aria-selected="false">Cram sheet</button>
+    </div>
+  </nav>
+  <section id="view-study"></section>
+  <section id="view-prac" hidden></section>
+  <section id="view-cram" hidden>
+    <div class="cram">
+      <div class="card">
+        <h3>1. 2-3 insert</h3>
+        <ul>
+          <li>2-node: 1 key, 2 kids. 3-node: 2 keys, 3 kids. All leaves on one level.</li>
+          <li>Insert in a leaf. Full leaf → temp 3 keys → <strong>middle key goes up</strong>.</li>
+          <li>Splits can chain up. Root split = only way to get taller.</li>
+          <li>log₃ n ≤ h ≤ log₂ n.</li>
+          <li>[40] over [20|30], [60|70] + 65 → root [40|65].</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>2. 2-3 delete</h3>
+        <ul>
+          <li>Internal key → swap with predecessor (rightmost of left subtree), delete from the leaf.</li>
+          <li>Empty node + sibling with 2 keys → <strong>borrow</strong>: parent key down, sibling's nearest key up.</li>
+          <li>Sibling with 1 key → <strong>merge</strong>: parent key comes down into the sibling. Can spread up.</li>
+          <li>Root empties → tree shrinks one level.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>3. Red-black encoding</h3>
+        <ul>
+          <li>[a|b] → b on top, a = <strong>red left child</strong>.</li>
+          <li>Decode: collapse red links into parents.</li>
+          <li>Rules: black root · red leans left · no node touches two reds · equal black count on every path.</li>
+          <li>Height ≤ 2 log₂ n. AVL ≤ 1.44 log₂ n.</li>
+          <li>Black height: null 0, red adds 0.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>4. Red-black insert</h3>
+        <ul>
+          <li>New node red. On the way up, in order: right red &amp; left black → <strong>rotateLeft</strong> · left red &amp; left.left red → <strong>rotateRight</strong> · both red → <strong>flipColors</strong>. Root black.</li>
+          <li>Rotation: rising node takes the old color, the dropped node turns red.</li>
+          <li>Key below the 3-node: rotateRight, flip. Key above: flip. Key in between: rotateLeft, rotateRight, flip.</li>
+          <li>flipColors = 4-node split.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>5. B-trees</h3>
+        <ul>
+          <li>Order M: ≤ M kids, ≤ M − 1 keys. Non-root ≥ ⌈M/2⌉ kids. Root ≥ 2 kids.</li>
+          <li>Split when a node hits <strong>M keys</strong>, middle goes up.</li>
+          <li>Height ≈ log<sub>M</sub> n. Cost = block reads.</li>
+          <li>M from block size: 16M − 8 ≤ block. 4096 → 256, 8192 → 512.</li>
+          <li>Full: M<sup>h</sup> − 1 keys. Min (HW4): 2⌈M/2⌉<sup>h</sup> − 1. Order 3 is a 2-3 tree.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>6. B+ trees</h3>
+        <ul>
+          <li>Records only in leaves. Leaves linked. Internal = routers.</li>
+          <li>Equal goes right: [30|60], search 30 → middle, 60 → right.</li>
+          <li>Leaf split copies up. Router split moves up.</li>
+          <li>Range scan: one descent, then walk the leaf chain.</li>
+          <li>RAM read-heavy → AVL. RAM general → red-black. Disk → B+.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>7. Heap basics</h3>
+        <ul>
+          <li>Complete + parent ≥ children. Max at a[1].</li>
+          <li>1-based: parent k/2, kids 2k, 2k + 1. Leaves ⌊n/2⌋ + 1 … n.</li>
+          <li>Height ⌊log₂ n⌋. 2nd largest at index 2 or 3. Min at some leaf, Θ(n) to find.</li>
+          <li>Sorted descending ⇒ heap. Heap ≠ sorted, heap ≠ BST.</li>
+          <li>Unordered array: insert 1, delMax n. Heap: log n, log n.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>8. Swim and sink</h3>
+        <ul>
+          <li>insert: append, <strong>swim</strong> up while bigger than the parent.</li>
+          <li>delMax: swap root with last, shrink, <strong>sink</strong> the new root.</li>
+          <li>Sink swaps with the <strong>larger</strong> child. Guard j &lt; n for a lone left child.</li>
+          <li>[90 80 70 30 60 50] + 85 → [90 80 85 30 60 50 70]. delMax → [80 60 70 30 50].</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>9. Heapify</h3>
+        <ul>
+          <li>Sink k = ⌊n/2⌋ down to 1. Bottom-up so both subtrees are already heaps.</li>
+          <li>Θ(n): sink pays height, and most nodes are near the bottom. n inserts = Θ(n log n).</li>
+          <li>[4 7 3 9 1 6 2] → [9 7 6 4 1 3 2].</li>
+          <li>[1 2 3 4 5 6 7] → [7 5 6 4 2 1 3].</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>10. Heapsort</h3>
+        <ul>
+          <li>Heapify, then: swap a[1] with a[end], sink(1, end − 1), end−−.</li>
+          <li>Θ(n log n) worst, Θ(1) space, <strong>not stable</strong>.</li>
+          <li>Min-heap with the same loop → descending.</li>
+          <li>[95 90 70 80 60] → round 1 [90 80 70 60 | 95], round 2 [80 60 70 | 90 95].</li>
+          <li>Mergesort: stable, Θ(n) space. Quicksort: Θ(n²) worst.</li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>11. HW4: d-ary heaps and PQ uses</h3>
+        <ul>
+          <li>0-based d-ary: kids d·i + 1 … d·i + d, parent (j − 1)/d. Binary 0-based: 2i + 1, 2i + 2, (j − 1)/2.</li>
+          <li>buildDary starts at (n − 2)/d. sinkDary picks the largest child.</li>
+          <li>kthLargest: min-heap of size k, pop when size &gt; k, answer = top. n log k. Repeats count.</li>
+          <li>Merge k sorted lists: min-heap of one head per list, L log k.</li>
+          <li>std::priority_queue = max-heap (greater&lt;int&gt; for min). Java and Python = min-heap.</li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>In the room</h3>
+        <ul>
+          <li>2-3 insert: write the temporary 3-key node, circle the middle, then redraw.</li>
+          <li>Red-black: draw the 2-3 tree next to it. Insert there first, then pick the moves that get you to the same shape.</li>
+          <li>Heaps: write index numbers over the array before you swim or sink. Draw the tree for anything with more than 5 keys.</li>
+          <li>0-based or 1-based? Check the question before using any formula.</li>
+        </ul>
+      </div>
+    </div>
+    <button class="btn ghost" data-act="reset" style="margin-top:14px">Start over (erase progress)</button>
+  </section>
+</div>
+
+<script>
+function parseTree(str) {
+  let i = 0;
+  function p() {
+    if (str[i] === "_") { i++; return null; }
+    const j = i;
+    while (i < str.length && !"(),".includes(str[i])) i++;
+    let tok = str.slice(j, i), mark = "", note = "", red = false;
+    if (tok[0] === "*" && tok.length > 1) { red = true; tok = tok.slice(1); }
+    if ("!^@".includes(tok[0]) && tok.length > 1) { mark = tok[0]; tok = tok.slice(1); }
+    const m = tok.match(/^(.*)\[(.*)\]$/);
+    if (m) { tok = m[1]; note = m[2]; }
+    const n = { tok, mark, note, red, kids: [], sub: tok[0] === "~" };
+    if (n.sub) n.tok = tok.slice(1);
+    n.keys = n.tok.split("|");
+    n.kmarks = n.keys.map(k => (k.length > 1 && "!^@".includes(k[0])) ? k[0] : "");
+    n.keys = n.keys.map((k, i) => n.kmarks[i] ? k.slice(1) : k);
+    n.tok = n.keys.join("|");
+    if (str[i] === "(") {
+      i++;
+      n.kids.push(p());
+      while (str[i] === ",") { i++; n.kids.push(p()); }
+      i++;
+    }
+    return n;
+  }
+  return p();
+}
+
+function treeSVG(str) {
+  const root = parseTree(str);
+  const nodes = [];
+  let multi = false;
+  (function scan(n) { if (!n) return; if (n.keys.length > 1 || n.kids.length > 2) multi = true; n.kids.forEach(scan); })(root);
+  const R = 15, DY = 54, PAD = 22, KW = 24;
+  const nodeW = n => n.sub ? 34 : (n.keys.length === 1 ? 2 * R : n.keys.length * KW + 8);
+  let maxD = 0, W, X;
+  if (!multi) {
+    let idx = 0;
+    const DX = 38;
+    (function walk(n, d) {
+      if (!n) return;
+      walk(n.kids[0], d + 1);
+      n.ix = idx++; n.d = d; maxD = Math.max(maxD, d + (n.sub ? 0.6 : 0));
+      nodes.push(n);
+      walk(n.kids[1], d + 1);
+    })(root, 0);
+    W = Math.max(1, idx - 1) * DX + PAD * 2;
+    X = n => PAD + n.ix * DX + (idx === 1 ? (W - PAD * 2) / 2 : 0);
+  } else {
+    const GAP = 12;
+    (function width(n, d) {
+      n.d = d; maxD = Math.max(maxD, d); nodes.push(n);
+      const ks = n.kids.filter(Boolean);
+      ks.forEach(c => width(c, d + 1));
+      const kidsW = ks.reduce((s, c) => s + c.w, 0);
+      n.w = Math.max(nodeW(n) + GAP, kidsW);
+    })(root, 0);
+    (function place(n, left) {
+      n.cx = left + n.w / 2;
+      const ks = n.kids.filter(Boolean);
+      const kidsW = ks.reduce((s, c) => s + c.w, 0);
+      let x = left + (n.w - kidsW) / 2;
+      ks.forEach(c => { place(c, x); x += c.w; });
+    })(root, 0);
+    W = root.w + PAD * 2 - 12;
+    X = n => PAD - 6 + n.cx;
+  }
+  const hasNote = nodes.some(n => n.note);
+  const H = maxD * DY + PAD * 2 + (hasNote ? 12 : 0) + 8;
+  const Y = n => PAD + n.d * DY;
+  let edges = "", body = "";
+  nodes.forEach(n => {
+    const ks = n.kids;
+    const real = ks.filter(Boolean);
+    ks.forEach((c, i) => {
+      if (!c) return;
+      let sx = X(n);
+      if (multi && n.keys.length > 1) { const w = nodeW(n); sx = X(n) - w / 2 + w * (i + 0.5) / ks.length; }
+      const sy = Y(n) + (multi ? R - 2 : 0);
+      edges += `<line class="t-edge${c.red ? " t-red" : ""}" x1="${sx}" y1="${sy}" x2="${X(c)}" y2="${Y(c) - (c.sub ? 2 : multi ? R - 2 : 0)}"/>`;
+    });
+  });
+  nodes.forEach(n => {
+    const x = X(n), y = Y(n);
+    const cls = (n.mark === "!" ? "t-bad" : n.mark === "^" ? "t-new" : n.mark === "@" ? "t-hi" : "") + (n.red ? " t-rednode" : "");
+    if (n.sub) {
+      body += `<polygon class="t-sub ${cls}" points="${x},${y - 4} ${x - 17},${y + 30} ${x + 17},${y + 30}"/>`;
+      body += `<text class="t-subl" x="${x}" y="${y + 23}">${n.tok}</text>`;
+    } else if (n.keys.length === 1 && !multi) {
+      body += `<circle class="t-node ${cls}" cx="${x}" cy="${y}" r="${R}"/>`;
+      const fs = n.tok.length > 2 ? 10 : 12;
+      body += `<text class="t-key" x="${x}" y="${y + 4}" style="font-size:${fs}px">${n.tok}</text>`;
+    } else {
+      const w = nodeW(n);
+      body += `<rect class="t-node ${cls}" x="${x - w / 2}" y="${y - R + 2}" width="${w}" height="${2 * R - 4}" rx="6"/>`;
+      n.keys.forEach((k, i) => {
+        const kx = x - w / 2 + 4 + KW * (i + 0.5) + (n.keys.length === 1 ? (w - 8 - KW) / 2 : 0);
+        body += `<text class="t-key${({ "!": " t-k-bad", "^": " t-k-new", "@": " t-k-hi" })[n.kmarks[i]] || ""}" x="${kx}" y="${y + 4}" style="font-size:${k.length > 2 ? 10 : 12}px">${k}</text>`;
+        if (i > 0) { const lx = x - w / 2 + 4 + KW * i; body += `<line class="t-div" x1="${lx}" y1="${y - R + 6}" x2="${lx}" y2="${y + R - 6}"/>`; }
+      });
+    }
+    if (n.note) body += `<text class="t-note ${/2/.test(n.note) ? "t-note-bad" : ""}" x="${x}" y="${y + R + 12}">${n.note}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="tree ${str.replace(/[!^@~*]/g, "")}">${edges}${body}</svg>`;
+}
+
+function heapStr(arr, mark) {
+  const n = arr.length;
+  const go = i => {
+    if (i > n) return "_";
+    const tok = (mark && mark.includes(i) ? "@" : "") + arr[i - 1];
+    if (2 * i > n) return tok;
+    return `${tok}(${go(2 * i)},${go(2 * i + 1)})`;
+  };
+  return go(1);
+}
+
+function arrHTML(arr, opts) {
+  opts = opts || {};
+  const base = opts.zero ? 0 : 1;
+  const hi = opts.hi || [];
+  const cells = arr.map((v, i) => `<td class="${hi.includes(i + base) ? "a-hi" : ""}${opts.bar === i + base ? " a-bar" : ""}">${v}</td>`).join("");
+  const idx = arr.map((v, i) => `<th>${i + base}</th>`).join("");
+  return `<div class="tablewrap"><table class="arr"><tr><th class="a-lab">i</th>${idx}</tr><tr><th class="a-lab">a</th>${cells}</tr></table></div>`;
+}
+
+function fillTrees(root) {
+  root.querySelectorAll(".tree:not([data-done])").forEach(el => {
+    el.dataset.done = "1";
+    try {
+      el.innerHTML = `<div class="tree-svg">${treeSVG(el.dataset.t)}</div>` + (el.dataset.cap ? `<div class="tree-cap">${el.dataset.cap}</div>` : "");
+    } catch (e) {
+      el.textContent = el.dataset.t;
+    }
+  });
+}
+
+const TREE = (t, cap) => `<div class="tree" data-t="${t}"${cap ? ` data-cap="${cap}"` : ""}></div>`;
+const ROW = (...items) => `<div class="trow">${items.join("")}</div>`;
+const ARROW = label => `<div class="tarrow"><span>${label}</span><span class="tarrow-a">→</span></div>`;
+const HEAP = (arr, cap, mark) => TREE(heapStr(arr, mark), cap);
+const ARR = (arr, opts) => arrHTML(arr, opts);
+const TT_PRAC = "40(20|30,60|70)";
+
+const TOPICS = [
+{
+  id: "tt", title: "2-3 trees: search and insertion",
+  learn: `
+<div class="big"><p>Instead of rotating to stay balanced, let a node hold <strong>one or two keys</strong>. Every leaf stays at exactly the same depth, always.</p></div>
+<p class="label">The two kinds of node</p>
+<ul>
+<li><strong>2-node</strong>: 1 key, 2 children (a normal BST node).</li>
+<li><strong>3-node</strong>: 2 keys a &lt; c, 3 children: keys below a, keys between a and c, keys above c.</li>
+<li><strong>Invariant: perfect balance.</strong> All leaves at one depth. So log₃ n ≤ height ≤ log₂ n: Θ(log n) for any insert order.</li>
+</ul>
+<p class="label">Search: pick a door</p>
+${TREE("50(20|35(10,25|30,40|45),70|85(60|65,75|80,90|95))")}
+<p>Search 65: 65 &gt; 50 → right. 65 &lt; 70 → left door. Found in [60|65]. One node per level, so Θ(log n).</p>
+<p class="label">Insertion always lands in a leaf</p>
+<ol class="steps">
+<li>Search down to the leaf where the key belongs.</li>
+<li><strong>Leaf is a 2-node</strong>: it becomes a 3-node. Done, nothing moves.</li>
+<li><strong>Leaf is a 3-node</strong>: it becomes a temporary 4-node (3 keys). <strong>Split</strong>: the <strong>middle key moves up</strong> into the parent, and the other two become 2-nodes.</li>
+<li>If the parent overflows, it splits too. This can repeat up to the root.</li>
+<li>If the <strong>root</strong> splits, the middle key becomes a <strong>new root</strong>. That's the only way the tree gets taller: it grows at the top, so every leaf drops one level together.</li>
+</ol>
+<div class="example"><p class="ex-h">Lecture 6: insert 50, 30, 70, 10, 20</p>
+<p>50 → [50]. 30 → [30|50]. 70 → [30|50|70] splits, 50 goes up: [50] over [30], [70]. 10 → [10|30]. 20 → [10|20|30] splits, 20 goes up into the root: <strong>[20|50] over [10], [30], [70]</strong>.</p>
+${TREE("20|50(10,30,70)")}</div>
+<div class="example"><p class="ex-h">Lecture 6 practice: insert 65</p>
+${ROW(TREE(TT_PRAC), ARROW("insert 65"), TREE("40|^65(20|30,60,70)"))}
+<p>65 goes to the full leaf [60|70] → temp [60|65|70] → 65 is the middle, it moves up. Root becomes [40|65].</p></div>
+<p class="label">Facts</p>
+<ul>
+<li>One insert causes at most one split per level (h + 1 splits counting a root split).</li>
+<li>No rotations anywhere. Balance comes from growing upward.</li>
+</ul>
+<p class="label">Watch out</p>
+<ul class="traps">
+<li>The key that moves up is the <strong>middle of the three</strong>, which isn't always the key you inserted.</li>
+<li>A 3-node always has exactly 3 children. [a|b] with only 2 children isn't a legal internal node.</li>
+</ul>`,
+  qs: [
+    { q: "Insert 50, 30, 70, 10, 20 into an empty 2-3 tree. What is the final tree?",
+      c: ["[20|50] over [10], [30], [70]", "[30] over [10|20], [50|70]", "[50] over [10|20|30], [70]", "[20] over [10], [30|50|70]"], a: 0,
+      e: "Two splits: [30|50|70] promotes 50, then [10|20|30] promotes 20 into the root.",
+      x: [null, "That would need 30 to be promoted, but 30 is never the middle of a full node here.", "[10|20|30] holds three keys, which is a temporary 4-node. It must split.", "[30|50|70] is a 4-node, not allowed to stay."],
+      d: ["50, 30 → [30|50]. Inserting 70 makes [30|50|70]: 50 moves up, root [50] over [30], [70].", "10 joins [30] → [10|30]. 20 makes [10|20|30]: middle 20 moves up.", "Root [50] becomes [20|50] with children [10], [30], [70]."] },
+    { q: `Insert 65 into this 2-3 tree. What is the new root?${TREE(TT_PRAC)}`,
+      c: ["[40]", "[65]", "[40|65]", "[60|65]"], a: 2,
+      e: "The leaf [60|70] overflows to [60|65|70]; 65 is the middle, so it joins the root.",
+      x: ["The root receives the promoted key, so it changes.", "The root had room (it was a 2-node), so no new root is made.", null, "60 stays in a leaf. Only the middle key moves up."],
+      d: ["65 > 40 → the right leaf [60|70], which is full.", "Temporary [60|65|70]. Middle key 65 moves up.", "Root [40] becomes [40|65] over [20|30], [60], [70]."] },
+    { q: `Insert 25 into this 2-3 tree. Which key moves up into the root?${TREE(TT_PRAC)}`,
+      c: ["20", "25", "30", "40"], a: 1,
+      e: "The leaf [20|30] becomes [20|25|30], and 25 is the middle.",
+      x: ["20 is the smallest of the three, so it stays down as a 2-node.", null, "30 is the largest of the three.", "40 is already in the root."],
+      d: ["25 < 40 → left leaf [20|30], full.", "Temporary [20|25|30]. The middle is 25.", "25 moves up: root [25|40] over [20], [30], [60|70]."] },
+    { q: `Insert 50 into this 2-3 tree. What does the tree look like after?${TREE(TT_PRAC)}`,
+      c: ["[40|50] over [20|30], [60], [70]", "[40] over [20|30], [50|60|70]", "[40|60] over [20|30], [50], [70]", "[50] over [40], [60|70]"], a: 2,
+      e: "The leaf becomes [50|60|70] and its middle, 60, moves up.",
+      x: ["50 is the inserted key but not the middle of 50, 60, 70.", "A 3-key node can't stay. It must split.", null, "The root had room for one more key, so no new root is needed."],
+      d: ["50 > 40 → right leaf [60|70], full.", "Temporary [50|60|70]. Middle key 60 moves up.", "Root [40|60] over [20|30], [50], [70]."] },
+    { q: "Chapter exercise: insert 60, 20, 80, 10, 40, 50 into an empty 2-3 tree. What is the middle leaf at the end?",
+      c: ["[40]", "[40|50]", "[50]", "[20|40]"], a: 1,
+      e: "Final tree: [20|60] over [10], [40|50], [80].",
+      x: ["50 is inserted last, and it lands next to 40.", null, "40 stays in that leaf. 50 just joins it.", "20 moved up into the root when [10|20|40] split."],
+      d: ["60, 20, 80 → split, [60] over [20], [80]. 10 → [10|20].", "40 → [10|20|40] splits, 20 goes up: [20|60] over [10], [40], [80].", "50: between 20 and 60 → the middle leaf [40] becomes [40|50]."] },
+    { q: "How does a 2-3 tree get taller?",
+      c: ["A new leaf is added below the deepest leaf", "A rotation at the root", "Only when the root splits: the promoted key becomes a new root", "Whenever any node splits"], a: 2,
+      e: "Growing at the top drops every leaf one level at once, so all leaves stay level.",
+      x: ["Never: keys are absorbed into existing leaves. A deeper leaf would break perfect balance.", "2-3 trees have no rotations.", null, "A split below the root just passes a key up. Height doesn't change."],
+      d: ["Inserts go into existing leaves.", "A split sends the middle key to the parent; height is unchanged.", "Only a root split creates a new node above everything: height + 1, leaves still level."] },
+    { q: "A 2-3 tree holds n keys. Which bounds hold for its height h?",
+      c: ["log₂ n ≤ h ≤ 1.44 log₂ n", "log₃ n ≤ h ≤ log₂ n", "h ≤ 2 log₂ n only", "h can reach n − 1"], a: 1,
+      e: "All 3-nodes is the shortest (base 3), all 2-nodes is the tallest (base 2).",
+      x: ["That's the AVL bound.", null, "2 log₂ n is the red-black bound. A 2-3 tree is tighter.", "Perfect balance rules out a path."],
+      d: ["Every leaf is at the same depth.", "Packed with 3-nodes, each level triples: height ~log₃ n.", "All 2-nodes, each level doubles: height ~log₂ n."] },
+    { q: "Insert 1, 2, 3, 4, 5, 6, 7 in order into an empty 2-3 tree. What is the root, and the height?",
+      c: ["[4], height 2", "[2|4], height 1", "[1], height 6", "[4|6], height 2"], a: 0,
+      e: "Four splits, the last at the root: [4] over [2], [6] over [1], [3], [5], [7].",
+      x: [null, "After 7 the root [2|4] gets 6 pushed in and splits, so the tree grows to height 2.", "2-3 trees never become paths.", "The root splits on [2|4|6] and only 4 stays on top."],
+      d: ["1,2,3 → [2] over [1],[3]. 4,5 → [3|4|5] splits, 4 up: [2|4].", "6,7 → [5|6|7] splits, 6 up into [2|4] → [2|4|6].", "The root splits: 4 becomes a new root over [2] and [6]. Height 2."] },
+    { q: `Insert 45 into this tree. How many splits happen, and what is the new root?${TREE("20|60(10,40|50,80)")}`,
+      c: ["1 split; root [20|45|60]", "2 splits; root [45]", "0 splits; [40|45|50] is fine", "2 splits; root [20|60]"], a: 1,
+      e: "The leaf [40|45|50] splits (45 up), then the root [20|45|60] splits (45 up again).",
+      x: ["A node with three keys is never kept; the root must split too.", null, "Three keys in a node is the temporary 4-node. It must split.", "The root absorbs 45 and overflows, so it can't stay [20|60]."],
+      d: ["45 goes to the middle leaf [40|50] → [40|45|50]. Split: 45 moves up.", "Root becomes [20|45|60]: overflow. Split again: 45 moves up as a new root.", "Result [45] over [20] and [60], leaves [10], [40], [50], [80]. Height 2."] }
+  ]
+},
+{
+  id: "ttdel", title: "2-3 deletion: borrow and merge",
+  learn: `
+<div class="big"><p>Deletion is insertion in reverse: <strong>borrow or merge</strong> instead of split and promote. Removal always happens in a leaf.</p></div>
+<ol class="steps">
+<li>Find the key. If it's in an <strong>internal</strong> node, swap it with its <strong>in-order predecessor</strong> (rightmost key of its left subtree, always in a leaf). The successor works too.</li>
+<li>Remove the key from the leaf. If the leaf still has a key, you're done.</li>
+<li>If the leaf is now <strong>empty</strong>, repair it:</li>
+</ol>
+<div class="tablewrap"><table>
+<thead><tr><th>Situation</th><th>Repair</th><th>Can it spread up?</th></tr></thead>
+<tbody>
+<tr><td>a neighboring sibling has 2 keys</td><td><strong>borrow</strong>: the parent's key drops into the empty node, the sibling's nearest key rises to replace it</td><td>No. The parent keeps the same number of keys.</td></tr>
+<tr><td>no sibling can spare a key</td><td><strong>merge</strong>: the empty node, the parent's key and the sibling fuse into one node</td><td>Yes. The parent lost a key and may empty out too.</td></tr>
+<tr><td>the root empties</td><td>drop it</td><td>The tree gets one level shorter.</td></tr>
+</tbody></table></div>
+<div class="example"><p class="ex-h">Borrow</p>
+${ROW(TREE("30(!10,40|50)", "delete 10"), ARROW("borrow"), TREE("40(30,50)"))}
+<p>[10] empties. Its sibling [40|50] can spare a key: 30 comes down, 40 goes up.</p></div>
+<div class="example"><p class="ex-h">Merge</p>
+${ROW(TREE("20|50(!10,30,60)", "delete 10"), ARROW("merge"), TREE("50(20|30,60)"))}
+<p>[10] empties. Sibling [30] has only one key. Merge: 20 comes down and joins 30. The parent shrinks to [50].</p></div>
+<div class="example"><p class="ex-h">Chapter exercise</p>
+<p>From [20|60] over [10], [40|50], [80]: <strong>delete 10</strong> → borrow from [40|50] → [40|60] over [20], [50], [80]. Then <strong>delete 40</strong>: it's internal, so its predecessor 20 takes its place; the leaf [20] empties; [50] can't lend → merge → <strong>[60] over [20|50], [80]</strong>.</p></div>
+<p class="label">Facts</p>
+<ul>
+<li>A deletion can merge at most once per level above the leaf (h merges).</li>
+<li>Predecessor or successor both work. From [30|60] over [10|20], [40], [70|80], deleting 30 by predecessor just shrinks [10|20] to [10]; by successor, [40] empties and borrows. Both end at [20|60] over [10], [40], [70|80].</li>
+</ul>`,
+  qs: [
+    { q: `Delete 10. What happens?${TREE("30(10,40|50)")}`,
+      c: ["Borrow: result [40] over [30], [50]", "Merge: result [30|40|50]", "Borrow: result [30] over [40], [50]", "Nothing, [10] can just be removed"], a: 0,
+      e: "The sibling [40|50] has a spare key, so the parent's 30 drops down and 40 rises.",
+      x: [null, "Merging is only for siblings that can't lend. [40|50] can lend.", "The left child of 30 must hold keys below 30, so 40 can't go there. 30 has to come down.", "Removing it leaves an empty leaf, which must be repaired."],
+      d: ["[10] becomes empty.", "Its sibling [40|50] has 2 keys: borrow.", "Parent key 30 drops into the empty node; 40 rises into the parent. Result [40] over [30], [50]."] },
+    { q: `Delete 10. What is the result?${TREE("20|50(10,30,60)")}`,
+      c: ["[30|50] over [20], [60]", "[50] over [20|30], [60]", "[20|50] over [30], [60]", "[20] over [30|50|60]"], a: 1,
+      e: "[30] has only one key, so no borrow: merge the empty node, the parent's 20, and [30].",
+      x: ["That's a borrow, but [30] has no spare key to give.", null, "A 3-node needs three children; the parent must lose a key.", "A 4-node isn't allowed."],
+      d: ["[10] empties. Its sibling [30] has 1 key: can't lend.", "Merge: parent key 20 comes down and joins 30 → [20|30].", "The parent shrinks from [20|50] to [50]."] },
+    { q: `Chapter exercise: delete 10 from this tree. Which repair, and what's the new root?${TREE("20|60(10,40|50,80)")}`,
+      c: ["Merge; root [60]", "Borrow; root [40|60]", "Borrow; root [20|60]", "Merge; root [20|40|60]"], a: 1,
+      e: "The right sibling [40|50] lends a key: 20 drops down, 40 rises.",
+      x: ["A merge is only needed when no sibling can lend. [40|50] can.", null, "The parent's 20 is the key that drops into the empty node, so it can't stay in the root.", "A node can't hold three keys."],
+      d: ["[10] empties. Its right sibling [40|50] has 2 keys.", "Borrow: separator 20 drops into the empty leaf, 40 rises to replace it.", "Root [40|60] over [20], [50], [80]."] },
+    { q: `Then delete 40 from this tree. What is the result?${TREE("40|60(20,50,80)")}`,
+      c: ["[60] over [20|50], [80]", "[50|60] over [20], [80]", "[20|60] over [50], [80]", "[40|60] over [20|50], [80]"], a: 0,
+      e: "40 is internal: its predecessor 20 takes its place, [20] empties, and [50] can't lend, so merge.",
+      x: [null, "That moves 50 up, but [50] is a leaf with one key and can't lend.", "The leaf [20] is empty after 20 moves up; it must be fixed.", "40 was the key being deleted."],
+      d: ["40 is internal → swap in its predecessor 20 (rightmost key to its left). Root [20|60], leaf [20] empties.", "Sibling [50] has one key: merge. Separator 20 comes down and joins 50 → [20|50].", "Root shrinks to [60] over [20|50], [80]."] },
+    { q: "Why can a borrow never spread up the tree, but a merge can?",
+      c: ["Borrows only happen at the root", "A borrow gives the parent a replacement key; a merge takes a key away from the parent", "A merge always empties the root", "They both spread up"], a: 1,
+      e: "After a borrow the parent has the same number of keys. After a merge it has one fewer and may empty.",
+      x: ["Borrows happen at any level.", null, "Only sometimes; usually the parent still has a key left.", "A borrow always stops right there."],
+      d: ["Borrow: one parent key comes down, one sibling key goes up. The parent's count is unchanged.", "Merge: a parent key comes down and nothing replaces it.", "If the parent was a 2-node, it's now empty and needs its own repair."] },
+    { q: `Delete 70 from this tree. What is the result?${TREE("30|60(10,40|50,70)")}`,
+      c: ["[30|50] over [10], [40], [60]", "[30] over [10], [40|50|60]", "[30|60] over [10], [40], [50]", "[50] over [30], [60]"], a: 0,
+      e: "The middle sibling [40|50] lends: 60 drops into the empty spot and 50 rises.",
+      x: [null, "That's a merge with a 4-node, which isn't allowed, and [40|50] can lend anyway.", "60 must come down into the empty leaf to keep the order.", "Only the parent's right key changes. 30 stays."],
+      d: ["[70] empties. Its neighbor [40|50] has 2 keys: borrow.", "Parent key 60 drops into the empty leaf; 50 (the nearest key) rises.", "Result [30|50] over [10], [40], [60]."] },
+    { q: "When does a 2-3 tree get shorter?",
+      c: ["After every deletion", "When a borrow reaches the root", "When merges empty the root, which is then dropped", "Never, it only grows"], a: 2,
+      e: "The mirror of a root split: the tree loses its top level, and every leaf rises together.",
+      x: ["Most deletions don't change the height.", "A borrow never empties anything.", null, "A merge that empties the root removes a level."],
+      d: ["A merge pulls a key out of the parent.", "If that cascades to a 2-node root, the root empties.", "Drop the empty root: one level shorter, all leaves still level."] }
+  ]
+},
+{
+  id: "rb", title: "Red-black trees: a 2-3 tree in a BST",
+  learn: `
+<div class="big"><p>A red-black tree is a <strong>2-3 tree stored as a binary BST</strong>, with one color bit per node. A 3-node becomes two nodes joined by a <strong>red link</strong>.</p></div>
+<p class="label">Encoding (left-leaning)</p>
+<ul>
+<li>2-node [a] → one <strong>black</strong> node.</li>
+<li>3-node [a|b] → <strong>b</strong> on top, with <strong>a as its red left child</strong>.</li>
+<li>A node is "red" when the link from its parent is red. Red links are drawn thick and red here.</li>
+</ul>
+${ROW(TREE("40|80(20,60,100)", "2-3 tree"), ARROW("encode"), TREE("80(*40(20,60),100)", "red-black BST"))}
+<p>To decode, <strong>collapse every red link into its parent</strong>. Search, min, max, floor and in-order are just the BST code.</p>
+<p class="label">The four rules</p>
+<ol class="steps">
+<li>The root is black.</li>
+<li>Red links lean left (a red node is always a left child).</li>
+<li>No node touches two red links: no red child of a red node, no two red children.</li>
+<li><strong>Black balance</strong>: every path from the root to a null link crosses the same number of black links.</li>
+</ol>
+<p>Rules 2 and 3 mean every 2-3 node is a 2-node or a left-leaning 3-node. Rule 4 is "all 2-3 leaves at one depth".</p>
+<div class="example"><p class="ex-h">HW4's valid tree, black height 2</p>
+${TREE("20(*10(5,15),30)")}
+<p>Black height counts black nodes from a node down to null (null = 0, a red node adds 0). Every path here meets 2 black nodes. HW4 rejects a red right child, two reds in a row, and unequal black counts.</p></div>
+<p class="label">Height ≤ 2 log₂ n</p>
+<ul>
+<li>The black links are the 2-3 tree's edges, so black count b ≤ log₂ n.</li>
+<li>At most one red link sits between two black ones, so height ≤ 2b ≤ <strong>2 log₂ n</strong>.</li>
+</ul>
+<p class="label">Red-black vs AVL</p>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>AVL</th><th>red-black</th></tr></thead>
+<tbody>
+<tr><td>height</td><td>≤ 1.44 log₂ n (tighter)</td><td>≤ 2 log₂ n</td></tr>
+<tr><td>rotations per insert</td><td>≤ 1 (single or double)</td><td>≤ 2, plus recolors</td></tr>
+<tr><td>rotations per delete</td><td>up to log n</td><td>O(1) (at most 3)</td></tr>
+<tr><td>best for</td><td>read-heavy</td><td>write-heavy (std::map, TreeMap)</td></tr>
+</tbody></table></div>`,
+  qs: [
+    { q: `Encode this 2-3 tree as a left-leaning red-black BST. Which node is the root, and which link is red?${TREE("40|80(20,60,100)")}`,
+      c: ["Root 40; 80 is its red right child", "Root 80; 40 is its red left child", "Root 60; 40 and 80 are both red", "Root 80; 100 is its red right child"], a: 1,
+      e: "A 3-node [a|b] becomes b with a as its red left child. 20 and 60 hang under 40, 100 under 80.",
+      x: ["Red links lean left, never right.", null, "60 isn't in the root 3-node. Two red children would also break rule 3.", "100 is a separate 2-node, so its link is black."],
+      d: ["The root 3-node [40|80] becomes 80 with a red left link to 40.", "20 (< 40) is 40's left child, 60 (between) is 40's right child.", "100 (> 80) is 80's right child. All three are black."] },
+    { q: `Which of these breaks no red-black rule?${ROW(TREE("20(10,*30)", "tree 1"), TREE("20(*10(*5,_),_)", "tree 2"), TREE("20(*10(5,15),30)", "tree 3"), TREE("20(10(5,_),30)", "tree 4"))}`,
+      c: ["Tree 1", "Tree 2", "Tree 3", "Tree 4"], a: 2,
+      e: "Tree 3 is HW4's valid example: every path meets two black nodes.",
+      x: ["30 is a red right child: red links must lean left.", "10 and 5 are two reds in a row.", null, "Path 20 → 10 → 5 meets 3 black nodes, but 20 → 30 meets only 2: black balance fails."],
+      d: ["Check for a red right child: tree 1 fails.", "Check for two reds in a row: tree 2 fails.", "Count black nodes on each path: tree 4 has 3 vs 2. Tree 3 has 2 everywhere."] },
+    { q: `What is the black height of this tree (HW4's definition)?${TREE("20(*10(5,15),30)")}`,
+      c: ["1", "2", "3", "4"], a: 1,
+      e: "Every root-to-null path meets two black nodes: 20 and then 5, 15 or 30.",
+      x: ["Count the root and the black node below it.", null, "The red node 10 doesn't count.", "Black height counts black nodes on one path, not all of them."],
+      d: ["null has black height 0. A black node adds 1, a red node adds 0.", "5, 15, 30 → 1. 10 is red → still 1.", "20 is black → 1 + 1 = 2."] },
+    { q: `Decode this red-black tree back into a 2-3 tree.${TREE("E(C(*A,_),S(*R,_))")}`,
+      c: ["[E] over [A|C], [R|S]", "[C|E|S] over [A], [R]", "[E] over [A], [C], [R], [S]", "[A|C] over [E], [R|S]"], a: 0,
+      e: "Collapse each red link into its parent: A joins C, R joins S.",
+      x: [null, "Only red links merge nodes. The links from E are black.", "A 2-node has two children, not four.", "E is the black root, so it stays on top."],
+      d: ["Red links: C–A and S–R.", "Collapse them: [A|C] and [R|S].", "E stays a 2-node on top: [E] over [A|C], [R|S]."] },
+    { q: "What is the height bound of a left-leaning red-black tree with n keys, and why?",
+      c: ["≤ 1.44 log₂ n, the Fibonacci argument", "≤ log₂ n, it's perfectly balanced", "≤ 2 log₂ n: black links ≤ log₂ n, and at most one red between blacks", "≤ n − 1, like a BST"], a: 2,
+      e: "The black links form a 2-3 tree (height ≤ log₂ n); reds at most double it.",
+      x: ["That's AVL's bound.", "The 2-3 tree underneath is perfectly balanced, but red links add extra levels.", null, "Black balance and no two reds in a row prevent a path."],
+      d: ["Collapse red links: the black links are the 2-3 tree's edges, so b ≤ log₂ n.", "No two reds in a row: at most one red link between consecutive blacks.", "Height ≤ 2b ≤ 2 log₂ n."] },
+    { q: "Why does a red-black insert color the new node red?",
+      c: ["Red nodes are cheaper to store", "A black leaf would add a black link to some paths and break black balance on every insert", "So that it can be rotated", "Red means the node is a leaf"], a: 1,
+      e: "A red leaf adds no black link, so only the red-link rules can break, and those are fixed locally.",
+      x: ["Color is one bit either way.", null, "Rotations work on any color.", "Red means the link from its parent is red: it's glued into a 3-node."],
+      d: ["Black balance needs every path to cross the same number of black links.", "A new black leaf would add one only to the paths through it.", "A red leaf adds none, so black balance holds and only rules 1–3 need fixing."] },
+    { q: "Compared with AVL, red-black trees are:",
+      c: ["Shorter, with more rotations per update", "Taller (≤ 2 log₂ n), with fewer rotations per update", "The same height, the same work", "Unbalanced in the worst case"], a: 1,
+      e: "Looser balance, cheaper updates: that's why std::map and TreeMap use red-black.",
+      x: ["That describes AVL.", null, "AVL ≤ 1.44 log₂ n, red-black ≤ 2 log₂ n.", "Both guarantee Θ(log n) height."],
+      d: ["AVL keeps |bf| ≤ 1: height ≤ 1.44 log₂ n, but deletes can rotate at every level.", "Red-black: ≤ 2 log₂ n, at most 2 rotations per insert, 3 per delete.", "Read-heavy → AVL. Write-heavy → red-black."] }
+  ]
+},
+{
+  id: "rbins", title: "Red-black insertion: the three moves",
+  learn: `
+<div class="big"><p>Insert like a BST, with the new node <strong>red</strong>. On the way back up, at each node run three checks <strong>in this order</strong>. Finally, color the root black.</p></div>
+<pre><code>Node* fixUp(Node* h) {
+    if (isRed(h-&gt;right) &amp;&amp; !isRed(h-&gt;left))     h = rotateLeft(h);
+    if (isRed(h-&gt;left) &amp;&amp; isRed(h-&gt;left-&gt;left)) h = rotateRight(h);
+    if (isRed(h-&gt;left) &amp;&amp; isRed(h-&gt;right))      flipColors(h);
+    return h;
+}</code></pre>
+<div class="tablewrap"><table>
+<thead><tr><th>Violation</th><th>Move</th><th>In the 2-3 tree</th></tr></thead>
+<tbody>
+<tr><td>a red link leans right</td><td>rotateLeft(h)</td><td>nothing changes</td></tr>
+<tr><td>two reds in a row (left, left)</td><td>rotateRight(h)</td><td>nothing changes</td></tr>
+<tr><td>two red children</td><td>flipColors(h)</td><td>a 4-node <strong>splits</strong>: the middle key joins its parent</td></tr>
+<tr><td>red root</td><td>recolor black</td><td>nothing changes</td></tr>
+</tbody></table></div>
+<p class="label">What the moves do to colors</p>
+<ul>
+<li><strong>rotateLeft(h)</strong>: x = h.right rises, <strong>x takes h's color, h turns red</strong>. rotateRight mirrors it. In-order unchanged.</li>
+<li><strong>flipColors(h)</strong>: both children turn black, h turns red (h moves up into its parent's 2-3 node).</li>
+</ul>
+<p class="label">The five things an insert can do (Lecture 6)</p>
+${ROW(TREE("50(*^30,_)", "30 into [50]: fine"), TREE("50(_,*^70)", "70 into [50]: rotateLeft(50)"))}
+${ROW(TREE("50(*30,*^70)", "70 into [30|50]: flipColors(50)"), TREE("50(*30(*^10,_),_)", "10 into [30|50]: rotateRight(50), flip"), TREE("50(*30(_,*^40),_)", "40 into [30|50]: rotateLeft(30), rotateRight(50), flip"))}
+<div class="example"><p class="ex-h">Chapter exercise: insert S, E, A, R, C</p>
+<p>S root. E: red left, fine. A: two reds in a row → rotateRight(S), then two red children → flipColors(E). R: red left under S, fine. C: red <em>right</em> under A → rotateLeft(A).</p>
+${TREE("E(C(*A,_),S(*R,_))")}
+<p>2-3 tree: [E] over [A|C], [R|S].</p></div>
+<div class="example"><p class="ex-h">Ascending 1 to 7</p>
+<p>Each new key lands on the right, so rotateLeft and flipColors keep firing. The result is perfectly balanced and all black: 4(2(1,3),6(5,7)).</p></div>`,
+  qs: [
+    { q: "Insert 70 into a tree that is just a black 50. Which move fires?",
+      c: ["None", "rotateLeft(50)", "rotateRight(50)", "flipColors(50)"], a: 1,
+      e: "70 becomes a red right child, which must lean left. After the rotation, 70 is on top with 50 as its red left child.",
+      x: ["A red right link always breaks the lean-left rule.", null, "rotateRight fixes two reds on the left.", "flipColors needs two red children."],
+      d: ["70 > 50: red right child.", "First check: right is red, left isn't → rotateLeft(50).", "70 rises (takes black), 50 drops left and turns red: the 3-node [50|70]."] },
+    { q: `Insert 70 into this tree. What happens?${TREE("50(*30,_)")}`,
+      c: ["rotateLeft(50)", "flipColors(50), then the root is recolored black", "rotateRight(50)", "Nothing"], a: 1,
+      e: "50 now has two red children: a 4-node [30|50|70] that splits.",
+      x: ["The left link is red too, so the first check doesn't fire.", null, "There are no two reds in a row on the left.", "Two red children always need a flip."],
+      d: ["70 is 50's red right child; 30 is its red left child.", "Third check: both children red → flipColors(50): 30, 70 black, 50 red.", "50 is the root, so it's recolored black: [50] over [30], [70]."] },
+    { q: `Insert 10 into this tree. Which moves fire, in order?${TREE("50(*30,_)")}`,
+      c: ["rotateLeft(30), then flipColors(50)", "rotateRight(50), then flipColors(30)", "flipColors(30) only", "rotateRight(30), then rotateLeft(50)"], a: 1,
+      e: "50 → 30 → 10 are two reds in a row. Rotate right at 50, then 30 has two red children.",
+      x: ["10 is a left child, so nothing leans right.", null, "30 doesn't have two red children until after the rotation.", "Those rotations would undo each other."],
+      d: ["10 becomes 30's red left child: two reds in a row.", "At 50, second check → rotateRight(50). 30 rises with red children 10 and 50.", "Third check → flipColors(30). Root 30 black over 10 and 50."] },
+    { q: `Insert 40 into this tree. Which moves fire, in order?${TREE("50(*30,_)")}`,
+      c: ["rotateLeft(30), rotateRight(50), flipColors(40)", "flipColors(50) only", "rotateRight(50), flipColors(30)", "rotateLeft(50), rotateRight(30)"], a: 0,
+      e: "40 falls between 30 and 50: first straighten the right lean at 30, then it's the two-in-a-row case.",
+      x: [null, "50 doesn't have two red children: 40 lands under 30, not under 50.", "That's the recipe for a key below 30, like 10.", "The first fix happens at 30, the node with the red right link."],
+      d: ["40 lands as 30's red right child.", "At 30: right red, left not → rotateLeft(30). Now 50 → 40 → 30 are two reds in a row.", "At 50: rotateRight(50), then flipColors(40). Result 40 over 30 and 50."] },
+    { q: "Chapter exercise: insert S, E, A, R, C. When C is inserted, which move fires?",
+      c: ["rotateRight(E)", "flipColors(C)", "rotateLeft(A)", "No move"], a: 2,
+      e: "C > A, so it's A's red right child: the right lean is fixed by rotateLeft(A).",
+      x: ["Nothing is two-in-a-row on the left.", "C has no red children.", null, "A red right child always needs fixing."],
+      d: ["Before C, the tree is E over A and S, with R as S's red left child.", "C < E, C > A: red right child of A.", "rotateLeft(A): C rises, A becomes its red left child."] },
+    { q: `Insert 35 into this tree (the chapter's encoding of [40] over [20|30], [60]). What happens?${TREE("40(30(*20,_),60)")}`,
+      c: ["rotateLeft(30)", "flipColors(30): 30 joins the root, giving 2-3 tree [30|40] over [20], [35], [60]", "rotateRight(40)", "Nothing"], a: 1,
+      e: "35 is 30's red right child, so 30 has two red children: the 4-node [20|30|35] splits.",
+      x: ["The left link is also red, so the first check doesn't fire.", null, "There are no two reds in a row after the flip.", "Two red children always trigger a flip."],
+      d: ["35 > 30: red right child of 30. 20 is already 30's red left child.", "Two red children → flipColors(30): 20, 35 black, 30 red.", "30 is now red under 40: the 3-node [30|40]. No more violations."] },
+    { q: `Insert 10 into the same tree. Which moves fire?${TREE("40(30(*20,_),60)")}`,
+      c: ["flipColors(20) only", "rotateRight(30), then flipColors(20)", "rotateLeft(20)", "rotateRight(40)"], a: 1,
+      e: "30 → 20 → 10 are two reds in a row. Rotating at 30 lifts 20, then flipping splits the 4-node.",
+      x: ["20 doesn't have two red children until after the rotation.", null, "10 is a left child, nothing leans right.", "The two reds are under 30, so the fix is at 30."],
+      d: ["10 becomes 20's red left child: two reds in a row under 30.", "At 30: rotateRight(30). 20 rises with red children 10 and 30.", "flipColors(20): 20 joins [40] as [20|40]."] },
+    { q: "Insert 1 to 7 in order into an empty left-leaning red-black tree. What is the final tree?",
+      c: ["A path with every link red", "4 over 2 and 6, with 1, 3, 5, 7 below, all black", "7 at the root, leaning left", "2 over 1 and 4, height 3"], a: 1,
+      e: "The rotations and flips keep it perfectly balanced: the 2-3 tree [4] over [2], [6] over four leaves.",
+      x: ["Red links never chain like that.", null, "Each new key lands on the right, and rotateLeft keeps pulling it back.", "After 7 the flips push 4 to the root."],
+      d: ["Each ascending key arrives as a red right link → rotateLeft.", "Two red children → flipColors, which splits a 4-node.", "After 7: 4(2(1,3),6(5,7)), height 2, all black."] },
+    { q: "In rotateLeft(h), what happens to the colors?",
+      c: ["Both nodes turn black", "x (the rising right child) takes h's color, and h turns red", "h keeps its color, x turns red", "Colors are flipped"], a: 1,
+      e: "The red link moves to the left side; the subtree's link to its parent keeps the same color.",
+      x: ["That would add black links and break black balance.", null, "h is now the lower node, glued to x by the red link.", "Flipping is a different move."],
+      d: ["x = h.right rises into h's place.", "x inherits h's color, so the parent's link is unchanged.", "h drops to x's left and turns red: the 3-node now leans left."] }
+  ]
+},
+{
+  id: "btree", title: "B-trees",
+  learn: `
+<div class="big"><p>A <strong>B-tree of order M</strong> is the 2-3 idea with wide nodes: up to <strong>M − 1 keys and M children</strong> per node. A 2-3 tree is a B-tree of order 3.</p></div>
+<p class="label">The rules</p>
+<ul>
+<li>Every node: at most M children (M − 1 keys).</li>
+<li>Every <strong>non-root</strong> node: at least <strong>⌈M/2⌉ children</strong> (at least ⌈M/2⌉ − 1 keys): at least half full.</li>
+<li>The root: at least 2 children, unless it's a leaf.</li>
+<li>All leaves at the same depth.</li>
+</ul>
+<p class="label">Why fat nodes: the disk</p>
+<ul>
+<li>A disk or SSD read costs ~10³ to 10⁵ times a RAM access and brings a whole <strong>block</strong>. So cost = <strong>node reads</strong>.</li>
+<li>One node = one block. Height ≈ <strong>log<sub>M</sub> n</strong>. Order 1000 with 10⁹ keys: <strong>3 reads</strong>. A balanced binary tree: ~30.</li>
+<li><strong>Choosing M</strong>: fit M pointers and M − 1 keys in a block. 4096-byte block, 8-byte keys and pointers: 8M + 8(M − 1) ≤ 4096 → <strong>M = 256</strong>.</li>
+</ul>
+<p class="label">Insert: same split and promote, wider</p>
+<p>Insert into a leaf. When a node reaches <strong>M keys</strong> (one too many), split it and promote the <strong>middle</strong> key.</p>
+<div class="example"><p class="ex-h">Lecture 6, order 5: insert 55</p>
+${ROW(TREE("30(10|20,60|70|80|90)"), ARROW("insert 55"), TREE("30|^70(10|20,55|60,80|90)"))}
+<p>[55|60|70|80|90] has 5 keys = M: split, 70 (the middle) moves up.</p></div>
+<div class="example"><p class="ex-h">Chapter exercise, order 5: insert 45, 55, 35</p>
+${TREE("30|60(10|20,40|50,70|80|90)")}
+<p>45 and 55 join the middle leaf: [40|45|50|55], 4 keys, still legal. 35 makes 5 keys → split, <strong>45</strong> moves up: root [30|45|60] over [10|20], [35|40], [50|55], [70|80|90].</p></div>
+<p class="label">Counting keys</p>
+<ul>
+<li>Full B-tree with h levels: <strong>M<sup>h</sup> − 1</strong> keys (M = 256, 3 levels: about 16.7 million).</li>
+<li>HW4 minKeysBTree: root 1 key, every other node ⌈M/2⌉ − 1 keys and ⌈M/2⌉ children. Height h: <strong>2·⌈M/2⌉<sup>h</sup> − 1</strong>. Order 3, height 2 → 7. Order 5, height 1 → 5.</li>
+</ul>`,
+  qs: [
+    { q: "In a B-tree of order 5, how many keys can a node hold, and how many children must a non-root node have?",
+      c: ["at most 5 keys; at least 2 children", "at most 4 keys; at least 3 children", "at most 4 keys; at least 2 children", "at most 5 keys; at least 3 children"], a: 1,
+      e: "Order M: up to M − 1 = 4 keys; non-root nodes need ⌈5/2⌉ = 3 children.",
+      x: ["M is the number of children, so keys max out at M − 1.", null, "2 is the root's minimum, not every node's.", "Five keys is the overflow that triggers a split."],
+      d: ["Max children = M = 5, so max keys = 4.", "Min children for non-root = ⌈M/2⌉ = 3.", "So every non-root node has at least 2 keys."] },
+    { q: `Order 5: insert 55. Which key is promoted, and what's the new root?${TREE("30(10|20,60|70|80|90)")}`,
+      c: ["60; root [30|60]", "55; root [30|55]", "70; root [30|70]", "80; root [30|80]"], a: 2,
+      e: "The leaf becomes [55|60|70|80|90]; the middle of five keys is 70.",
+      x: ["60 is second of five, not the middle.", "The inserted key isn't automatically the one promoted.", null, "80 is fourth of five."],
+      d: ["55 > 30 → the right leaf, now 5 keys = M: overflow.", "Sorted: 55, 60, 70, 80, 90. Middle is 70.", "70 moves up: root [30|70] over [10|20], [55|60], [80|90]."] },
+    { q: `Order 5: insert 45, then 55, then 35. Which insert causes a split, and which key is promoted?${TREE("30|60(10|20,40|50,70|80|90)")}`,
+      c: ["45; 45", "55; 50", "35; 45", "35; 40"], a: 2,
+      e: "After 45 and 55 the middle leaf holds 4 keys, which is legal. 35 makes 5.",
+      x: ["After 45 the leaf has 3 keys, under the limit of 4.", "After 55 the leaf has 4 keys: full but legal.", null, "Sorted 35, 40, 45, 50, 55: the middle is 45."],
+      d: ["45 → [40|45|50], 55 → [40|45|50|55]. Both legal (max 4 keys).", "35 → [35|40|45|50|55]: 5 keys = M, split.", "Middle 45 moves up: root [30|45|60]."] },
+    { q: "Why do databases and filesystems use B-trees instead of balanced binary trees?",
+      c: ["B-trees use fewer comparisons", "Each node fills one disk block, so the tree is about log_M n tall and a lookup takes very few block reads", "B-trees never need to split", "Binary trees can't hold a billion keys"], a: 1,
+      e: "On disk the cost is block reads, and a wide node cuts the height from ~log₂ n to ~log_M n.",
+      x: ["Comparisons aren't the bottleneck; they may even be more per node.", null, "B-trees split all the time.", "They can, they're just ~30 levels tall."],
+      d: ["A disk read costs far more than a RAM access and returns a whole block.", "Make one node = one block with hundreds of keys.", "Height ~log_M n: 3 reads for 10⁹ keys with M = 1000, vs ~30."] },
+    { q: "Blocks are 4096 bytes. Keys and child pointers are 8 bytes each. What order M fills one block?",
+      c: ["128", "256", "512", "4096"], a: 1,
+      e: "M pointers + (M − 1) keys: 8M + 8(M − 1) = 16M − 8 ≤ 4096 → M = 256.",
+      x: ["That leaves half the block empty.", null, "512 pointers alone would take the whole block.", "That's the block size in bytes, not the number of children."],
+      d: ["A node holds M pointers and M − 1 keys.", "Bytes: 8M + 8(M − 1) = 16M − 8.", "16M − 8 ≤ 4096 → M ≤ 256.5 → M = 256 (4,088 bytes)."] },
+    { q: "HW4: what is the fewest keys a B-tree of order 5 and height 2 can hold?",
+      c: ["7", "11", "17", "25"], a: 2,
+      e: "2·⌈5/2⌉² − 1 = 2·9 − 1 = 17.",
+      x: ["7 is order 3 (a 2-3 tree) at height 2.", "That miscounts the nodes at depth 2.", null, "That fills nodes more than the minimum."],
+      d: ["Root: 1 key, 2 children. Every other node: 2 keys, 3 children.", "Depth 1: 2 nodes. Depth 2: 6 nodes. Non-root nodes: 8, each with 2 keys = 16.", "Plus the root's 1 key: 17. Formula 2·3² − 1."] },
+    { q: "A full B-tree of order 256 has 3 levels. About how many keys can it hold?",
+      c: ["About 65 thousand", "About 16.7 million", "About 4 billion", "768"], a: 1,
+      e: "M^h − 1 = 256³ − 1 = 16,777,215.",
+      x: ["256² is only two levels.", null, "That's 256⁴.", "That counts one key per child, not 255 keys per node."],
+      d: ["A full node has 255 keys and 256 children.", "Nodes: 1 + 256 + 256² across 3 levels.", "Keys: 256³ − 1 ≈ 16.7 million."] },
+    { q: "Which tree is a B-tree of order 3?",
+      c: ["An AVL tree", "A red-black tree", "A 2-3 tree", "A binary heap"], a: 2,
+      e: "Order 3: up to 2 keys and 3 children, at least 2 children per internal node.",
+      x: ["AVL is binary with balance factors.", "Red-black encodes a 2-3 tree, but as a binary tree.", null, "A heap isn't a search tree."],
+      d: ["Order M = 3 → at most 3 children, 2 keys.", "Non-root nodes need ⌈3/2⌉ = 2 children.", "Nodes with 1 or 2 keys, all leaves level: a 2-3 tree."] }
+  ]
+},
+{
+  id: "bplus", title: "B+ trees and choosing a tree",
+  learn: `
+<div class="big"><p>A <strong>B+ tree</strong> keeps <strong>all records in the leaves</strong>, links the leaves left to right, and uses internal nodes only as <strong>routers</strong>.</p></div>
+${TREE("30|60(10|20,30|45,60|90)", "routers on top; leaves [10|20] → [30|45] → [60|90] are chained")}
+<ul>
+<li><strong>Routing rule</strong>: at routers [30|60], k &lt; 30 → left, 30 ≤ k &lt; 60 → middle, k ≥ 60 → right. <strong>Equal goes right.</strong></li>
+<li>A key can appear <strong>twice</strong>: as a router and in a leaf (30 and 60 above).</li>
+<li><strong>Leaf split</strong>: the new right leaf's first key is <strong>copied</strong> up. <strong>Router split</strong>: the middle router <strong>moves</strong> up.</li>
+<li><strong>Range scan</strong> (BETWEEN 20 AND 40): descend once to 20's leaf, then walk the leaf chain until you pass 40.</li>
+<li>Routers carry no records, so more of them fit per block: higher fan-out, shorter tree.</li>
+</ul>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>B-tree</th><th>B+ tree</th></tr></thead>
+<tbody>
+<tr><td>records</td><td>in every node</td><td>leaves only</td></tr>
+<tr><td>range scan</td><td>walk up and down the tree</td><td>one descent + leaf chain</td></tr>
+<tr><td>a key appears</td><td>once</td><td>router and leaf</td></tr>
+</tbody></table></div>
+<p class="label">Which balanced tree when</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Situation</th><th>Pick</th></tr></thead>
+<tbody>
+<tr><td>in RAM, read-heavy</td><td>AVL (≤ 1.44 log₂ n, shortest)</td></tr>
+<tr><td>in RAM, general purpose / many updates</td><td>red-black (std::map, TreeMap)</td></tr>
+<tr><td>on disk, database index, range queries</td><td>B+ tree</td></tr>
+<tr><td>learning, explaining red-black</td><td>2-3 tree</td></tr>
+</tbody></table></div>
+<p>All of them guarantee Θ(log n) search for any insert order. Only a plain BST can degrade to n − 1.</p>`,
+  qs: [
+    { q: "A B+ tree router node holds [30|60]. A search for exactly 30 goes to which child?",
+      c: ["The left child", "The middle child", "The right child", "It stops at the router"], a: 1,
+      e: "Equal goes right: 30 ≤ k < 60 is the middle door. The record lives in the leaf.",
+      x: ["Left is only for keys below 30.", null, "Right is for keys ≥ 60.", "Routers hold no records, so the search always ends in a leaf."],
+      d: ["Rule: k < 30 → left, 30 ≤ k < 60 → middle, k ≥ 60 → right.", "30 ≤ 30 < 60.", "Middle child, which leads to the leaf [30|45]."] },
+    { q: "Why do databases prefer B+ trees for queries like WHERE age BETWEEN 20 AND 40?",
+      c: ["B+ trees store keys in sorted arrays", "All records sit in linked leaves, so the query descends once and then walks the leaf chain", "B+ trees are binary", "B+ trees have no routers"], a: 1,
+      e: "In a plain B-tree records sit at every level, so a range scan bounces up and down.",
+      x: ["Both kinds keep sorted keys in nodes.", null, "B+ trees are wide, like B-trees.", "The internal nodes are exactly the routers."],
+      d: ["Descend once to the leaf holding 20.", "Leaves are chained in key order.", "Walk right, reporting records, until passing 40."] },
+    { q: "In a B+ tree, where are the records stored?",
+      c: ["In every node", "Only in the root", "Only in the leaves", "Only in the routers"], a: 2,
+      e: "Routers hold keys and child pointers only, so more fit per block.",
+      x: ["That's a plain B-tree.", "The root is a router unless the tree is a single leaf.", null, "Routers carry no records."],
+      d: ["Internal nodes = routers (keys + pointers).", "Every key, with its record, appears in a leaf.", "That's also why a key can appear twice."] },
+    { q: "When a B+ tree leaf splits, what happens to the key that separates the two halves?",
+      c: ["It moves up and disappears from the leaves", "It's copied up as a router and stays in the new leaf", "It's deleted", "It goes to the left leaf"], a: 1,
+      e: "Leaf splits copy; router splits move. That's why a key can appear twice.",
+      x: ["That's what a router split does.", null, "Every key must stay in some leaf with its record.", "The new right leaf starts with it."],
+      d: ["Leaves hold the records, so no key can leave the leaf level.", "The new right leaf's first key is copied into the parent.", "When a router node splits, its middle router moves up (no copy)."] },
+    { q: "You need an index for a database table on disk that supports ordered range scans. Which tree?",
+      c: ["AVL tree", "Red-black tree", "B+ tree", "Binary heap"], a: 2,
+      e: "Wide nodes cut disk reads; linked leaves make ranges one descent plus a walk.",
+      x: ["AVL is for in-memory, read-heavy maps.", "Red-black is the in-memory general-purpose map.", null, "A heap can only give the max."],
+      d: ["On disk, cost = block reads → wide nodes.", "Range scans → linked leaves.", "B+ tree."] },
+    { q: "True or false: AVL, red-black, 2-3 and B-trees all guarantee Θ(log n) search no matter what order keys are inserted.",
+      c: ["True", "False, red-black can degrade", "False, B-trees can become paths", "False, only AVL guarantees it"], a: 0,
+      e: "Each keeps a Θ(log n) height bound under every insert order. Only a plain BST can reach n − 1.",
+      x: [null, "Red-black height ≤ 2 log₂ n always.", "All B-tree leaves stay at one depth.", "All four have worst-case bounds."],
+      d: ["AVL ≤ 1.44 log₂ n. Red-black ≤ 2 log₂ n.", "2-3: log₃ n to log₂ n. B-tree: ≤ log_{⌈M/2⌉} n.", "Search is one node per level: Θ(log n) in every case."] }
+  ]
+}
+];
+
+const H6 = [90, 80, 70, 30, 60, 50];
+TOPICS.push(
+{
+  id: "heap", title: "Priority queues and the binary heap",
+  learn: `
+<div class="big"><p>A <strong>priority queue</strong> only promises the maximum: <code>insert</code>, <code>max</code>, <code>delMax</code>. A <strong>binary heap</strong> does all of it in Θ(log n) using a plain array.</p></div>
+<div class="tablewrap"><table>
+<thead><tr><th>Implementation</th><th>insert</th><th>delMax</th></tr></thead>
+<tbody>
+<tr><td>unordered array</td><td>Θ(1)</td><td>Θ(n)</td></tr>
+<tr><td>ordered array</td><td>Θ(n)</td><td>Θ(1)</td></tr>
+<tr><td><strong>binary heap</strong></td><td><strong>Θ(log n)</strong></td><td><strong>Θ(log n)</strong></td></tr>
+</tbody></table></div>
+<p class="label">Two conditions</p>
+<ol class="steps">
+<li><strong>Complete</strong>: every level full except maybe the last, filled left to right.</li>
+<li><strong>Heap-ordered</strong>: every parent ≥ both its children.</li>
+</ol>
+<p class="label">The array (1-based, a[0] unused)</p>
+${ROW(HEAP(H6), ARR(H6))}
+<ul>
+<li><strong>parent(k) = k/2</strong> (integer division). <strong>children = 2k and 2k + 1</strong>.</li>
+<li>Internal nodes are 1 … ⌊n/2⌋. <strong>Leaves are ⌊n/2⌋ + 1 … n</strong>: at least half the heap.</li>
+<li>Height = <strong>⌊log₂ n⌋</strong>.</li>
+</ul>
+<p class="label">What the rules imply</p>
+<ul>
+<li>The max is at a[1]. Every root-to-leaf path goes down in value, but <strong>siblings and levels have no order</strong>.</li>
+<li>A key is smaller than all its ancestors, so the k-th largest sits at depth ≤ k − 1: the 2nd largest is at index 2 or 3.</li>
+<li>The <strong>min is at a leaf</strong>, but which one is unknown: finding it is Θ(n).</li>
+<li>A descending-sorted array is always a max-heap. A heap is usually not sorted.</li>
+<li><strong>Heap ≠ BST</strong>: a BST orders left &lt; node &lt; right and finds any key; a heap only knows the max.</li>
+<li>Why not use an AVL tree as the PQ? The heap needs no pointers, builds in Θ(n), and is ~20 lines.</li>
+</ul>`,
+  qs: [
+    { q: "Which array (1-based) is a valid max-heap?",
+      c: ["[90 80 70 30 85 50]", "[90 80 70 30 60 50]", "[80 90 70 30 60 50]", "[90 30 70 80 60 50]"], a: 1,
+      e: "Check a[k] ≥ a[2k] and a[2k+1] for k = 1, 2, 3: 90 ≥ 80, 70; 80 ≥ 30, 60; 70 ≥ 50.",
+      x: ["a[5] = 85 is a child of a[2] = 80, and 85 > 80.", null, "The root 80 is smaller than its child 90.", "a[2] = 30 has child a[4] = 80, which is bigger."],
+      d: ["Children of k are 2k and 2k + 1.", "Check k = 1: 90 vs 80, 70. k = 2: 80 vs 30, 60. k = 3: 70 vs 50.", "All parents win: valid heap."] },
+    { q: "In a 1-based heap array, what are the children of a[6], and the parent of a[11]?",
+      c: ["7 and 8; 10", "12 and 13; 5", "11 and 12; 6", "12 and 13; 6"], a: 1,
+      e: "Children 2k, 2k + 1; parent k/2 rounded down.",
+      x: ["Those are just the next indices.", null, "That's the 0-based rule (2k + 1, 2k + 2) applied to a 1-based array.", "11/2 rounds down to 5."],
+      d: ["Children of 6: 2·6 = 12 and 13.", "Parent of 11: 11/2 = 5 (integer division).", "Answer: 12, 13 and 5."] },
+    { q: "A heap has n = 15 keys in a[1..15]. Which indices are leaves?",
+      c: ["1 to 7", "8 to 15", "Only 15", "9 to 15"], a: 1,
+      e: "Node k has a child exactly when 2k ≤ n. That fails from k = 8 on.",
+      x: ["Those are the internal nodes.", null, "Every node in the last row is a leaf.", "a[8]'s children would be 16 and 17, past n, so 8 is a leaf too."],
+      d: ["Internal nodes: 1 … ⌊n/2⌋ = 1 … 7.", "Leaves: 8 … 15.", "More than half the heap is leaves."] },
+    { q: "A max-heap holds 15 distinct keys in a[1..15]. Where can the second-largest key be?",
+      c: ["Only at a[2]", "At a[2] or a[3]", "Anywhere in a[2..7]", "At a leaf"], a: 1,
+      e: "Only the max can be above it, so it has exactly one ancestor: depth 1.",
+      x: ["It could just as well be the right child.", null, "That's where the third-largest can be.", "Leaves have many ancestors; the second-largest has only one."],
+      d: ["Every larger key must be an ancestor.", "The second-largest has only one larger key: the root.", "So it's a child of the root: index 2 or 3."] },
+    { q: "Where is the minimum key in a max-heap, and how long does finding it take?",
+      c: ["At a[n], Θ(1)", "At some leaf, Θ(n) to find", "At a[2], Θ(1)", "At the root of the left subtree, Θ(log n)"], a: 1,
+      e: "Any node with a child is bigger than that child, so the min is a leaf, but no rule says which.",
+      x: ["a[n] is a leaf but not necessarily the smallest.", null, "a[2] is a child of the root, near the top.", "Heaps don't order left against right."],
+      d: ["An internal node is ≥ its children, so it can't be the min (keys distinct).", "So the min is among the leaves, ⌊n/2⌋ + 1 … n.", "Nothing orders the leaves: check them all, Θ(n)."] },
+    { q: "What is the height of a binary heap with 100 keys?",
+      c: ["5", "6", "7", "50"], a: 1,
+      e: "⌊log₂ 100⌋ = 6. A complete tree is as short as possible.",
+      x: ["Height 5 holds at most 63 keys.", null, "log₂ 100 ≈ 6.6; height uses the floor.", "Heaps are always complete, never stretched."],
+      d: ["Height of a complete tree = ⌊log₂ n⌋.", "2⁶ = 64 ≤ 100 < 128 = 2⁷.", "Height 6."] },
+    { q: "True or false: a descending-sorted array is always a valid max-heap.",
+      c: ["True", "False, it isn't complete", "False, siblings must be sorted", "False, only ascending arrays are heaps"], a: 0,
+      e: "Every child index is larger than its parent's index, so the child's key is smaller.",
+      x: [null, "An array is always complete by construction.", "Heaps don't care about sibling order.", "An ascending array is a min-heap."],
+      d: ["Children of k are at 2k and 2k + 1, both > k.", "Sorted descending means a[k] ≥ a[j] whenever j > k.", "So every parent ≥ its children: a heap."] },
+    { q: "An unordered array as a priority queue: what do insert and delMax cost?",
+      c: ["Θ(1) and Θ(1)", "Θ(1) and Θ(n)", "Θ(n) and Θ(1)", "Θ(log n) and Θ(log n)"], a: 1,
+      e: "Append is free, but finding the max means scanning everything.",
+      x: ["Something has to find the max.", null, "That's the ordered array.", "That's the binary heap."],
+      d: ["insert: put it at the end, Θ(1).", "delMax: scan all n for the max, Θ(n).", "The heap balances both at Θ(log n)."] }
+  ]
+},
+{
+  id: "ss", title: "Insert and delete-max: swim and sink",
+  learn: `
+<div class="big"><p><strong>insert</strong> = put the key at the end, then <strong>swim</strong> it up. <strong>delMax</strong> = swap the root with the last key, shrink, then <strong>sink</strong> the new root down. Each repairs one path: Θ(log n).</p></div>
+<pre><code>void swim(int a[], int k) {
+    while (k &gt; 1 &amp;&amp; a[k/2] &lt; a[k]) { swap(a[k/2], a[k]); k = k/2; }
+}
+void sink(int a[], int k, int n) {
+    while (2*k &lt;= n) {
+        int j = 2*k;
+        if (j &lt; n &amp;&amp; a[j] &lt; a[j+1]) j++;   // the larger child
+        if (a[k] &gt;= a[j]) break;
+        swap(a[k], a[j]); k = j;
+    }
+}</code></pre>
+<div class="example"><p class="ex-h">Lecture 7: insert 95 into [90 80 70 30 60 50]</p>
+${ROW(HEAP([90, 80, 70, 30, 60, 50, 95], "append at a[7]", [7]), ARROW("95 > 70, then > 90"), HEAP([95, 80, 90, 30, 60, 50, 70], "[95 80 90 30 60 50 70]", [1]))}
+<p>Insert 85 instead: it beats 70 but loses to 90, so it stops at index 3: [90 80 85 30 60 50 70].</p></div>
+<div class="example"><p class="ex-h">Lecture 7: delMax on [95 90 70 80 60 50]</p>
+${ROW(HEAP([95, 90, 70, 80, 60, 50]), ARROW("50 to the top, sink"), HEAP([90, 80, 70, 50, 60], "returns 95"))}
+<p>50 moves to the root. It sinks under the <strong>larger</strong> child twice: 90 (not 70), then 80 (not 60).</p></div>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>swim (insert)</th><th>sink (delMax)</th></tr></thead>
+<tbody>
+<tr><td>starts at</td><td>the new last leaf</td><td>the root</td></tr>
+<tr><td>moves</td><td>up</td><td>down</td></tr>
+<tr><td>compares with</td><td>1 parent</td><td>2 children, picks the larger</td></tr>
+<tr><td>cost</td><td>O(log n)</td><td>O(log n)</td></tr>
+</tbody></table></div>
+<p class="label">Watch out</p>
+<ul class="traps">
+<li>Sink must swap with the <strong>larger</strong> child. Swapping with the smaller one leaves a bigger key under a smaller one.</li>
+<li>The <code>j &lt; n</code> guard: when a node has only a left child (2k = n), there's no right child to compare. Without it, sink would look at the parked old max past the end.</li>
+</ul>`,
+  qs: [
+    { q: `Insert 85 into this heap. What is the array after?${HEAP(H6)}`,
+      c: ["[90 80 70 30 60 50 85]", "[90 80 85 30 60 50 70]", "[85 80 90 30 60 50 70]", "[90 85 70 80 60 50 30]"], a: 1,
+      e: "85 lands at a[7] under 70, beats 70, then loses to 90.",
+      x: ["85 is bigger than its parent 70, so it must swim.", null, "85 < 90, so it stops below the root.", "85's path is 7 → 3 → 1. It never touches index 2."],
+      d: ["Append at a[7]. Parent a[3] = 70.", "85 > 70 → swap: a[3] = 85, a[7] = 70.", "Parent a[1] = 90 > 85 → stop."] },
+    { q: `Insert 95 into this heap. What is the array after?${HEAP(H6)}`,
+      c: ["[95 80 90 30 60 50 70]", "[95 90 80 70 60 50 30]", "[90 80 95 30 60 50 70]", "[95 80 70 30 60 50 90]"], a: 0,
+      e: "95 swims from 7 to 3 to 1: two swaps.",
+      x: [null, "Swim only moves keys along one path. 80 and 30 don't move.", "95 > 90 too, so it keeps going.", "Each swap moves the parent down into the child's slot: 70 goes to 7, 90 to 3."],
+      d: ["Append at a[7]: 95 > 70 → swap.", "At a[3]: 95 > 90 → swap.", "At a[1]: done. [95 80 90 30 60 50 70]."] },
+    { q: `Insert 55 into this heap. How many swaps?${HEAP(H6)}`,
+      c: ["0", "1", "2", "3"], a: 0,
+      e: "55 lands under 70 and 55 < 70, so it stays.",
+      x: [null, "55 never beats its parent 70.", "Nothing moves.", "Swim can't move more than the height (2) anyway."],
+      d: ["Append at a[7]; parent a[3] = 70.", "55 < 70 → stop immediately.", "[90 80 70 30 60 50 55]."] },
+    { q: "Chapter exercise: insert 5, 15, 10, 20, 8 into an empty max-heap. What is the final array?",
+      c: ["[20 15 10 5 8]", "[20 8 15 10 5]", "[5 8 10 15 20]", "[20 15 8 5 10]"], a: 0,
+      e: "20 swims to the root; 8 stays under 15.",
+      x: [null, "8 is inserted last and never beats 15.", "That's sorted ascending, a min-heap.", "10 was at index 3 before 8 arrived and doesn't move."],
+      d: ["5 → [5]. 15 swims → [15 5]. 10 → [15 5 10].", "20 at a[4]: beats 5, then 15 → [20 15 10 5].", "8 at a[5]: parent 15 > 8 → stays. [20 15 10 5 8]."] },
+    { q: `delMax on [20 15 10 5 8]. What is returned, and what array remains?${HEAP([20, 15, 10, 5, 8])}`,
+      c: ["20; [15 8 10 5]", "20; [15 10 8 5]", "20; [8 15 10 5]", "8; [20 15 10 5]"], a: 0,
+      e: "8 moves to the root, sinks under 15 (larger of 15, 10), then stops over 5.",
+      x: [null, "Sink only swaps along one path; 10 stays at index 3.", "8 must sink: it's smaller than both children.", "delMax returns the root, 20."],
+      d: ["Return 20. Move the last key 8 to the root: [8 15 10 5].", "Children 15, 10 → larger 15 > 8 → swap: [15 8 10 5].", "8 at index 2 has child 5 → 8 ≥ 5, stop."] },
+    { q: `delMax on this heap. What array remains?${HEAP(H6)}`,
+      c: ["[80 70 60 30 50]", "[80 60 70 30 50]", "[80 50 70 30 60]", "[70 80 50 30 60]"], a: 1,
+      e: "50 goes to the root, sinks under 80, then under 60.",
+      x: ["70 stays at index 3. Sink follows one path.", null, "At index 2, 50 < 60, so it keeps sinking.", "The larger child of the root is 80, not 70."],
+      d: ["Return 90. Last key 50 to the root: [50 80 70 30 60].", "Larger child 80 > 50 → swap: [80 50 70 30 60].", "At index 2: children 30, 60 → 60 > 50 → swap: [80 60 70 30 50]."] },
+    { q: "Why must sink swap with the larger of the two children?",
+      c: ["It's quicker", "Otherwise the larger child ends up below the smaller one, breaking heap order", "It keeps the tree complete", "It doesn't matter"], a: 1,
+      e: "The node that moves up becomes the parent of the other child, so it must be the bigger one.",
+      x: ["Both choices cost the same.", null, "Completeness never changes during sink.", "The smaller choice breaks the heap."],
+      d: ["After the swap, the chosen child becomes the parent of its sibling.", "If it's the smaller one, its sibling is bigger than it.", "That breaks parent ≥ child. Pick the larger."] },
+    { q: `Chapter exercise: delMax on [20 5 18 4 3 17 16]. What array remains?${HEAP([20, 5, 18, 4, 3, 17, 16])}`,
+      c: ["[18 5 17 4 3 16]", "[18 16 17 4 3 5]", "[17 5 18 4 3 16]", "[18 5 16 4 3 17]"], a: 0,
+      e: "16 sinks under 18, then under its only child 17 (here the j < n guard matters).",
+      x: [null, "5 is in the other subtree and never moves.", "The root must be the larger child, 18.", "16 < 17, so it must sink once more."],
+      d: ["Return 20. 16 to the root, n = 6: [16 5 18 4 3 17].", "Larger child 18 → swap: [18 5 16 4 3 17].", "Index 3: only child a[6] = 17 (j = n, guard skips the right) → 17 > 16 → swap: [18 5 17 4 3 16]."] }
+  ]
+},
+{
+  id: "hfy", title: "Heapify: building a heap in Θ(n)",
+  learn: `
+<div class="big"><p>Given all n keys up front, don't insert one by one. <strong>Sink every internal node from ⌊n/2⌋ down to 1.</strong> Leaves are already one-node heaps.</p></div>
+<pre><code>void heapify(int a[], int n) {
+    for (int k = n/2; k &gt;= 1; k--) sink(a, k, n);
+}</code></pre>
+<div class="example"><p class="ex-h">Chapter exercise: [4 7 3 9 1 6 2], n = 7</p>
+${HEAP([4, 7, 3, 9, 1, 6, 2])}
+<ul>
+<li>sink 3: 3 vs children 6, 2 → swap 6 → [4 7 6 9 1 3 2]</li>
+<li>sink 2: 7 vs 9, 1 → swap 9 → [4 9 6 7 1 3 2]</li>
+<li>sink 1: 4 vs 9, 6 → swap 9; then 4 vs 7, 1 → swap 7 → <strong>[9 7 6 4 1 3 2]</strong></li>
+</ul></div>
+<div class="example"><p class="ex-h">Lecture 7: [30 60 50 90 85 40 70 45 20], n = 9</p>
+<p>Start at k = 4: 90 beats 45, 20, no swap. k = 3: 50 → 70 swaps up: [30 60 70 90 85 40 50 45 20]. k = 2: 60 → 90: [30 90 70 60 85 40 50 45 20]. k = 1: 30 sinks twice (90, then 85): <strong>[90 85 70 60 30 40 50 45 20]</strong>.</p></div>
+<p class="label">Why the order is n/2 down to 1</p>
+<p>sink(k) only works if both subtrees of k are already heaps. Going from the bottom up makes sure they are. Going top-down sinks the root into unsorted junk and leaves it in the wrong place.</p>
+<p class="label">Why it's Θ(n)</p>
+<ul>
+<li>sink pays the node's <strong>height</strong>; swim pays its <strong>depth</strong>.</li>
+<li>Half the nodes are leaves (height 0), a quarter have height 1, and so on. The total is <strong>fewer than n swaps</strong> (for a full tree, n − h − 1).</li>
+<li>Inserting n keys one by one pays depth: Θ(n log n).</li>
+<li>No conflict with the n log n sorting bound: a heap isn't sorted. Pulling everything out in order still costs n log n (that's heapsort).</li>
+</ul>`,
+  qs: [
+    { q: `Heapify [4 7 3 9 1 6 2]. What is the final array?${HEAP([4, 7, 3, 9, 1, 6, 2])}`,
+      c: ["[9 7 6 4 1 3 2]", "[9 4 6 7 1 3 2]", "[9 7 4 6 1 3 2]", "[9 6 7 4 1 3 2]"], a: 0,
+      e: "Sink 3, then 2, then 1; the 4 at the root sinks two levels.",
+      x: [null, "4 must keep sinking: at index 2 its child 7 is bigger.", "Index 3 ends with 6 (from sink 3), not 4.", "The root's larger child is 9 then 7 on the left, not 6."],
+      d: ["sink 3: 3 ↔ 6 → [4 7 6 9 1 3 2]. sink 2: 7 ↔ 9 → [4 9 6 7 1 3 2].", "sink 1: 4 ↔ 9 → [9 4 6 7 1 3 2].", "4 at index 2: children 7, 1 → swap 7 → [9 7 6 4 1 3 2]."] },
+    { q: "Heapify an array of n = 9 keys. Which index does the loop sink first?",
+      c: ["1", "9", "4", "5"], a: 2,
+      e: "The last internal node is ⌊9/2⌋ = 4. Indices 5 to 9 are leaves.",
+      x: ["The root is sunk last.", "a[9] is a leaf; sinking it does nothing.", null, "a[5] has children 10 and 11, both past n: it's a leaf."],
+      d: ["Internal nodes are 1 … ⌊n/2⌋.", "⌊9/2⌋ = 4.", "The loop goes k = 4, 3, 2, 1."] },
+    { q: `Heapify [30 60 50 90 85 40 70 45 20]. What is the final array?${HEAP([30, 60, 50, 90, 85, 40, 70, 45, 20])}`,
+      c: ["[90 85 70 60 30 40 50 45 20]", "[90 60 70 45 85 40 50 30 20]", "[90 85 70 45 60 40 50 30 20]", "[90 85 70 60 45 40 50 30 20]"], a: 0,
+      e: "Lecture 7's worked pass: the root 30 sinks under 90 and then 85.",
+      x: [null, "60 sinks under 90 when k = 2, so it can't still be at index 2.", "30 follows the larger child at each step: 90, then 85 (index 5), not 60.", "30 ends at index 5 (under 85), and 45 stays at index 8."],
+      d: ["k = 4: 90 ≥ 45, 20. k = 3: 50 ↔ 70. k = 2: 60 ↔ 90.", "k = 1: 30 vs 90, 70 → swap 90.", "30 at index 2: children 60, 85 → swap 85. Leaf. [90 85 70 60 30 40 50 45 20]."] },
+    { q: "How long does heapify take, compared with inserting the n keys one at a time?",
+      c: ["Both Θ(n log n)", "Heapify Θ(n); n inserts Θ(n log n)", "Heapify Θ(log n); inserts Θ(n)", "Heapify Θ(n²)"], a: 1,
+      e: "sink pays each node's height (mostly 0 or 1); swim pays its depth (mostly ~log n).",
+      x: ["Heapify is linear.", null, "Every key has to be looked at, so nothing is under Θ(n).", "Heapify makes fewer than n swaps."],
+      d: ["Half the nodes are leaves: 0 work in heapify.", "Summing heights gives fewer than n swaps: Θ(n).", "n inserts: half the keys sit at depth ~log n → Θ(n log n)."] },
+    { q: "Why does heapify sink from ⌊n/2⌋ down to 1, and not from 1 up?",
+      c: ["It's just a convention", "sink(k) needs both subtrees of k to be heaps already, and bottom-up makes that true", "Top-down would be slower but correct", "So the leaves get sunk first"], a: 1,
+      e: "Top-down sinks a key into subtrees that aren't heaps yet, and it stops in the wrong place.",
+      x: ["The order is required, not optional.", null, "Top-down doesn't produce a heap at all.", "Leaves are skipped; they're already heaps."],
+      d: ["The sink lemma: if both subtrees are heaps, sink makes the whole subtree a heap.", "Going downward in index, children (2k, 2k + 1) are always done before k.", "So every sink meets two heaps below it."] },
+    { q: "A Θ(n) heap build seems to beat the Ω(n log n) sorting bound. Why doesn't it?",
+      c: ["Heapify isn't really Θ(n)", "A heap isn't sorted; extracting sorted order still costs n log n", "The sorting bound doesn't apply to arrays", "It does beat it"], a: 1,
+      e: "A heap only orders keys along paths, far less than a full sort.",
+      x: ["It is Θ(n): fewer than n swaps.", null, "The bound applies to any comparison sort.", "No comparison method beats it."],
+      d: ["The bound is for producing fully sorted output.", "A heap only guarantees parent ≥ child.", "Getting sorted output from it takes n delMaxes: n log n (heapsort)."] },
+    { q: `Heapify [10 20 15 30 40]. What is the final array?${HEAP([10, 20, 15, 30, 40])}`,
+      c: ["[40 30 15 10 20]", "[40 20 15 30 10]", "[40 30 15 20 10]", "[30 40 15 10 20]"], a: 0,
+      e: "sink 2 lifts 40; sink 1 lifts 40 again and 10 ends under 30.",
+      x: [null, "20 can't stay at index 2 over 30.", "10 sinks to the larger child of index 2, which is 30 at index 4.", "The root must be the max, 40."],
+      d: ["n = 5, start at k = 2: 20 vs 30, 40 → swap 40 → [10 40 15 30 20].", "k = 1: 10 vs 40, 15 → swap 40 → [40 10 15 30 20].", "10 at index 2: children 30, 20 → swap 30 → [40 30 15 10 20]."] }
+  ]
+},
+{
+  id: "hs", title: "Heapsort",
+  learn: `
+<div class="big"><p><strong>Heapsort</strong> = heapify, then repeatedly swap the max to the end of the heap, shrink, and sink. The sorted part grows on the right, in the same array.</p></div>
+<pre><code>void heapsort(int a[], int n) {
+    heapify(a, n);
+    for (int end = n; end &gt; 1; end--) {
+        swap(a[1], a[end]);     // max goes to its final spot
+        sink(a, 1, end - 1);    // a[1..end-1] is a heap again
+    }
+}</code></pre>
+<div class="example"><p class="ex-h">Lecture 7: sort down [95 90 70 80 60]</p>
+<div class="tablewrap"><table class="num">
+<thead><tr><th>Round</th><th>heap | sorted</th></tr></thead>
+<tbody>
+<tr><td>swap 95, sink</td><td>90 80 70 60 | 95</td></tr>
+<tr><td>swap 90, sink</td><td>80 60 70 | 90 95</td></tr>
+<tr><td>swap 80, sink</td><td>70 60 | 80 90 95</td></tr>
+<tr><td>swap 70, sink</td><td>60 | 70 80 90 95</td></tr>
+</tbody></table></div></div>
+<div class="example"><p class="ex-h">Chapter exercise: two rounds on [9 7 6 4 1 3 2]</p>
+<p>Round 1: swap 9 and 2 → 2 sinks under 7, then 4 → [7 4 6 2 1 3 | 9]. Round 2: swap 7 and 3 → 3 sinks under 6 → [6 4 3 2 1 | 7 9].</p></div>
+<p class="label">Facts</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Sort</th><th>Worst case</th><th>Extra space</th><th>Stable</th></tr></thead>
+<tbody>
+<tr><td>mergesort</td><td>Θ(n log n)</td><td>Θ(n)</td><td>yes</td></tr>
+<tr><td>quicksort</td><td>Θ(n²)</td><td>Θ(log n)</td><td>no</td></tr>
+<tr><td><strong>heapsort</strong></td><td><strong>Θ(n log n)</strong></td><td><strong>Θ(1)</strong></td><td>no</td></tr>
+</tbody></table></div>
+<ul>
+<li>Only heapsort is guaranteed n log n <strong>and</strong> in place. std::sort (introsort) falls back to it when quicksort recurses too deep.</li>
+<li>It's selection sort with a heap: find the max in Θ(log n) instead of Θ(n).</li>
+<li>In practice it loses to quicksort: sink jumps around the array and misses the cache.</li>
+</ul>
+<p class="label">Watch out</p>
+<ul class="traps">
+<li>Using a <strong>min-heap</strong> with the same loop sorts <strong>descending</strong>.</li>
+<li>Writing <code>sink(a, 1, end)</code> instead of <code>end − 1</code> lets the parked max back into the heap and wrecks the sort.</li>
+</ul>`,
+  qs: [
+    { q: `One sort-down round on the heap [9 7 6 4 1 3 2]. What is the array after?${HEAP([9, 7, 6, 4, 1, 3, 2])}`,
+      c: ["[7 4 6 2 1 3 | 9]", "[2 7 6 4 1 3 | 9]", "[7 6 4 2 1 3 | 9]", "[7 2 6 4 1 3 | 9]"], a: 0,
+      e: "9 swaps to the end; 2 sinks under 7, then under 4.",
+      x: [null, "The new root has to sink.", "Sink only swaps along one path; 6 stays at index 3.", "2 keeps sinking: at index 2 its child 4 is bigger."],
+      d: ["Swap a[1] = 9 with a[7] = 2. Heap is now a[1..6] = [2 7 6 4 1 3].", "2 vs 7, 6 → swap 7: [7 2 6 4 1 3].", "2 at index 2: children 4, 1 → swap 4: [7 4 6 2 1 3 | 9]."] },
+    { q: "Continue: the second round on [7 4 6 2 1 3 | 9]. What is the array after?",
+      c: ["[6 4 3 2 1 | 7 9]", "[3 4 6 2 1 | 7 9]", "[6 3 4 2 1 | 7 9]", "[6 4 3 1 2 | 7 9]"], a: 0,
+      e: "7 swaps to the boundary; 3 sinks under 6 and stops (index 3 has no children now).",
+      x: [null, "3 at the root is smaller than its children; it must sink.", "3 follows the larger child, 6 on the right, not 4.", "2 and 1 don't move."],
+      d: ["Swap a[1] = 7 with a[6] = 3. Heap a[1..5] = [3 4 6 2 1].", "3 vs 4, 6 → swap 6: [6 4 3 2 1].", "3 at index 3: children would be 6 and 7, both past 5. Stop."] },
+    { q: `Heapsort's first round on [95 90 70 80 60]. What is the array after?${HEAP([95, 90, 70, 80, 60])}`,
+      c: ["[90 80 70 60 | 95]", "[60 90 70 80 | 95]", "[90 70 80 60 | 95]", "[90 60 70 80 | 95]"], a: 0,
+      e: "60 sinks under 90, then under 80.",
+      x: [null, "60 must sink.", "70 stays at index 3; only the left path moves.", "60 keeps sinking: 80 is below it."],
+      d: ["Swap 95 and 60: heap [60 90 70 80].", "60 vs 90, 70 → swap 90: [90 60 70 80].", "60 at index 2: child 80 → swap: [90 80 70 60 | 95]."] },
+    { q: "Heapsort's worst-case time and extra space?",
+      c: ["Θ(n log n) time, Θ(n) space", "Θ(n log n) time, Θ(1) space", "Θ(n²) time, Θ(1) space", "Θ(n) time, Θ(1) space"], a: 1,
+      e: "Heapify Θ(n), then n − 1 sinks of Θ(log n) each, all inside the array.",
+      x: ["That's mergesort's space.", null, "That's quicksort's worst case.", "No comparison sort is linear."],
+      d: ["Heapify: Θ(n).", "n − 1 rounds × Θ(log n) sink: Θ(n log n).", "The sorted tail lives in the same array: Θ(1) extra."] },
+    { q: "Which sort is guaranteed Θ(n log n) in the worst case and sorts in place?",
+      c: ["Mergesort", "Quicksort", "Heapsort", "Insertion sort"], a: 2,
+      e: "That's why introsort (std::sort) falls back to heapsort.",
+      x: ["Mergesort needs a Θ(n) buffer.", "Quicksort's worst case is Θ(n²).", null, "Insertion sort is Θ(n²) worst case."],
+      d: ["Mergesort: guaranteed but not in place.", "Quicksort: in place but Θ(n²) worst.", "Heapsort: both."] },
+    { q: "You build a min-heap and run the same sort-down loop. What comes out?",
+      c: ["Ascending order", "Descending order", "Unsorted", "It crashes"], a: 1,
+      e: "Each round parks the current minimum at the right end, so the smallest keys pile up on the right.",
+      x: ["Ascending needs a max-heap with this loop.", null, "Each round still removes the extreme key correctly.", "The code runs fine."],
+      d: ["Each round swaps the root (the min) to the boundary.", "The right end fills with smallest first.", "The array reads largest to smallest: descending."] },
+    { q: "A bug writes sink(a, 1, end) instead of sink(a, 1, end − 1). What goes wrong?",
+      c: ["Nothing", "The sink can pull the just-parked max back into the heap", "It runs out of bounds", "It sorts descending"], a: 1,
+      e: "The parked max is still inside the range sink looks at, so it can swap back up.",
+      x: ["The chapter shows it ends unsorted.", null, "end is a valid index.", "The direction doesn't flip; it just fails to sort."],
+      d: ["After the swap, a[end] holds the max.", "sink(a, 1, end) still treats a[end] as part of the heap.", "A sinking key can swap with it and drag it back: the sort breaks."] },
+    { q: "Is heapsort stable?",
+      c: ["Yes", "No", "Only on distinct keys", "Only with heapify"], a: 1,
+      e: "Swapping the root with the far end moves equal keys past each other.",
+      x: ["Long-distance swaps reorder equal keys.", null, "With distinct keys stability doesn't matter, but heapsort still isn't stable in general.", "Heapify reorders too."],
+      d: ["Stable means equal keys keep their input order.", "Heapsort swaps a[1] with a[end], jumping keys across the array.", "Equal keys can switch order: not stable. Mergesort is the stable one."] }
+  ]
+},
+{
+  id: "dary", title: "HW4: d-ary heaps and priority-queue uses",
+  learn: `
+<div class="big"><p>HW4 generalizes the heap to <strong>d children per node</strong>, stored <strong>0-based</strong>, and uses priority queues to solve two problems.</p></div>
+<p class="label">d-ary heap, 0-based</p>
+<ul>
+<li>Children of i: <strong>d·i + 1, d·i + 2, …, d·i + d</strong> (those &lt; n).</li>
+<li>Parent of j &gt; 0: <strong>(j − 1) / d</strong>.</li>
+<li>Binary, 0-based: children 2i + 1, 2i + 2; parent (j − 1)/2. (Don't mix it up with the 1-based 2k, 2k + 1, k/2.)</li>
+<li>Height ≈ log<sub>d</sub> n: swim gets cheaper (fewer levels), but sink compares up to d children per level.</li>
+<li><strong>sinkDary</strong>: swap with the <strong>largest</strong> child (leftmost on ties) while smaller.</li>
+<li><strong>buildDary</strong>: sink every internal node from the last one, <strong>(n − 2)/d</strong>, down to 0. Still linear time.</li>
+</ul>
+<div class="example"><p class="ex-h">HW4 test: ternary sink from index 0 on [2 5 9 7 1 1 1 1]</p>
+${ARR([2, 5, 9, 7, 1, 1, 1, 1], { zero: true, hi: [0] })}
+<p>Children of 0 are 1, 2, 3 (5, 9, 7). Largest is 9 → swap. 2 is now at index 2; its children 7, 8 → only index 7 exists (1). 2 ≥ 1, stop: [9 5 2 7 1 1 1 1].</p></div>
+<p class="label">kthLargest with a min-heap of size k</p>
+<ul>
+<li>Push each value; if the heap has more than k values, pop the smallest.</li>
+<li>The heap keeps the k largest so far, and its <strong>top (the min) is the k-th largest</strong>.</li>
+<li>Cost <strong>n log k</strong>, memory k. [7 2 9 4 9 1 5]: 1st, 2nd, 3rd largest are 9, 9, 7 (repeats count).</li>
+</ul>
+<p class="label">mergeSorted: k sorted lists, L values total</p>
+<ul>
+<li>Min-heap with <strong>one entry per list</strong>: (value, which list, position).</li>
+<li>Pop the smallest, output it, push the next value from that same list.</li>
+<li>Cost <strong>L log k</strong>.</li>
+</ul>
+<p class="label">Library priority queues</p>
+<p>C++ <code>std::priority_queue</code> is a <strong>max</strong>-heap (use <code>greater&lt;int&gt;</code> for a min-heap). Java PriorityQueue and Python heapq are <strong>min</strong>-heaps.</p>`,
+  qs: [
+    { q: "In a 0-based ternary (d = 3) heap, what are the children of index 2?",
+      c: ["4, 5, 6", "6, 7, 8", "7, 8, 9", "5, 6, 7"], a: 2,
+      e: "d·i + 1 … d·i + d = 7, 8, 9.",
+      x: ["That's 2i, 2i + 1, 2i + 2.", "That's d·i … d·i + 2, off by one.", null, "That adds 3 instead of multiplying."],
+      d: ["Children of i: d·i + 1 through d·i + d.", "3·2 = 6.", "Children 7, 8, 9."] },
+    { q: "In a 0-based 4-ary heap, what is the parent of index 9?",
+      c: ["1", "2", "3", "4"], a: 1,
+      e: "(9 − 1) / 4 = 2.",
+      x: ["That's 9/9 or a wrong formula.", null, "That's 9/3, the ternary rule without the −1.", "That's 9/2, the binary 1-based rule."],
+      d: ["Parent of j: (j − 1) / d.", "(9 − 1) / 4 = 8 / 4.", "2. Check: children of 2 are 9, 10, 11, 12."] },
+    { q: "In a 0-based binary heap, what are the children and the parent of index 3?",
+      c: ["Children 6, 7; parent 1", "Children 7, 8; parent 1", "Children 6, 7; parent 2", "Children 7, 8; parent 2"], a: 1,
+      e: "0-based binary: children 2i + 1, 2i + 2; parent (j − 1) / 2.",
+      x: ["That's the 1-based rule on a 0-based array.", null, "Both are off: 1-based children and parent 3/2 rounded up.", "(3 − 1) / 2 = 1, not 2."],
+      d: ["Children: 2·3 + 1 = 7 and 2·3 + 2 = 8.", "Parent: (3 − 1) / 2 = 1.", "This is HW4's d = 2 case."] },
+    { q: "HW4 kthLargest on [7 2 9 4 9 1 5] with k = 2. What does it return?",
+      c: ["7", "9", "5", "4"], a: 1,
+      e: "Repeats count: the two largest values are 9 and 9.",
+      x: ["7 is the 3rd largest.", null, "5 is the 4th largest.", "4 is the 5th largest."],
+      d: ["Sorted high to low: 9, 9, 7, 5, 4, 2, 1.", "The 2nd entry is 9.", "The min-heap of size 2 ends holding {9, 9}; its top is 9."] },
+    { q: "Why does kthLargest use a min-heap of size k, and what does it cost?",
+      c: ["A max-heap of size k; n log n", "A min-heap of size k; its top is the k-th largest; n log k", "Sort the array; n log n", "A min-heap of size n; n log n"], a: 1,
+      e: "The heap holds the k largest so far; the smallest of those is the k-th largest.",
+      x: ["A max-heap would make it easy to evict the wrong (largest) value.", null, "HW4 forbids sorting.", "Keeping only k values is the whole point: log k per operation."],
+      d: ["Push each value; if size > k, pop the min.", "The k largest survive. The min of them is the answer.", "n pushes/pops on a size-k heap: n log k."] },
+    { q: "Merging k sorted lists with L values total, using a min-heap with one entry per list, costs:",
+      c: ["L log L", "L log k", "k log L", "L · k"], a: 1,
+      e: "The heap never holds more than k entries, and each of the L values is pushed and popped once.",
+      x: ["That's sorting everything from scratch.", null, "That would only process k values.", "That's scanning all list heads for every output."],
+      d: ["The heap holds at most one entry per list: size ≤ k.", "Each output value: one pop + one push, Θ(log k).", "L values → L log k."] },
+    { q: "HW4 buildDary on n = 13 values with d = 4 (0-based). Which index does it sink first?",
+      c: ["6", "3", "2", "12"], a: 2,
+      e: "The last internal node is the parent of the last index: (13 − 2) / 4 = 2.",
+      x: ["That's n/2 − 0.5, the binary rule.", "That's (13 − 1) / 4, the parent of index 13, which doesn't exist.", null, "Index 12 is a leaf."],
+      d: ["The last index is n − 1 = 12.", "Its parent: (12 − 1) / 4 = 2.", "So buildDary sinks 2, 1, 0."] },
+    { q: "C++ std::priority_queue&lt;int&gt; with default settings is:",
+      c: ["A min-heap", "A max-heap", "A sorted vector", "A red-black tree"], a: 1,
+      e: "top() is the largest. Pass greater<int> to make a min-heap (HW4 shows how).",
+      x: ["Java's PriorityQueue and Python's heapq are min-heaps; C++ is the other way.", null, "It's a binary heap.", "std::map and std::set are red-black trees."],
+      d: ["std::priority_queue uses less<int> by default.", "That keeps the largest on top: a max-heap.", "priority_queue<int, vector<int>, greater<int>> is the min-heap."] }
+  ]
+}
+);
+
+const PRACTICE = [
+{
+  id: "A", title: "Practice quiz A",
+  qs: [
+    { tp: "tt", q: "Insert 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 in that order into an empty 2-3 tree. What is the root, and what is the height?",
+      c: ["Root [40], height 2", "Root [40|80], height 1", "Root [50], height 3", "Root [30|60], height 2"], a: 0,
+      e: "Ascending keys split the right edge over and over. The root splits twice: once at 30 (root [20]) and once at 70 (40 goes up).",
+      x: [null, "A height-1 2-3 tree holds at most 8 keys (a 3-node over three 3-nodes). Ten keys need height 2.", "The root only splits twice (when 30 and 70 arrive), so the height stops at 2. 50 ends in a leaf.", "[20|40|60] is the node that splits at the top, and its middle key is 40, so 40 ends up alone on top."],
+      d: ["10, 20, 30 → split, root [20]. 40, 50 → [30|40|50] splits, root [20|40]. 60, 70 → [50|60|70] splits, root [20|40|60] splits: 40 becomes a new root.", "80, 90 → [70|80|90] splits, 80 joins [60] → [60|80]. 100 joins [90] → [90|100].", "Final: [40] over [20], [60|80], leaves [10], [30], [50], [70], [90|100]. Height 2."] },
+    { tp: "ttdel", q: `Delete 80 from this 2-3 tree. What is the result?${TREE("40|60(20,50,80)")}`,
+      c: ["[40|50] over [20], [60]", "[40] over [20], [50|60]", "[40|60] over [20], [50]", "[50] over [20|40], [60]"], a: 1,
+      e: "The leaf empties, and its sibling [50] has only one key, so it can't lend. Merge: 60 comes down and joins 50.",
+      x: ["That's a borrow, which needs a sibling with 2 keys. [50] has 1.", null, "A 3-node must have 3 children. Something has to come down.", "Deleting from a leaf never pulls 40 down. Only the parent key next to the empty leaf (60) moves."],
+      d: ["Remove 80: its leaf is empty.", "Sibling [50] is a 2-node, so no borrow. Merge: pull the parent key 60 down into [50|60].", "The root [40|60] loses 60: [40] over [20], [50|60]."] },
+    { tp: "rbins", q: "Insert 30, 20, 10 into an empty left-leaning red-black tree. Which moves fire when 10 goes in?",
+      c: ["rotateLeft(20), then flipColors(30)", "rotateRight(30), then flipColors(20)", "flipColors(20) only", "rotateRight(20), then rotateRight(30)"], a: 1,
+      e: "30 → 20 → 10 are two red links in a row on the left. Rotate right at the top, then the middle key has two red children.",
+      x: ["Nothing leans right: 10 and 20 are both left children.", null, "20 doesn't have two red children until after the rotation.", "Only one rotation is needed; the second would unbalance it."],
+      d: ["10 becomes 20's red left child; 20 is 30's red left child.", "At 30: two reds in a row → rotateRight(30). 20 rises with red children 10 and 30.", "flipColors(20): 10 and 30 go black. Root 20 black."] },
+    { tp: "rb", q: "Encode the 2-3 tree [30|60] over [10], [40], [70] as a left-leaning red-black tree. Which link is red?",
+      c: ["30 to 60, with 30 as 60's left child", "60 to 30, with 60 as 30's right child", "30 to 10", "None: all black"], a: 0,
+      e: "A 3-node [a|b] becomes b with a as its red left child. Here: 60 on top, 30 hangs left by a red link.",
+      x: [null, "Red links lean left. A red right link is illegal in an LLRB.", "[10] is its own 2-node, so its link is black.", "A 3-node always needs one red link."],
+      d: ["Split [30|60] into two nodes: the larger, 60, on top.", "30 becomes 60's left child, joined by a red link.", "The children go in order: 10 and 40 under 30, 70 under 60. Result 60(*30(10,40),70)."] },
+    { tp: "btree", q: `B-tree of order 5: insert 85, then 99. What is the root after both?${TREE("30|60(10|20,40|50,70|80|90)")}`,
+      c: ["[30|60]", "[30|60|85]", "[30|60|80]", "[60]"], a: 1,
+      e: "85 fills the right leaf to 4 keys (legal). 99 makes 5 keys, which splits and promotes the middle, 85.",
+      x: ["99 overflows the right leaf, so something goes up.", null, "Sorted 70, 80, 85, 90, 99: the middle is 85, not 80.", "The root has room for a third key; it doesn't split."],
+      d: ["85 → [70|80|85|90]: 4 keys, max for order 5. Fine.", "99 → [70|80|85|90|99]: 5 keys = M, split.", "Middle 85 moves up: root [30|60|85] over [10|20], [40|50], [70|80], [90|99]."] },
+    { tp: "btree", q: "HW4 minKeysBTree: what is the fewest keys a B-tree of order 7 and height 2 can hold?",
+      c: ["17", "31", "48", "97"], a: 1,
+      e: "2·⌈7/2⌉² − 1 = 2·16 − 1 = 31.",
+      x: ["That's order 5 at height 2.", null, "That's a full-ish count, not the minimum.", "That fills the root more than the minimum of 1 key."],
+      d: ["Root: 1 key, 2 children. Every other node: ⌈7/2⌉ = 4 children, 3 keys.", "Depth 1: 2 nodes. Depth 2: 8 nodes. That's 10 non-root nodes × 3 keys = 30.", "Plus the root's 1 key: 31."] },
+    { tp: "ss", q: `Insert 75 into this max-heap. What is the array after?${HEAP([90, 80, 70, 30, 60, 50])}`,
+      c: ["[90 80 70 30 60 50 75]", "[90 80 75 30 60 50 70]", "[90 75 80 30 60 50 70]", "[75 80 90 30 60 50 70]"], a: 1,
+      e: "75 lands at a[7] under 70, beats 70, then loses to 90.",
+      x: ["75 is bigger than its parent 70, so it swims.", null, "75 never moves into the left subtree; its path is 7 → 3 → 1.", "75 < 90, so it stops at index 3."],
+      d: ["Append at a[7]. Parent a[3] = 70.", "75 > 70 → swap.", "Parent a[1] = 90 > 75 → stop. [90 80 75 30 60 50 70]."] },
+    { tp: "hfy", q: `Heapify [1 2 3 4 5 6 7] into a max-heap. What is the final array?${HEAP([1, 2, 3, 4, 5, 6, 7])}`,
+      c: ["[7 6 5 4 3 2 1]", "[7 5 6 4 2 1 3]", "[7 5 6 1 2 4 3]", "[7 4 6 1 2 5 3]"], a: 1,
+      e: "Sink 3, 2, 1 in that order. The 1 at the root sinks to the bottom along the right side.",
+      x: ["Heapify doesn't sort; keys off the sink paths stay put.", null, "4 never moves: at k = 2, the 2 swaps with 5 (index 5), not with 4.", "At k = 2 the larger child is 5, so 5 rises, not 4."],
+      d: ["k = 3: 3 vs 6, 7 → swap 7: [1 2 7 4 5 6 3]. k = 2: 2 vs 4, 5 → swap 5: [1 5 7 4 2 6 3].", "k = 1: 1 vs 5, 7 → swap 7: [7 5 1 4 2 6 3].", "1 at index 3: children 6, 3 → swap 6: [7 5 6 4 2 1 3]."] },
+    { tp: "hs", q: `Run two sort-down rounds of heapsort on the heap [95 90 70 80 60]. What is the array after?${HEAP([95, 90, 70, 80, 60])}`,
+      c: ["[80 60 70 | 90 95]", "[80 70 60 | 90 95]", "[70 60 80 | 90 95]", "[90 80 70 60 | 95]"], a: 0,
+      e: "Round 1 parks 95 and leaves [90 80 70 60]. Round 2 parks 90; 60 sinks under 80.",
+      x: [null, "60 sinks to the left child (80's spot), so 70 stays at index 3.", "80 is the largest left in the heap, so it must be at the root.", "That's after one round, not two."],
+      d: ["Round 1: swap 95 and 60, sink 60 → [90 80 70 60 | 95].", "Round 2: swap 90 and 60 → [60 80 70 | 90 95].", "60 vs 80, 70 → swap 80: [80 60 70 | 90 95]."] },
+    { tp: "dary", q: "In a 0-based ternary (d = 3) heap, what is the parent of index 19?",
+      c: ["6", "9", "5", "7"], a: 0,
+      e: "(19 − 1) / 3 = 6.",
+      x: [null, "That's 19/2, the binary 1-based rule.", "Off by one: index 5's children are 16, 17, 18.", "Index 7's children are 22, 23, 24."],
+      d: ["Parent of j: (j − 1) / d.", "(19 − 1) / 3 = 18 / 3 = 6.", "Check: children of 6 are 19, 20, 21."] }
+  ]
+},
+{
+  id: "B", title: "Practice quiz B",
+  qs: [
+    { tp: "tt", q: "Insert 40, 20, 30, 60, 70, 65 in that order into an empty 2-3 tree. What is the final tree?",
+      c: ["[30|60] over [20], [40], [65|70]", "[30|65] over [20], [40|60], [70]", "[40] over [20|30], [60|65|70]", "[30] over [20], [40|60|65|70]"], a: 0,
+      e: "Two splits: [20|30|40] sends 30 up, then [40|60|70] sends 60 up. 65 just joins [70].",
+      x: [null, "65 is inserted last into a leaf that has room, so it never goes up.", "[60|65|70] has three keys: it must split.", "A leaf with four keys isn't a 2-3 node."],
+      d: ["40, 20 → [20|40]. 30 → [20|30|40] splits: root [30] over [20], [40].", "60 → [40|60]. 70 → [40|60|70] splits: 60 joins the root, [30|60].", "65 goes to the right leaf [70] → [65|70]."] },
+    { tp: "ttdel", q: `Delete 70 from this 2-3 tree. What is the result?${TREE("30|60(10,40|50,70)")}`,
+      c: ["[30|50] over [10], [40], [60]", "[30] over [10], [40|50|60]", "[30|40] over [10], [50], [60]", "[30|60] over [10], [40], [50]"], a: 0,
+      e: "The leaf empties, but its sibling [40|50] has two keys, so it lends: 60 rotates down, 50 rotates up.",
+      x: [null, "A leaf can't hold three keys, and merging isn't needed when the sibling can lend.", "Only the parent key between the two leaves (60) moves, and the sibling's nearest key (50) replaces it.", "Keys can't skip past the parent: 50 can't land in the right leaf while 60 stays up."],
+      d: ["Remove 70: the right leaf is empty.", "Sibling [40|50] has two keys → borrow.", "Parent key 60 drops into the empty leaf; 50 moves up to replace it: [30|50] over [10], [40], [60]."] },
+    { tp: "rb", q: `What 2-3 tree does this left-leaning red-black tree encode? (Red link: 40 to 20.)${TREE("40(*20(10,30),50)")}`,
+      c: ["[20|40] over [10], [30], [50]", "[40] over [20], [50] with leaves [10], [30]", "[20] over [10], [30|40|50]", "[10|20|30] over [40|50]"], a: 0,
+      e: "Collapse the red link: 20 and 40 merge into a 3-node with three children.",
+      x: [null, "That ignores the red link and reads every link as black.", "A red link glues a child to its parent; it doesn't move 40 into a leaf.", "The black links stay as tree edges between 2-3 nodes."],
+      d: ["Red link 40 → 20: merge them into [20|40].", "The children in order: 10, 30 (from 20) and 50 (from 40).", "[20|40] over [10], [30], [50]. All leaves at one level, as they must be."] },
+    { tp: "rbins", q: `Insert 25 into this tree. Which moves fire, in order?${TREE("30(*20,_)")}`,
+      c: ["rotateLeft(20), rotateRight(30), flipColors(25)", "rotateRight(30), flipColors(20)", "flipColors(30)", "rotateLeft(30), flipColors(25)"], a: 0,
+      e: "25 falls between 20 and 30: first fix the right lean at 20, then it's the two-reds-in-a-row case.",
+      x: [null, "That's the recipe for a key below 20, like 10.", "30 doesn't get two red children: 25 lands under 20.", "The right-leaning link is at 20, not at 30."],
+      d: ["25 > 20: it lands as 20's red right child.", "At 20: rotateLeft(20). Now 30 → 25 → 20 are two reds in a row.", "At 30: rotateRight(30), then flipColors(25). Root 25 over 20 and 30."] },
+    { tp: "bplus", q: `In a B+ tree, a router node holds [25|55]. You search for 55, then for 54. Which child does each go to?${TREE("25|55(~L,~M,~R)")}`,
+      c: ["55 → right, 54 → middle", "55 → middle, 54 → middle", "55 → right, 54 → right", "Both stop here, since 55 is in the router"], a: 0,
+      e: "Equal goes right: k ≥ 55 takes the right child. 54 is between 25 and 55.",
+      x: [null, "A router key equal to the search key sends it right, not left.", "54 < 55, so it goes to the middle.", "Records live only in the leaves of a B+ tree. Routers just route."],
+      d: ["Rule: k < 25 → left, 25 ≤ k < 55 → middle, k ≥ 55 → right.", "55 ≥ 55 → right child. The record for 55 is in that leaf.", "25 ≤ 54 < 55 → middle child."] },
+    { tp: "btree", q: "Blocks are 8192 bytes. Keys and child pointers are 8 bytes each. What B-tree order M fills one block?",
+      c: ["256", "512", "1024", "8192"], a: 1,
+      e: "8M + 8(M − 1) = 16M − 8 ≤ 8192 → M = 512.",
+      x: ["That's the answer for 4096-byte blocks.", null, "1024 pointers alone would fill the whole block.", "That's the block size in bytes."],
+      d: ["A node holds M pointers and M − 1 keys.", "16M − 8 ≤ 8192 → M ≤ 512.5.", "M = 512 (8,184 bytes)."] },
+    { tp: "ss", q: `delMax on this heap. What array remains?${HEAP([95, 80, 90, 30, 60, 50, 70])}`,
+      c: ["[90 80 70 30 60 50]", "[90 70 80 30 60 50]", "[80 90 70 30 60 50]", "[90 80 50 30 60 70]"], a: 0,
+      e: "70 moves to the root and sinks under 90 (the larger child). At index 3 its only child is 50, so it stops.",
+      x: [null, "The left side doesn't move; 70 follows the right path.", "The root must be the larger child, 90.", "70 ≥ 50, so it doesn't swap again."],
+      d: ["Return 95. Last key 70 to the root: [70 80 90 30 60 50].", "Children 80, 90 → larger 90 > 70 → swap: [90 80 70 30 60 50].", "Index 3: only child a[6] = 50 < 70 → stop."] },
+    { tp: "heap", q: "A 1-based heap has n = 20 keys. What is the first leaf index?",
+      c: ["10", "11", "20", "16"], a: 1,
+      e: "Leaves are ⌊n/2⌋ + 1 … n = 11 … 20.",
+      x: ["a[10] has child a[20], so it's internal.", null, "20 is the last leaf, not the first.", "That's the first index on the bottom row, but 11 to 15 are leaves too."],
+      d: ["Internal nodes: 1 … ⌊n/2⌋ = 1 … 10.", "a[10]'s left child is a[20]: still internal.", "a[11]'s child would be a[22] > 20: the first leaf."] },
+    { tp: "hs", q: "Which statement about heapsort is true?",
+      c: ["Θ(n log n) worst case, in place, not stable", "Θ(n log n) worst case, Θ(n) extra space, stable", "Θ(n²) worst case, in place, not stable", "Θ(n) with heapify, in place, stable"], a: 0,
+      e: "Heapify is Θ(n), then n − 1 sinks of Θ(log n), all inside the array. The long-distance swaps break stability.",
+      x: [null, "That's mergesort.", "That's quicksort's worst case.", "Heapify alone is Θ(n), but pulling the keys out in order costs n log n."],
+      d: ["Time: Θ(n) heapify + (n − 1) × Θ(log n) sinks = Θ(n log n), even worst case.", "Space: the sorted tail lives in the same array: Θ(1).", "Swapping a[1] with a[end] can reorder equal keys: not stable."] },
+    { tp: "dary", q: "HW4 kthLargest on [7 2 9 4 9 1 5] with k = 4. What does it return?",
+      c: ["4", "5", "7", "9"], a: 1,
+      e: "High to low with repeats: 9, 9, 7, 5. The 4th is 5.",
+      x: ["4 is the 5th largest.", null, "7 is the 3rd largest.", "9 is the 1st and 2nd."],
+      d: ["Sort high to low (on paper): 9, 9, 7, 5, 4, 2, 1.", "Repeats count, so the 4th entry is 5.", "The min-heap of size 4 ends holding {5, 7, 9, 9}; its top is 5."] }
+  ]
+}
+];
+
+function seeded(str) { let h = 2166136261; for (const ch of str) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return (h >>> 0) / 4294967296; }; }
+function mix(q, seed) {
+  const x = [0, 1, 2, 3].map(k => q.x[k] == null ? null : q.x[k]);
+  const order = [0, 1, 2, 3];
+  const r = seeded(seed);
+  for (let k = 3; k > 0; k--) { const j = Math.floor(r() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; }
+  q.c = order.map(k => q.c[k]); q.x = order.map(k => x[k]); q.a = order.indexOf(q.a);
+}
+TOPICS.forEach(t => t.qs.forEach((q, i) => mix(q, "67781:" + t.id + ":" + i)));
+PRACTICE.forEach(p => p.qs.forEach((q, i) => mix(q, "67781:p" + p.id + ":" + i)));
+const L = "ABCD";
+const PASS = 9, ROUND = 10;
+const POOL = [];
+TOPICS.forEach((t, ti) => t.qs.forEach((q, i) => POOL.push(Object.assign({}, q, { t: t.id, ti, key: t.id + "-" + i }))));
+const BY = {}; POOL.forEach(q => { BY[q.key] = q; });
+const FINAL = TOPICS.length;
+
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const KEY = "q4v1-state";
+function fresh() { return { step: 0, phase: "learn", queue: [], pick: null, first: {}, scores: {}, hist: {}, fin: { round: [], picks: [], pos: 0, results: [], last: [] }, passed: false, view: "study" }; }
+let S = store.get(KEY);
+if (!S || typeof S.step !== "number" || !S.fin) S = fresh();
+S.queue = (S.queue || []).filter(k => BY[k]);
+function save() { store.set(KEY, S); }
+
+const $ = s => document.querySelector(s);
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function renderTrack() {
+  const items = TOPICS.map((t, i) => {
+    const done = S.scores[t.id] != null;
+    const cur = S.step === i;
+    return `<button class="tk ${done ? "done" : ""} ${cur ? "cur" : ""}" data-step="${i}" title="${t.title}"><span class="tk-n">${done ? "✓" : i + 1}</span><span class="tk-t">${t.title}</span></button>`;
+  }).join("");
+  const fdone = S.passed;
+  $("#track").innerHTML = items + `<button class="tk final ${fdone ? "done" : ""} ${S.step >= FINAL ? "cur" : ""}" data-step="${FINAL}"><span class="tk-n">${fdone ? "✓" : "★"}</span><span class="tk-t">Final check</span></button>`;
+}
+
+function choiceHTML(q, a) {
+  const locked = a != null;
+  return q.c.map((t, k) => {
+    let cls = "choice";
+    if (locked) cls += k === q.a ? " right" : (k === a ? " wrong" : " dim");
+    return `<button class="${cls}" data-pick="${k}" ${locked ? "disabled" : ""}><span class="letter">${L[k]}</span><span class="ctext">${t}</span></button>`;
+  }).join("");
+}
+
+function feedbackHTML(q, a, retryNote) {
+  if (a == null) return "";
+  if (a === q.a) return `<div class="fb ok"><strong>Correct.</strong>${q.e}</div>`;
+  return `<div class="fb no">
+    <strong>Not quite. You picked ${L[a]}. The answer is ${L[q.a]}.</strong>
+    <p class="fb-h">Why ${L[a]} is wrong</p><p>${q.x[a]}</p>
+    <p class="fb-h">How to get ${L[q.a]}</p><ol>${q.d.map(s => `<li>${s}</li>`).join("")}</ol>
+    ${retryNote ? `<p class="fb-note">${retryNote}</p>` : ""}
+  </div>`;
+}
+
+function lessonDetails(t, open) {
+  return `<details class="relearn" ${open ? "open" : ""}><summary>Reread the lesson</summary><div class="relearn-body">${t.learn}</div></details>`;
+}
+
+function renderStudy() {
+  renderTrack();
+  const v = $("#view-study");
+  if (S.step < FINAL) {
+    const t = TOPICS[S.step];
+    if (S.phase === "learn") {
+      v.innerHTML = `<article class="lesson"><p class="eyebrow">Topic ${S.step + 1} of ${TOPICS.length} · Learn</p><h2>${t.title}</h2>${t.learn}
+        <button class="btn primary big-btn" data-act="quiz">Got it, quiz me on this (${t.qs.length} questions)</button></article>`;
+    } else if (S.phase === "quiz") {
+      const key = S.queue[0];
+      const q = BY[key];
+      const isRetry = !!S.curRetry;
+      const answered = Object.keys(S.first).filter(k => k.startsWith(t.id + "-")).length;
+      const shownNum = S.pick == null ? answered + 1 : answered;
+      const segs = t.qs.map((qq, i) => {
+        const k = t.id + "-" + i, f = S.first[k];
+        const fixed = f === false && S.hist[k] === "right";
+        return `<span class="seg ${f === true ? "ok" : f === false ? (fixed ? "fixed" : "bad") : ""} ${k === key ? "cur" : ""}"></span>`;
+      }).join("");
+      const willRetry = S.pick != null && S.pick !== q.a;
+      v.innerHTML = `<div class="panel">
+        <div class="qhead"><span class="eyebrow" style="margin:0">Topic ${S.step + 1} · ${t.title}</span><span class="eyebrow" style="margin:0">${isRetry ? "Retry" : `Question ${shownNum} of ${t.qs.length}`}</span></div>
+        <div class="segbar" style="grid-template-columns:repeat(${t.qs.length},minmax(0,1fr))">${segs}</div>
+        ${isRetry ? `<p class="retry-tag">You missed this one earlier. Try it again.</p>` : ""}
+        <div class="stem">${q.q}</div>
+        <div class="choices">${choiceHTML(q, S.pick)}</div>
+        ${feedbackHTML(q, S.pick, willRetry ? "This question comes back at the end of the topic." : "")}
+        ${S.pick != null ? `<div class="nav"><span></span><button class="btn primary" data-act="next">Next</button></div>` : ""}
+      </div>${lessonDetails(t, false)}`;
+    } else {
+      const sc = S.scores[t.id] || 0;
+      const missed = t.qs.map((qq, i) => t.id + "-" + i).filter(k => S.first[k] === false);
+      const nextT = TOPICS[S.step + 1];
+      v.innerHTML = `<div class="panel">
+        <p class="eyebrow">Topic ${S.step + 1} done</p>
+        <h2>${t.title} ✓</h2>
+        <div class="score-big">${sc} / ${t.qs.length} <span class="score-sub">on the first try</span></div>
+        <p>${missed.length ? `You fixed ${missed.length === 1 ? "the one you missed" : `all ${missed.length} you missed`} on the retry. They'll show up again in the final check.` : "Clean sweep."}</p>
+        <div class="nav">
+          <button class="btn" data-act="redo">Redo this topic</button>
+          <button class="btn primary" data-act="advance">${nextT ? `Next topic: ${nextT.title}` : "Go to the final check"}</button>
+        </div>
+      </div>`;
+    }
+  } else {
+    renderFinal(v);
+  }
+}
+
+function buildRound() {
+  const last = new Set(S.fin.last || []);
+  const res = [];
+  const add = k => { if (!res.includes(k) && res.length < ROUND) res.push(k); };
+  shuffle(POOL.filter(q => S.hist[q.key] === "wrong" || S.first[q.key] === false || (S.fin.missed || []).includes(q.key)).map(q => q.key)).slice(0, 5).forEach(add);
+  shuffle(TOPICS.map(t => t.id)).forEach(t => {
+    if (res.some(k => BY[k].t === t)) return;
+    const c = POOL.filter(q => q.t === t && !res.includes(q.key));
+    const notLast = c.filter(q => !last.has(q.key));
+    const from = notLast.length ? notLast : c;
+    if (from.length) add(from[Math.floor(Math.random() * from.length)].key);
+  });
+  shuffle(POOL.filter(q => !res.includes(q.key) && !last.has(q.key))).forEach(q => add(q.key));
+  shuffle(POOL.filter(q => !res.includes(q.key))).forEach(q => add(q.key));
+  return shuffle(res);
+}
+
+function renderFinal(v) {
+  const F = S.fin;
+  if (!F.round.length) {
+    const notDone = TOPICS.filter(t => S.scores[t.id] == null);
+    v.innerHTML = `<div class="panel"><p class="eyebrow">Final check</p><h2>10 mixed questions</h2>
+      <p>All ${TOPICS.length} topics, shuffled, like the real quiz. You see the full explanation after each one. Score 9 or 10 to pass. If you don't, the ones you missed come back in the next round.</p>
+      ${notDone.length ? `<p class="fb-note">You haven't finished ${notDone.length} topic${notDone.length === 1 ? "" : "s"} yet. You can still start, but the topics come first for a reason.</p>` : ""}
+      <button class="btn primary big-btn" data-act="fstart">Start the final check</button></div>`;
+    return;
+  }
+  if (F.pos >= F.round.length) {
+    const right = F.picks.filter((p, i) => p === BY[F.round[i]].a).length;
+    const missed = F.round.filter((k, i) => F.picks[i] !== BY[k].a);
+    const pass = right >= PASS;
+    const list = F.round.map((k, i) => {
+      const ok = F.picks[i] === BY[k].a;
+      return `<li class="${ok ? "r-ok" : "r-bad"}">${ok ? "✓" : "✗"} ${TOPICS[BY[k].ti].title}</li>`;
+    }).join("");
+    const topics = [...new Set(missed.map(k => BY[k].ti))];
+    v.innerHTML = `<div class="panel">
+      <p class="eyebrow">Final check · round ${F.results.length}</p>
+      <div class="score-big">${right} / ${ROUND}</div>
+      <p>${pass ? "<strong>You passed.</strong> Next, take the two practice quizzes under real conditions." : `You need ${PASS}. The ${missed.length} you missed come back next round.`}</p>
+      ${topics.length ? `<p class="fb-h">Reread before the next round</p><div class="toc">${topics.map(ti => `<button class="chip" data-step="${ti}" data-reread="1">${TOPICS[ti].title}</button>`).join("")}</div>` : ""}
+      <ul class="rlist">${list}</ul>
+      <div class="nav">${pass ? `<button class="btn" data-act="fstart">Another round</button><button class="btn primary" data-go="prac">Open the practice quizzes</button>` : `<button class="btn primary" data-act="fstart">Start round ${F.results.length + 1}</button>`}</div>
+    </div>`;
+    return;
+  }
+  const key = F.round[F.pos], q = BY[key], a = F.picks[F.pos];
+  const right = F.picks.filter((p, i) => p != null && p === BY[F.round[i]].a).length;
+  const segs = F.round.map((k, i) => {
+    const p = F.picks[i];
+    return `<span class="seg ${p == null ? "" : p === BY[k].a ? "ok" : "bad"} ${i === F.pos ? "cur" : ""}"></span>`;
+  }).join("");
+  v.innerHTML = `<div class="panel">
+    <div class="qhead"><span class="eyebrow" style="margin:0">Final check · round ${F.results.length + 1} · question ${F.pos + 1} of ${ROUND}</span><span class="eyebrow" style="margin:0">${right} correct</span></div>
+    <div class="segbar">${segs}</div>
+    <p class="topic">${TOPICS[q.ti].title}</p>
+    <div class="stem">${q.q}</div>
+    <div class="choices">${choiceHTML(q, a)}</div>
+    ${feedbackHTML(q, a, a != null && a !== q.a ? "This one comes back next round." : "")}
+    ${a != null ? `<div class="nav"><span></span><button class="btn primary" data-act="fnext">${F.pos === ROUND - 1 ? "See my score" : "Next"}</button></div>` : ""}
+  </div>`;
+}
+
+function startTopic(i) {
+  S.step = i; S.phase = "learn"; S.queue = []; S.pick = null;
+  save(); renderStudy(); window.scrollTo({ top: 0 });
+}
+
+$("#view-study").addEventListener("click", e => {
+  const pick = e.target.closest("[data-pick]");
+  const act = e.target.closest("[data-act]");
+  const stepBtn = e.target.closest("[data-step]");
+  const go = e.target.closest("[data-go]");
+  if (pick && !pick.disabled) {
+    const k = +pick.dataset.pick;
+    if (S.step < FINAL) {
+      const key = S.queue[0];
+      S.pick = k;
+      if (S.first[key] == null) S.first[key] = k === BY[key].a;
+      S.hist[key] = k === BY[key].a ? "right" : "wrong";
+    } else {
+      const F = S.fin, key = F.round[F.pos];
+      F.picks[F.pos] = k;
+      S.hist[key] = k === BY[key].a ? "right" : "wrong";
+    }
+    save(); renderStudy();
+    return;
+  }
+  if (act) {
+    const a = act.dataset.act;
+    const t = TOPICS[S.step];
+    if (a === "quiz") {
+      S.phase = "quiz"; S.queue = t.qs.map((q, i) => t.id + "-" + i); S.pick = null; S.curRetry = false;
+      t.qs.forEach((q, i) => { delete S.first[t.id + "-" + i]; });
+      save(); renderStudy(); window.scrollTo({ top: 0 });
+    } else if (a === "next") {
+      const key = S.queue.shift();
+      if (S.pick !== BY[key].a) S.queue.push(key);
+      S.pick = null;
+      S.curRetry = S.queue.length ? S.first[S.queue[0]] != null : false;
+      if (!S.queue.length) {
+        S.phase = "done";
+        S.scores[t.id] = t.qs.filter((q, i) => S.first[t.id + "-" + i] === true).length;
+      }
+      save(); renderStudy(); window.scrollTo({ top: 0 });
+    } else if (a === "redo") {
+      startTopic(S.step);
+    } else if (a === "advance") {
+      startTopic(S.step + 1);
+    } else if (a === "fstart") {
+      const F = S.fin;
+      F.last = F.round.slice();
+      F.missed = F.round.filter((k, i) => F.picks[i] != null && F.picks[i] !== BY[k].a);
+      F.round = buildRound(); F.picks = Array(ROUND).fill(null); F.pos = 0;
+      save(); renderStudy(); window.scrollTo({ top: 0 });
+    } else if (a === "fnext") {
+      const F = S.fin;
+      F.pos++;
+      if (F.pos >= F.round.length) {
+        const right = F.picks.filter((p, i) => p === BY[F.round[i]].a).length;
+        F.results.push(right);
+        if (right >= PASS) S.passed = true;
+      }
+      save(); renderStudy(); window.scrollTo({ top: 0 });
+    }
+    return;
+  }
+  if (stepBtn) { startTopic(+stepBtn.dataset.step); return; }
+  if (go) show(go.dataset.go);
+});
+
+$("#track").addEventListener("click", e => {
+  const b = e.target.closest("[data-step]");
+  if (!b) return;
+  const i = +b.dataset.step;
+  if (i === FINAL) { S.step = FINAL; save(); show("study"); return; }
+  if (i === S.step && S.phase !== "done") { show("study"); return; }
+  startTopic(i); show("study");
+});
+
+
+function show(view) {
+  document.querySelectorAll(".switch button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === view ? "true" : "false"));
+  $("#view-study").hidden = view !== "study";
+  $("#view-prac").hidden = view !== "prac";
+  $("#view-cram").hidden = view !== "cram";
+  if (view === "study") renderStudy();
+  if (view === "prac") renderPrac();
+  store.set("q4-view", view);
+  S.view = view; save();
+  window.scrollTo({ top: 0 });
+}
+document.querySelector(".switch").addEventListener("click", e => {
+  const b = e.target.closest("button[data-view]"); if (b) show(b.dataset.view);
+});
+$("#view-cram").addEventListener("click", e => {
+  const b = e.target.closest("[data-act='reset']");
+  if (!b) return;
+  if (b.dataset.armed) { S = fresh(); save(); P = pFresh(); pSave(); show("study"); }
+  else { b.dataset.armed = "1"; b.textContent = "Tap again to erase all progress"; }
+});
+const PK = "q4prac-v1";
+const PBY = {}; PRACTICE.forEach(p => { PBY[p.id] = p; });
+const TIDX = {}; TOPICS.forEach((t, i) => { TIDX[t.id] = i; });
+function pFresh() { const o = { cur: "A", q: {} }; PRACTICE.forEach(p => { o.q[p.id] = { picks: Array(p.qs.length).fill(null), graded: false, tries: [] }; }); return o; }
+let P = store.get(PK);
+if (!P || !P.q || PRACTICE.some(p => !P.q[p.id])) P = pFresh();
+if (!PBY[P.cur]) P.cur = "A";
+function pSave() { store.set(PK, P); }
+
+function pChoices(q, a, graded, qi) {
+  return q.c.map((t, k) => {
+    let cls = "choice";
+    if (graded) cls += k === q.a ? " right" : (k === a ? " wrong" : " dim");
+    else if (k === a) cls += " picked";
+    return `<button class="${cls}" data-pq="${qi}" data-pk="${k}" ${graded ? "disabled" : ""} aria-pressed="${k === a}"><span class="letter">${L[k]}</span><span class="ctext">${t}</span></button>`;
+  }).join("");
+}
+
+function renderPrac() {
+  const v = $("#view-prac");
+  const p = PBY[P.cur], st = P.q[p.id];
+  const n = p.qs.length;
+  const answered = st.picks.filter(x => x != null).length;
+  const right = st.picks.filter((x, i) => x === p.qs[i].a).length;
+  const notDone = TOPICS.filter(t => S.scores[t.id] == null).length;
+  const pick = PRACTICE.map(pp => {
+    const s = P.q[pp.id];
+    const best = s.tries.length ? Math.max(...s.tries) : null;
+    return `<button class="mod ${pp.id === p.id ? "on" : ""}" data-pquiz="${pp.id}"><span class="mod-tag">10 questions</span><span class="mod-t">${pp.title}</span><span class="mod-s ${best != null && best >= PASS ? "full" : ""}">${best == null ? "not taken" : `best ${best} / ${n}`}</span></button>`;
+  }).join("");
+  const grid = p.qs.map((q, i) => {
+    const a = st.picks[i];
+    const cls = st.graded ? (a === q.a ? "ok" : "bad") : "";
+    return `<a class="cell ${cls}" href="#pq-${i}" data-jump="${i}"><span class="n">${i + 1}</span><span class="l">${a == null ? "" : L[a]}</span></a>`;
+  }).join("");
+  let top = "";
+  if (st.graded) {
+    const missedT = [...new Set(p.qs.map((q, i) => st.picks[i] === q.a ? null : q.tp).filter(Boolean))];
+    const other = PRACTICE.find(pp => pp.id !== p.id);
+    top = `<div class="score">
+      <p class="eyebrow">${p.title} · attempt ${st.tries.length}</p>
+      <div class="score-big">${right} / ${n}</div>
+      <p>${right >= PASS ? "<strong>That's a pass.</strong> " + (right === n ? "Perfect score." : "Read the explanation for the one you missed below.") : `Aim for ${PASS} or more. Every question below shows the right answer and how to get it. Reread the topics you missed, then retake.`}</p>
+      ${missedT.length ? `<p class="fb-h">Topics to reread</p><div class="toc">${missedT.map(id => `<button class="chip" data-ptopic="${TIDX[id]}">${TOPICS[TIDX[id]].title}</button>`).join("")}</div>` : ""}
+      <div class="nav"><button class="btn" data-pact="retake">Retake ${p.title.replace("Practice quiz ", "quiz ")}</button>${other ? `<button class="btn primary" data-pquiz="${other.id}">Go to ${other.title}</button>` : ""}</div>
+    </div>`;
+  } else {
+    top = `<div class="score">
+      <p class="eyebrow">${p.title}</p>
+      <p style="margin-top:4px">Ten mixed questions across Lectures 6 and 7 and HW4, set up like Monday. The real quiz gives you 20 minutes, so try to finish in that. Nothing gets marked until you hit <strong>Grade</strong>; then each question shows the answer and why.</p>
+      ${notDone ? `<p class="fb-note">You still have ${notDone} topic${notDone === 1 ? "" : "s"} left in Study. These quizzes work best after all eleven.</p>` : ""}
+    </div>`;
+  }
+  const qs = p.qs.map((q, i) => {
+    const a = st.picks[i];
+    let fb = "";
+    if (st.graded) {
+      if (a == null) fb = `<div class="fb no"><strong>Left blank. The answer is ${L[q.a]}.</strong><p class="fb-h">How to get ${L[q.a]}</p><ol>${q.d.map(s => `<li>${s}</li>`).join("")}</ol></div>`;
+      else fb = feedbackHTML(q, a, "");
+    }
+    return `<div class="mq" id="pq-${i}">
+      <div class="qhead"><span class="mq-n">Question ${i + 1}</span><span class="mq-n">${TOPICS[TIDX[q.tp]].title}</span></div>
+      <div class="stem">${q.q}</div>
+      <div class="choices">${pChoices(q, a, st.graded, i)}</div>
+      ${fb}
+    </div>`;
+  }).join("");
+  const bottom = st.graded
+    ? `<div class="nav"><button class="btn" data-pact="top">Back to the top</button><button class="btn primary" data-pact="retake">Retake</button></div>`
+    : `<div class="nav"><span class="mq-n">${answered} of ${n} answered</span><button class="btn primary" data-pact="grade">${answered < n ? `Grade (${n - answered} blank)` : "Grade my quiz"}</button></div>`;
+  v.innerHTML = `<div class="mods" style="grid-template-columns:repeat(2,minmax(0,1fr))">${pick}</div>${top}<div class="grid10">${grid}</div>${qs}${bottom}`;
+}
+
+$("#view-prac").addEventListener("click", e => {
+  const t = e.target;
+  if (!t || !t.closest) return;
+  const c = t.closest("[data-pk]");
+  const qz = t.closest("[data-pquiz]");
+  const act = t.closest("[data-pact]");
+  const tp = t.closest("[data-ptopic]");
+  const jump = t.closest("[data-jump]");
+  const st = P.q[P.cur];
+  if (c && !c.disabled) {
+    const i = +c.dataset.pq, k = +c.dataset.pk;
+    st.picks[i] = st.picks[i] === k ? null : k;
+    pSave(); renderPrac();
+    return;
+  }
+  if (jump) {
+    e.preventDefault();
+    const el = document.getElementById("pq-" + jump.dataset.jump);
+    if (el && el.scrollIntoView) el.scrollIntoView({ block: "start" });
+    return;
+  }
+  if (qz) { P.cur = qz.dataset.pquiz; pSave(); renderPrac(); window.scrollTo({ top: 0 }); return; }
+  if (tp) { startTopic(+tp.dataset.ptopic); show("study"); return; }
+  if (act) {
+    const a = act.dataset.pact;
+    const p = PBY[P.cur];
+    if (a === "grade") {
+      st.graded = true;
+      st.tries.push(st.picks.filter((x, i) => x === p.qs[i].a).length);
+      pSave(); renderPrac(); window.scrollTo({ top: 0 });
+    } else if (a === "retake") {
+      st.graded = false; st.picks = Array(p.qs.length).fill(null);
+      pSave(); renderPrac(); window.scrollTo({ top: 0 });
+    } else if (a === "top") {
+      window.scrollTo({ top: 0 });
+    }
+  }
+});
+
+new MutationObserver(() => fillTrees(document)).observe(document.body, { childList: true, subtree: true });
+show(["study", "prac", "cram"].includes(store.get("q4-view")) ? store.get("q4-view") : "study");
+fillTrees(document);
+</script>
+
+</body></html>
