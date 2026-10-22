@@ -1,0 +1,1083 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CSS 343 Quiz 2 Cram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column with a sticky three-way switch (Learn / Mock quiz / Cram sheet); lessons sit above a one-question-at-a-time practice card. */
+:root {
+  --bg: #edf0f4;
+  --surface: #ffffff;
+  --ink: #142030;
+  --muted: #586678;
+  --rule: #d4dae3;
+  --accent: #2b55c7;
+  --on-accent: #ffffff;
+  --accent-soft: #e2e8f9;
+  --good: #1d7549;
+  --good-soft: #def1e6;
+  --bad: #b23a31;
+  --bad-soft: #f8e2df;
+  --code-bg: #f2f4f8;
+  --pad-hatch: #c9d0da;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1219; --surface: #161d27; --ink: #e2e7ee; --muted: #94a1b2; --rule: #29333f;
+    --accent: #85a2ff; --on-accent: #0d1219; --accent-soft: #1d2945;
+    --good: #5ec891; --good-soft: #15301f; --bad: #f28479; --bad-soft: #3b1d1a;
+    --code-bg: #10161f; --pad-hatch: #3a4554; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1219; --surface: #161d27; --ink: #e2e7ee; --muted: #94a1b2; --rule: #29333f;
+  --accent: #85a2ff; --on-accent: #0d1219; --accent-soft: #1d2945;
+  --good: #5ec891; --good-soft: #15301f; --bad: #f28479; --bad-soft: #3b1d1a;
+  --code-bg: #10161f; --pad-hatch: #3a4554; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 64px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 750; letter-spacing: -0.01em; }
+h2 { font-size: 1.6rem; font-weight: 750; }
+h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.6em; }
+p { margin: 0.7em 0; }
+ul { margin: 0.6em 0; padding-left: 1.2em; }
+li { margin: 0.3em 0; }
+sup, sub { line-height: 0; }
+code, pre, .m { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; }
+pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; overflow-x: auto; line-height: 1.5; margin: 0.8em 0; }
+pre code { background: none; padding: 0; font-size: 1em; }
+.eyebrow { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 6px; font-weight: 500; }
+.lede { color: var(--muted); max-width: 60ch; }
+
+header.top { display: grid; gap: 10px; margin-bottom: 20px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { font-size: 0.8rem; border: 1px solid var(--rule); background: var(--surface); padding: 3px 10px; border-radius: 999px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.switch { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 8px; margin-bottom: 18px; }
+.switch-inner { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 4px; gap: 4px; }
+.switch button { font: 600 0.92rem var(--body); border: 0; background: transparent; color: var(--muted); padding: 8px 4px; border-radius: 7px; cursor: pointer; }
+.switch button[aria-selected="true"] { background: var(--accent); color: var(--on-accent); }
+button:focus-visible, .choice:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 8px; margin-bottom: 22px; }
+.mod { text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; cursor: pointer; display: grid; gap: 2px; min-width: 0; }
+.mod.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.mod-tag { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.mod-t { font-weight: 600; line-height: 1.3; }
+.mod-s { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mod-s.full { color: var(--good); font-weight: 600; }
+
+.lesson { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 18px; }
+.lesson > p, .lesson > ul { max-width: 65ch; }
+.formula { font-family: var(--mono); font-size: 0.95rem; background: var(--accent-soft); border-radius: 8px; padding: 10px 14px; overflow-x: auto; }
+.example { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; margin: 1.2em 0; }
+.ex-h { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 600; margin: 0; }
+.defs { display: grid; gap: 8px; margin: 1em 0; }
+.def { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; }
+.def b { font-family: var(--mono); }
+.tablewrap { overflow-x: auto; margin: 0.8em 0; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; }
+table.num td { font-variant-numeric: tabular-nums; }
+td code { white-space: nowrap; }
+.yes { color: var(--good); font-weight: 600; }
+.no { color: var(--bad); font-weight: 600; }
+
+.bytes { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 3px; margin: 0.6em 0 0.2em; max-width: 420px; }
+.byte { aspect-ratio: 1.5 / 1; max-width: 100%; border-radius: 3px; display: grid; place-items: center; font: 600 0.72rem var(--mono); }
+.byte.mem { background: var(--accent-soft); color: var(--accent); }
+.byte.pad { background: repeating-linear-gradient(135deg, var(--pad-hatch) 0 2px, transparent 2px 6px); border: 1px solid var(--pad-hatch); }
+.bytes-cap { font-size: 0.82rem; color: var(--muted); margin: 0 0 1em; }
+
+.practice { margin-top: 18px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 18px; }
+.p-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.dots { display: flex; flex-wrap: wrap; gap: 6px; }
+.dot { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--rule); background: var(--code-bg); font: 600 0.72rem var(--mono); color: var(--muted); cursor: pointer; padding: 0; }
+.dot.ok { background: var(--good); border-color: var(--good); color: var(--on-accent); }
+.dot.bad { background: var(--bad); border-color: var(--bad); color: var(--on-accent); }
+.dot.cur { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stem { font-weight: 500; margin: 14px 0 10px; }
+.choices { display: grid; gap: 8px; }
+.choice { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 9px; padding: 10px 12px; cursor: pointer; }
+.choice:hover:not(:disabled) { border-color: var(--accent); }
+.choice:disabled { cursor: default; color: var(--ink); }
+.choice.picked { border-color: var(--accent); background: var(--accent-soft); }
+.choice.right { border-color: var(--good); background: var(--good-soft); }
+.choice.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.choice.dim { opacity: 0.55; }
+.letter { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; font: 600 0.8rem var(--mono); background: var(--code-bg); border: 1px solid var(--rule); }
+.ctext { min-width: 0; overflow-wrap: anywhere; }
+.fb { margin-top: 12px; border-radius: 9px; padding: 10px 12px; font-size: 0.95rem; }
+.fb.ok { background: var(--good-soft); }
+.fb.no { background: var(--bad-soft); }
+.fb strong { display: block; margin-bottom: 2px; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin-top: 14px; }
+.btn { font: 600 0.92rem var(--body); border-radius: 8px; padding: 9px 14px; cursor: pointer; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.ghost { border-color: transparent; color: var(--muted); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+
+.mockbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+.clock { font: 600 1.6rem var(--mono); font-variant-numeric: tabular-nums; }
+.clock.low { color: var(--bad); }
+.grid10 { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); border: 1px solid var(--ink); border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
+.cell { display: grid; text-align: center; border-right: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+.cell:last-child { border-right: 0; }
+.cell .n { font-size: 0.72rem; color: var(--muted); border-bottom: 1px solid var(--rule); padding: 2px 0; }
+.cell .l { font: 600 1rem var(--mono); padding: 6px 0; min-height: 2.1em; }
+.cell.ok .l { color: var(--good); }
+.cell.bad .l { color: var(--bad); }
+.mq { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.mq .stem { margin-top: 4px; }
+.mq-n { font: 600 0.78rem var(--mono); color: var(--muted); }
+.score { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+.score-big { font: 750 2.2rem var(--display); }
+
+.cram { display: grid; gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.card h3 { margin-top: 0; font-size: 1.02rem; }
+.card ul { padding-left: 1.1em; font-size: 0.94rem; }
+.card p { font-size: 0.94rem; }
+.button {
+    padding: 12px 24px;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .button:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+  }
+
+  .button:focus-visible {
+    outline: 3px solid #a5b4fc;
+    outline-offset: 3px;
+  }
+@media (min-width: 720px) { .cram { grid-template-columns: 1fr 1fr; } .card.wide { grid-column: 1 / -1; } }
+@media (prefers-reduced-motion: no-preference) { .choice, .dot, .mod { transition: border-color .15s, background-color .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">CSS 343 · L02 Analysis of Algorithms: Time · L03 Memory and Asymptotic Notation</p>
+    <button class="button" onclick="window.location.href='study-guide-3-for-css-343.html';">next quiz</button>
+    <h1>Quiz 2 study</h1>
+    <p class="lede">Built from the course site's Lecture 2 and 3 notes, their "Your turn" and "Try it" problems, the Asymptotic Notation chapter exercises, and HW2. Each lesson teaches one quiz topic in the course's notation, then drills it one question at a time. Finish with the timed mock quiz and skim the cram sheet before you walk in.</p>
+    <div class="meta">
+      <span class="pill">Mon Oct 12 · 1:15 to 1:35 PM</span>
+      <span class="pill">10 MC · 3.5 pts each</span>
+      <span class="pill">Closed book, no devices</span>
+    </div>
+  </header>
+
+  <nav class="switch" aria-label="Sections">
+    <div class="switch-inner" role="tablist">
+      <button role="tab" id="tab-learn" data-view="learn" aria-selected="true">Learn</button>
+      <button role="tab" id="tab-mock" data-view="mock" aria-selected="false">Mock quiz</button>
+      <button role="tab" id="tab-cram" data-view="cram" aria-selected="false">Cram sheet</button>
+    </div>
+  </nav>
+
+  <section id="view-learn">
+    <div class="mods" id="mods"></div>
+    <article class="lesson" id="lesson"></article>
+    <div class="practice" id="practice"></div>
+  </section>
+
+  <section id="view-mock" hidden></section>
+
+  <section id="view-cram" hidden>
+    <div class="cram">
+      <div class="card">
+        <h3>Doubling data</h3>
+        <ul>
+          <li>T(N) = a·N<sup>b</sup> → T(2N)/T(N) = 2<sup>b</sup>. a cancels, so the machine drops out.</li>
+          <li>Ratio 2 → N · just over 2 and falling → N log₂ N · 4 → N² · just over 4 → N² log₂ N · 8 → N³.</li>
+          <li>Any factor: b = log(T₂/T₁) / log(N₂/N₁). N ×3 → ×3, ×9, ×27.</li>
+          <li>Log-log plot: straight line, slope b.</li>
+          <li>Count ratios are exact; time ratios wobble (small N, warm-up, other processes, caches). Trust the larger N.</li>
+          <li>Language or machine changes a, never b.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Predicting</h3>
+        <ul>
+          <li>T<sub>new</sub> = T<sub>last</sub> × (N<sub>new</sub>/N<sub>last</sub>)<sup>b</sup>.</li>
+          <li>a = T/N<sup>b</sup>. 3-sum: 1.050/2000³ = 1.31 × 10⁻¹⁰ s → T(4000) ≈ 8.4 s, T(16000) ≈ 538 s.</li>
+          <li>2× machine: N grows 2<sup>1/b</sup> (N ×2, N² ×1.41, N³ ×1.26, 2ᴺ +1 element).</li>
+          <li>To double N: 2<sup>b</sup>× speedup (2, 4, 8; impossible for 2ᴺ).</li>
+          <li>N = 10⁶ at 10⁹ ops/s: N 1 ms, N log₂ N 20 ms, N² ~17 min, N³ ~31 years.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Tilde counts</h3>
+        <ul>
+          <li>Total time = Σ cost × frequency. The frequency is the algorithm's.</li>
+          <li>Pairs ~N²/2 · triples C(N,3) ~N³/6 · 1²+…+N² ~N³/3 · 1+2+4+…+N = 2N−1 ~2N · halvings ⌊log₂ N⌋.</li>
+          <li>C(1000,3) = 166,167,000 exactly.</li>
+          <li>3-sum: ~N³/6 if tests, ~N³/2 array accesses.</li>
+          <li>f ~ g implies f ∈ Θ(g), not the reverse (2N³ ∈ Θ(N³), not ~N³).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Loop shapes</h3>
+        <ul>
+          <li>Sum rule: sequential steps add, biggest wins. Product rule: nested work multiplies.</li>
+          <li>Inner bound depends on outer i → it's a sum, not a product.</li>
+          <li>i doubles, inner j &lt; i → 1023 at N = 1024: linear.</li>
+          <li>i halves, inner j &lt; i → ~2N: linear.</li>
+          <li>i·i &lt; N → √N. Inner k &lt; 100 → just a constant.</li>
+          <li>3-sum ladder: N³ → sort + binary search N² log₂ N → two pointers N².</li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>O, Ω, Θ as sets</h3>
+        <ul>
+          <li><b>O(g)</b>: ∃ c, n₀ &gt; 0 with 0 ≤ f(n) ≤ c·g(n) for all n ≥ n₀. <b>Ω</b>: 0 ≤ c·g(n) ≤ f(n). <b>Θ</b>: both; Θ = O ∩ Ω.</li>
+          <li>2n² + 8n + 5 ≤ c·n²: c = 15/n₀ = 1, c = 3/n₀ = 9, c = 2.5/n₀ = 17; c = 2 never works.</li>
+          <li>3n² − 5n + 2 ∈ Θ(n²): c₁ = 2, c₂ = 3, n₀ = 5. ½n² − 3n: c₁ = 1/14, c₂ = ½, n₀ = 7.</li>
+          <li>Non-member: assume witnesses, divide, get n ≤ constant for all n. Contradiction.</li>
+          <li>Limit of f/g: 0 → O not Ω · constant L &gt; 0 → Θ · ∞ → Ω not O.</li>
+          <li>Hierarchy: 1, log₂ n, √n, n, n log₂ n, n², n³, 2ⁿ, n!. Log base doesn't matter.</li>
+          <li>Mistakes: c that depends on n, checking a few values, "at least O(n²)" (meaningless; use Ω).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Memory</h3>
+        <ul>
+          <li>char, bool 1 · int 4 · long, double, pointer 8.</li>
+          <li>Member offset is a multiple of its size; total rounds up to the largest.</li>
+          <li>{int; Node*} = 16. {char; int; char} = 12. {int; char; char} = 8.</li>
+          <li>Array of N ints 4N bytes, linked list 16N: same order, 4× constant.</li>
+          <li>vector header 24 bytes; capacity 1, 2, 4, …, 1024; 1023 copies &lt; 2N.</li>
+          <li>Aux space: 3-sum Θ(1), fact(n) Θ(n) stack, recursive binary search Θ(log₂ N), mergesort Θ(N) buffer.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Case vs bound</h3>
+        <ul>
+          <li>Case picks the input; O/Ω/Θ picks the set. Independent choices.</li>
+          <li>Insertion sort compares: best n − 1, worst n(n−1)/2, average ~n²/4 (999 · 499,500 · ~250,000 at n = 1000).</li>
+          <li>Running time Θ(g) ⟺ worst case O(g) and best case Ω(g).</li>
+          <li>push_back: one call Θ(N), amortized Θ(1). Amortized is not average.</li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>Algorithm vs problem</h3>
+        <ul>
+          <li>An algorithm in Θ(f) shows the <b>problem</b> is in <b>O(f)</b>: achievable, never necessary.</li>
+          <li>A lower bound belongs to the problem and must be proved for every algorithm.</li>
+          <li>Sorted search by comparisons: decision tree, 2ʰ ≥ N + 1 leaves, h ≥ ⌈log₂(N+1)⌉. Binary search's ⌊log₂ N⌋ + 1 meets it (10 at 1000, 20 at 10⁶).</li>
+          <li>Comparison sorting: O(N log₂ N) and Ω(N log₂ N), settled. 3-sum: O(N²) and Ω(N), open gap.</li>
+          <li>Classify every claim: algorithm or problem, which case, which set.</li>
+        </ul>
+      </div>
+      <div class="card wide">
+        <h3>In the room</h3>
+        <ul>
+          <li>About 2 minutes per question. Skip one that stalls and come back.</li>
+          <li>Doubling question: write the ratios in the margin before reading the choices.</li>
+          <li>Witness question: plug n₀ into the inequality. If it fails at n₀, cross that choice out.</li>
+          <li>Struct question: draw 8-byte rows and hatch the padding.</li>
+          <li>Only the letter grid at the top gets graded. Copy every letter there.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const L = "ABCD";
+
+const MODS = [
+{
+  id: "doubling", tag: "Lecture 2", title: "Order of growth from doubling data",
+  learn: `
+<p>The course asks two questions about any program: how long on a bigger input, and how much memory. You answer them like a scientist: observe, hypothesize, predict, verify.</p>
+<h3>The lecture's experiment</h3>
+<p>Brute-force 3-sum ticks <code>ops</code> once per triple tested, then N doubles each row:</p>
+<div class="tablewrap"><table class="num">
+<thead><tr><th>N</th><th>operations</th><th>ratio</th><th>time (s)</th><th>time ratio</th></tr></thead>
+<tbody>
+<tr><td>250</td><td>2,573,000</td><td></td><td>0.002</td><td></td></tr>
+<tr><td>500</td><td>20,708,500</td><td>8.05</td><td>0.018</td><td>11.75</td></tr>
+<tr><td>1000</td><td>166,167,000</td><td>8.02</td><td>0.156</td><td>8.77</td></tr>
+<tr><td>2000</td><td>1,331,334,000</td><td>8.01</td><td>1.050</td><td>6.72</td></tr>
+</tbody></table></div>
+<p>The operation ratio settles on 8 every doubling. The time ratio agrees, noisily.</p>
+<h3>Why the ratio is 2<sup>b</sup></h3>
+<p>Model the cost as T(N) = a·N<sup>b</sup>. Then T(2N)/T(N) = a(2N)<sup>b</sup> / aN<sup>b</sup> = 2<sup>b</sup>.</p>
+<ul>
+<li>The constant a cancels, so the machine drops out.</li>
+<li>Lower-order terms fade as N grows, which is why 8.05 → 8.02 → 8.01. Exactly, C(2N,3)/C(N,3) = 8 + 12/(N − 2).</li>
+<li>b = log₂(ratio). Here log₂ 8 = 3.</li>
+</ul>
+<div class="tablewrap"><table>
+<thead><tr><th>Ratio per doubling</th><th>b</th><th>Order of growth</th></tr></thead>
+<tbody>
+<tr><td>2</td><td>1</td><td>N</td></tr>
+<tr><td>just over 2, falling toward 2</td><td>about 1</td><td>N log₂ N (ratio is 2(1 + 1/log₂ N))</td></tr>
+<tr><td>4</td><td>2</td><td>N²</td></tr>
+<tr><td>a little over 4</td><td>about 2</td><td>N² log₂ N</td></tr>
+<tr><td>8</td><td>3</td><td>N³</td></tr>
+</tbody></table></div>
+<h3>The log-log plot</h3>
+<p>Take log₂ of T(N) = a·N<sup>b</sup>: log₂ T = b·log₂ N + log₂ a. That's a straight line with slope b. Read the slope and you have the exponent without looking at the code.</p>
+<h3>When the ratio wobbles</h3>
+<p>Count ratios are exact. Time ratios scatter when N is too small for the timer, during warm-up, when other processes share the machine, or when data outgrows a cache. The fix is to count when you can, repeat timings and keep the best, and trust the larger N.</p>
+<h3>Same b, different machine</h3>
+<p>The lecture ran 3-sum in C++ (1.05 s at N = 2000, ratio 8.0) and JavaScript (2.5 s, ratio 8.7). The language changes a. The exponent b belongs to the algorithm.</p>
+<h3>When N doesn't double (HW2)</h3>
+<p class="formula">b = log(T₂ / T₁) / log(N₂ / N₁)</p>
+<p>N × 3 → time × 3, × 9, × 27 for b = 1, 2, 3. N × 10 → × 10, × 100, × 1000.</p>`,
+  qs: [
+    { q: "Lecture 2's Your turn: N = 1000, 2000, 4000 take 0.21, 0.83, 3.32 s. Predict T(8000).",
+      c: ["6.6 s", "13.3 s", "26.6 s", "3.3 s"], a: 1,
+      e: "Ratios 3.95 and 4.00 give 2<sup>b</sup> ≈ 4, so b ≈ 2. T(8000) ≈ 4 × 3.32 ≈ 13.3 s, and T(16000) ≈ 53 s." },
+    { q: "Chapter exercise: successive doubling ratios are 2.4, 2.3, 2.2, 2.1. Order of growth?",
+      c: ["N", "N log₂ N", "N²", "2ᴺ"], a: 1,
+      e: "Above 2 and drifting down toward it is the N log₂ N signature: T(2N)/T(N) = 2(1 + 1/log₂ N)." },
+    { q: "Chapter exercise: ratios 3.9, 3.95, 3.98. Order of growth?",
+      c: ["N log₂ N", "N²", "N² log₂ N", "N³"], a: 1,
+      e: "The ratio tends to 4 = 2², so b = 2: quadratic. (N² log₂ N would sit a little over 4.)" },
+    { q: "A log-log plot of time against N is a straight line with slope 3. What does that tell you?",
+      c: ["Time grows by 3 per doubling", "b = 3, so the cost is cubic", "a = 3", "The intercept log₂ a is 3"], a: 1,
+      e: "log₂ T = b log₂ N + log₂ a, so the slope is b." },
+    { q: "Running the same 3-sum in JavaScript instead of C++ changes which part of T(N) = a·N<sup>b</sup>?",
+      c: ["b only", "a only", "both a and b", "neither"], a: 1,
+      e: "Language and machine change the constant a. The exponent is the algorithm's." },
+    { q: "In the lecture table the time ratios were 11.75, 8.77, 6.72 while the count ratios were 8.05, 8.02, 8.01. Which is NOT a reason times wobble?",
+      c: ["N too small for the timer", "Warm-up: loading, filling caches", "Data outgrowing a cache level", "The algorithm's exponent changing between runs"], a: 3,
+      e: "The exponent is fixed by the algorithm. The other three are measurement noise." },
+    { q: "Chapter exercise: a sort's log-log plot has slope 1 over the sizes you tried. Which experiment tells a real linear sort from a best-case input?",
+      c: ["Rerun the same inputs on a quicker machine", "Rerun on reversed or random inputs of the same sizes", "Use a finer timer", "Plot on linear axes"], a: 1,
+      e: "If you fed it sorted arrays you may have measured the best case. If the slope jumps to about 2 on random or reversed input, the linear behavior was the best case." }
+  ]
+},
+{
+  id: "predict", tag: "Lecture 2", title: "Predicting a running time",
+  learn: `
+<p>Once b is known, one measured row pins down a, and the formula forecasts any N. The forecast stands or falls on the next measurement. Measuring gives the exponent; it never says why the exponent is what it is.</p>
+<h3>The lecture's prediction</h3>
+<p>With b = 3 and T(2000) = 1.050 s:</p>
+<p class="formula">a = 1.050 / 2000³ = 1.31 × 10⁻¹⁰ s</p>
+<div class="tablewrap"><table class="num">
+<thead><tr><th>N</th><th>Predicted T(N) ≈ 1.31 × 10⁻¹⁰ · N³</th></tr></thead>
+<tbody><tr><td>4000</td><td>8.4 s</td></tr><tr><td>16000</td><td>538 s, about 9 minutes</td></tr></tbody></table></div>
+<p>Shortcut from the last row: T(N<sub>new</sub>) = T(N<sub>last</sub>) × (N<sub>new</sub>/N<sub>last</sub>)<sup>b</sup>. Each doubling multiplies by 2<sup>b</sup>.</p>
+<h3>What it means in seconds</h3>
+<p>At N = 10⁶ on a machine doing 10⁹ operations per second:</p>
+<div class="tablewrap"><table class="num">
+<thead><tr><th>Growth</th><th>Time</th></tr></thead>
+<tbody>
+<tr><td>N</td><td>1 ms</td></tr><tr><td>N log₂ N</td><td>20 ms</td></tr><tr><td>N²</td><td>about 17 minutes</td></tr><tr><td>N³</td><td>about 31 years</td></tr><tr><td>2ᴺ</td><td>longer than the age of the universe</td></tr>
+</tbody></table></div>
+<h3>Moore's law: who keeps up?</h3>
+<p>A machine twice as quick grows the feasible N by 2<sup>1/b</sup>. Doubling N in the same time needs a 2<sup>b</sup>× quicker machine.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Order</th><th>2× machine grows N by</th><th>Speedup to double N</th></tr></thead>
+<tbody>
+<tr><td>N</td><td>× 2</td><td>2×</td></tr>
+<tr><td>N²</td><td>× √2 ≈ 1.41</td><td>4×</td></tr>
+<tr><td>N³</td><td>× ∛2 ≈ 1.26</td><td>8×</td></tr>
+<tr><td>2ᴺ</td><td>+ 1 element</td><td>impossible: it squares the work</td></tr>
+</tbody></table></div>
+<p>The lecture's takeaway: ask for a better order of growth before a quicker machine.</p>`,
+  qs: [
+    { q: "3-sum is cubic and T(2000) = 1.05 s. Predict T(4000).",
+      c: ["2.1 s", "4.2 s", "8.4 s", "16.8 s"], a: 2,
+      e: "One doubling multiplies by 2³ = 8. 1.05 × 8 = 8.4 s." },
+    { q: "With b = 3 and T(2000) = 1.050 s, what is a?",
+      c: ["5.25 × 10⁻⁴ s", "2.6 × 10⁻⁷ s", "1.31 × 10⁻¹⁰ s", "1.31 × 10⁻⁹ s"], a: 2,
+      e: "2000³ = 8 × 10⁹, and 1.050 / (8 × 10⁹) ≈ 1.31 × 10⁻¹⁰." },
+    { q: "A quadratic program takes 3 s at N = 10,000. Predict N = 40,000.",
+      c: ["12 s", "24 s", "48 s", "192 s"], a: 2,
+      e: "N × 4, so time × 4² = 16. 3 × 16 = 48 s." },
+    { q: "You get a machine twice as quick. A cubic algorithm's feasible N grows by about",
+      c: ["2×", "1.41×", "1.26×", "one element"], a: 2,
+      e: "2<sup>1/3</sup> = ∛2 ≈ 1.26." },
+    { q: "To solve 2N in the same time with an N² algorithm, how much quicker must the machine be?",
+      c: ["2×", "4×", "8×", "16×"], a: 1,
+      e: "2<sup>b</sup> with b = 2." },
+    { q: "A 2ᴺ algorithm on a machine twice as quick handles",
+      c: ["twice the N", "about 1.26× the N", "one more element", "the same N"], a: 2,
+      e: "2<sup>N+1</sup> = 2 · 2ᴺ, so doubling the speed buys exactly one more element." },
+    { q: "N = 10⁶ on a machine doing 10⁹ operations a second. A quadratic algorithm takes about",
+      c: ["1 ms", "20 ms", "17 minutes", "31 years"], a: 2,
+      e: "10¹² operations / 10⁹ per second = 1000 s ≈ 17 minutes." }
+  ]
+},
+{
+  id: "tilde", tag: "Lecture 2", title: "Tilde counts of loops",
+  learn: `
+<p>Knuth's idea from the lecture: total time = Σ cost × frequency over every statement. The cost belongs to the machine; the <strong>frequency</strong> belongs to the algorithm, and it's the part worth counting.</p>
+<h3>Every statement in 3-sum has a frequency</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Statement</th><th>Frequency</th><th>Tilde</th></tr></thead>
+<tbody>
+<tr><td>test <code>i &lt; N</code></td><td>N + 1</td><td>~N</td></tr>
+<tr><td>test <code>j &lt; N</code></td><td>C(N,2) + N</td><td>~N²/2</td></tr>
+<tr><td>test <code>k &lt; N</code></td><td>C(N,3) + C(N,2)</td><td>~N³/6</td></tr>
+<tr><td>the <code>if</code></td><td>C(N,3)</td><td>~N³/6</td></tr>
+<tr><td><code>cnt++</code></td><td>triples found</td><td>depends on input</td></tr>
+</tbody></table></div>
+<p>C(N,3) = N(N−1)(N−2)/6 = N³/6 − N²/2 + N/3. At N = 1000 that's exactly 166,167,000, the count the experiment printed.</p>
+<h3>Tilde: keep the leading term</h3>
+<p>f(N) ~ g(N) means f(N)/g(N) → 1. Dropping the rest is legitimate since (N³/6 − N²/2 + N/3)/(N³/6) = 1 − 3/N + 2/N² → 1. Tilde keeps the coefficient; order of growth drops it too.</p>
+<h3>The sums you'll meet</h3>
+<div class="tablewrap"><table class="num">
+<thead><tr><th>Sum</th><th>Exact</th><th>Tilde</th><th>At N = 1024</th></tr></thead>
+<tbody>
+<tr><td>1 + 2 + … + N</td><td>N(N+1)/2</td><td>~N²/2</td><td>524,800</td></tr>
+<tr><td>pairs i &lt; j</td><td>N(N−1)/2</td><td>~N²/2</td><td>523,776</td></tr>
+<tr><td>1² + 2² + … + N²</td><td>N(N+1)(2N+1)/6</td><td>~N³/3</td><td>358,438,400</td></tr>
+<tr><td>triples i &lt; j &lt; k</td><td>N(N−1)(N−2)/6</td><td>~N³/6</td><td>178,433,024</td></tr>
+<tr><td>1 + 2 + 4 + … + N (N = 2ᵏ)</td><td>2N − 1</td><td>~2N</td><td>2,047</td></tr>
+<tr><td>halvings of N to 1</td><td>⌊log₂ N⌋</td><td>~log₂ N</td><td>10</td></tr>
+</tbody></table></div>
+<h3>Cost models: what to count</h3>
+<ul>
+<li>Inner-loop executions: 3-sum does N(N−1)(N−2)/6.</li>
+<li>Array accesses: 3-sum reads a[i], a[j], a[k] per triple, so ~N³/2.</li>
+<li>Compares: searching and sorting. Probes: binary search does ⌊log₂ N⌋ + 1.</li>
+</ul>
+<h3>Tilde is stronger than Θ</h3>
+<p>f ~ g implies f ∈ Θ(g), but not the reverse. 2N³ ∈ Θ(N³), yet 2N³ is not ~ N³.</p>
+<pre><code>for (int i = 0; i &lt; N; i++)
+    for (int j = 0; j &lt; i; j++)   // runs i times
+        op();                     // N(N-1)/2 ~ N²/2</code></pre>`,
+  qs: [
+    { q: `Lecture 2's Your turn. Exact count and tilde?<pre><code>for (int i = 0; i &lt; N; i++)
+    for (int j = i; j &lt; N; j++)
+        for (int k = 0; k &lt; 3; k++)
+            op();</code></pre>`,
+      c: ["3N(N+1)/2, ~3N²/2", "N(N+1)/2, ~N²/2", "3N(N−1)/2, ~3N²", "3N², ~3N²"], a: 0,
+      e: "j runs N − i times: N + (N−1) + … + 1 = N(N+1)/2, times 3. At N = 10 that's 165." },
+    { q: "In brute-force 3-sum, how many times does the test <code>k &lt; N</code> run?",
+      c: ["C(N,3)", "C(N,3) + C(N,2)", "N³", "C(N,2) + N"], a: 1,
+      e: "Once per triple, plus one failing test each time the k loop ends, which happens once per pair." },
+    { q: "Tilde approximation of 3N² + 100N log₂ N + 500?",
+      c: ["~N²", "~3N²", "~100N log₂ N", "~3N² + 100N log₂ N"], a: 1,
+      e: "Keep the leading term and its coefficient. Dropping the 3 is what order of growth does, not tilde." },
+    { q: "Brute-force 3-sum, counting array accesses as the cost model?",
+      c: ["~N³/6", "~N³/3", "~N³/2", "~3N³"], a: 2,
+      e: "~N³/6 triples × 3 reads each = ~N³/2. That's the lecture's Proposition." },
+    { q: "1² + 2² + … + N² in tilde notation?",
+      c: ["~N²/2", "~N³/6", "~N³/3", "~N³"], a: 2,
+      e: "N(N+1)(2N+1)/6 has leading term 2N³/6 = N³/3." },
+    { q: "Which statement is true?",
+      c: ["f ~ g implies f ∈ Θ(g), but not the reverse", "f ∈ Θ(g) implies f ~ g", "Tilde drops the leading coefficient", "2N³ ~ N³"], a: 0,
+      e: "Tilde demands the ratio go to 1. Θ only needs it between two constants." },
+    { q: "<code>while (n &gt; 1) { n /= 2; count++; }</code> starting at n = 1000 ends with count =",
+      c: ["9", "10", "500", "999"], a: 0,
+      e: "⌊log₂ 1000⌋ = 9, since 2⁹ = 512 ≤ 1000 &lt; 1024." }
+  ]
+},
+{
+  id: "shapes", tag: "Lecture 2", title: "Orders of growth of loop shapes",
+  learn: `
+<div class="tablewrap"><table>
+<thead><tr><th>Order</th><th>Name</th><th>Code shape</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>constant</td><td>a statement</td><td>add two numbers</td></tr>
+<tr><td>log₂ N</td><td>logarithmic</td><td>halve each step</td><td>binary search</td></tr>
+<tr><td>N</td><td>linear</td><td>one loop</td><td>find the maximum</td></tr>
+<tr><td>N log₂ N</td><td>linearithmic</td><td>divide and conquer</td><td>mergesort</td></tr>
+<tr><td>N²</td><td>quadratic</td><td>double loop</td><td>check all pairs</td></tr>
+<tr><td>N³</td><td>cubic</td><td>triple loop</td><td>3-sum</td></tr>
+<tr><td>2ᴺ</td><td>exponential</td><td>every subset</td><td>exhaustive search</td></tr>
+</tbody></table></div>
+<h3>Sum rule and product rule</h3>
+<ul>
+<li><strong>Sum:</strong> step A then step B, costs add and the larger decides. N log₂ N + N² is N².</li>
+<li><strong>Product:</strong> work nested in a loop multiplies. N iterations × log₂ N each is N log₂ N, not N + log₂ N.</li>
+<li>If the inner count changes with i, it's a <strong>sum</strong>, not a product.</li>
+</ul>
+<h3>Lecture 2's "classify the loop"</h3>
+<pre><code>for (int i = 0; i &lt; N; i++)                       // (a)
+    for (int j = 1; j &lt; N; j *= 2) op();
+for (int i = N; i &gt; 0; i /= 2)                    // (b)
+    for (int j = 0; j &lt; i; j++) op();
+for (int i = 0; i &lt; N; i++)                       // (c)
+    for (int j = 0; j &lt; i; j++)
+        for (int k = 0; k &lt; 100; k++) op();
+for (int i = 0; i * i &lt; N; i++) op();             // (d)</code></pre>
+<p>(a) N log₂ N, 10,240 at N = 1024. (b) N + N/2 + … + 1 ~ 2N: linear, 2047. (c) 100 · N(N−1)/2 ~ 50N²: N². (d) i runs to √N: √N, 32.</p>
+<p>The Predict slide: <code>i *= 2</code> outside, <code>j &lt; i</code> inside gives 1 + 2 + … + N/2 = N − 1, so 1023 at N = 1024. Linear, not N log₂ N.</p>
+<h3>Designing a quicker 3-sum</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Algorithm</th><th>Idea</th><th>Order</th><th>Doubling ratio</th></tr></thead>
+<tbody>
+<tr><td>2-sum brute force</td><td>every pair</td><td>N²</td><td>4</td></tr>
+<tr><td>2-sum sorted</td><td>sort, binary-search −a[i]</td><td>N log₂ N</td><td>just over 2</td></tr>
+<tr><td>3-sum brute force</td><td>every triple</td><td>N³</td><td>8</td></tr>
+<tr><td>3-sum sort + binary search</td><td>search −(a[i] + a[j]) per pair</td><td>N² log₂ N</td><td>a little over 4</td></tr>
+<tr><td>3-sum two pointers</td><td>each test retires an index</td><td>N²</td><td>4</td></tr>
+</tbody></table></div>
+<p>The trade: spend a sort up front so each lookup is cheap. Two pointers then drops the log₂ N since lo and hi only move inward, at most N − i − 2 tests per i.</p>`,
+  qs: [
+    { q: `Loop (a) from the lecture. Order of growth?<pre><code>for (int i = 0; i &lt; N; i++)
+    for (int j = 1; j &lt; N; j *= 2) op();</code></pre>`,
+      c: ["N", "N log₂ N", "N²", "log₂ N"], a: 1,
+      e: "N outer passes × log₂ N inner passes." },
+    { q: `Loop (b). Order of growth?<pre><code>for (int i = N; i &gt; 0; i /= 2)
+    for (int j = 0; j &lt; i; j++) op();</code></pre>`,
+      c: ["log₂ N", "N", "N log₂ N", "N²"], a: 1,
+      e: "N + N/2 + N/4 + … + 1 ~ 2N. The inner count shrinks with i, so it's a sum." },
+    { q: `Loop (c). Order of growth?<pre><code>for (int i = 0; i &lt; N; i++)
+    for (int j = 0; j &lt; i; j++)
+        for (int k = 0; k &lt; 100; k++) op();</code></pre>`,
+      c: ["N", "N log₂ N", "N²", "N³"], a: 2,
+      e: "100 · N(N−1)/2 ~ 50N². The k loop is a constant." },
+    { q: "<code>for (int i = 0; i * i &lt; N; i++) op();</code> at N = 1024 calls op() how many times, and what order?",
+      c: ["10, log₂ N", "32, √N", "512, N", "1024, N"], a: 1,
+      e: "i stops once i² reaches N, so it runs √1024 = 32 times." },
+    { q: "Sort (N log₂ N), then for each of ~N²/2 pairs binary-search (log₂ N). Order of growth?",
+      c: ["N²", "N² log₂ N", "N³", "N log₂ N"], a: 1,
+      e: "Sum rule: N log₂ N + N² log₂ N. The larger term wins." },
+    { q: "Doubling ratio you'd expect for the sort + binary search 3-sum?",
+      c: ["8", "a little over 4", "exactly 2", "a little over 2"], a: 1,
+      e: "N² gives 4; the log₂ N factor nudges it slightly above." },
+    { q: "Why does two-pointer 3-sum get rid of the log₂ N?",
+      c: ["It skips the sort", "Each test retires an index for good, so at most N tests per i", "It uses a hash table", "It checks fewer triples by luck"], a: 1,
+      e: "lo only moves up and hi only moves down. N log₂ N + N · N is N²." }
+  ]
+},
+{
+  id: "asym", tag: "Lecture 3", title: "O, Ω, Θ as sets and witness constants",
+  learn: `
+<p>The course treats O(g) as a <strong>set</strong> of functions. For any f, either f ∈ O(g) or f ∉ O(g). You prove membership by exhibiting constants, and non-membership by showing none can exist.</p>
+<div class="defs">
+<div class="def"><b>O(g)</b> = { f : ∃ c, n₀ &gt; 0 such that 0 ≤ f(n) ≤ c·g(n) for all n ≥ n₀ }. c absorbs constant factors; n₀ discards small inputs.</div>
+<div class="def"><b>Ω(g)</b>: 0 ≤ c·g(n) ≤ f(n) for all n ≥ n₀. f grows at least like g.</div>
+<div class="def"><b>Θ(g)</b>: 0 ≤ c₁·g(n) ≤ f(n) ≤ c₂·g(n) for all n ≥ n₀. The sandwich. Θ = O ∩ Ω.</div>
+</div>
+<h3>Witnesses are not unique</h3>
+<p>For 2n² + 8n + 5 ≤ c·n²:</p>
+<div class="tablewrap"><table class="num">
+<thead><tr><th>c</th><th>Smallest n₀</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>15</td><td>1</td><td>term by term: 8n ≤ 8n², 5 ≤ 5n²</td></tr>
+<tr><td>3</td><td>9</td><td>n² − 8n − 5 ≥ 0 from n = 9</td></tr>
+<tr><td>2.5</td><td>17</td><td>0.5n² ≥ 8n + 5 from n = 17</td></tr>
+<tr><td>2</td><td>none</td><td>8n + 5 ≤ 0 never holds</td></tr>
+</tbody></table></div>
+<p>A smaller c needs a later n₀. Any c above the leading coefficient works; c equal to it never does. For Ω, the leading term alone works: 2n² + 8n + 5 ≥ 2n² with c = 2, n₀ = 1.</p>
+<h3>Θ proofs from the lecture</h3>
+<ul>
+<li><strong>3n² − 5n + 2:</strong> upper c₂ = 3 (−5n + 2 &lt; 0 for n ≥ 1). Lower c₁ = 2 needs n² − 5n + 2 ≥ 0, roots about 0.44 and 4.56, so n₀ = 5. Check: 50 ≤ 52 ≤ 75.</li>
+<li><strong>½n² − 3n:</strong> divide by n²: c₁ ≤ ½ − 3/n ≤ c₂. c₂ = ½. At n = 7 the middle is 1/14, so c₁ = 1/14, n₀ = 7.</li>
+<li><strong>5n³ + 2n:</strong> 5n³ ≤ f ≤ 7n³ for n ≥ 1. c₁ = 5, c₂ = 7, n₀ = 1.</li>
+<li><strong>Polynomials:</strong> with leading coefficient aₖ &gt; 0, p ∈ Θ(nᵏ).</li>
+</ul>
+<h3>Non-membership by contradiction</h3>
+<p>6n³ ∉ O(n²): suppose 6n³ ≤ c·n² for all n ≥ n₀. Divide by n²: n ≤ c/6 for all n ≥ n₀. A fixed number can't cap a growing n. Contradiction.</p>
+<h3>The limit test</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>lim f/g</th><th>Conclusion</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>f ∈ O(g), f ∉ Ω(g)</td></tr>
+<tr><td>constant L &gt; 0</td><td>f ∈ Θ(g)</td></tr>
+<tr><td>∞</td><td>f ∈ Ω(g), f ∉ O(g)</td></tr>
+</tbody></table></div>
+<h3>Facts to know cold</h3>
+<ul>
+<li>Hierarchy: 1, log₂ n, √n, n, n log₂ n, n², n³, 2ⁿ, n!. Each is in O of the next, not Ω.</li>
+<li>Log bases differ by a constant, so O(log₂ n) = O(ln n) = O(log₁₀ n).</li>
+<li>2ⁿ beats every polynomial: 2ⁿ ≥ n² from n = 4, ≥ n³ from 10.</li>
+<li>2<sup>n+1</sup> = 2·2ⁿ ∈ O(2ⁿ) with c = 2. 2<sup>2n</sup> ∉ O(2ⁿ): dividing gives 2ⁿ ≤ c.</li>
+<li>log₂(n²) = 2 log₂ n ∈ O(log₂ n). (n + 1)² ∈ Θ(n²) with n² ≤ (n+1)² ≤ 4n².</li>
+<li>n = O(n²) is one-way shorthand for n ∈ O(n²). Never read it right to left.</li>
+</ul>
+<h3>Common mistakes</h3>
+<ul>
+<li>A "constant" that depends on n (n² ≤ c·n with c = n proves nothing).</li>
+<li>Checking a few values instead of every n ≥ n₀.</li>
+<li>Reading O as the running time. 5n ∈ O(n³) is true.</li>
+<li>"At least O(n²)" is meaningless. Lower bounds use Ω.</li>
+</ul>`,
+  qs: [
+    { q: "Which witness pair FAILS for 2n² + 8n + 5 ∈ O(n²)?",
+      c: ["c = 15, n₀ = 1", "c = 3, n₀ = 9", "c = 2.5, n₀ = 17", "c = 2, n₀ = 100"], a: 3,
+      e: "c = 2 would need 8n + 5 ≤ 0, which never holds. Any c above 2 works with a big enough n₀." },
+    { q: "Which witnesses prove 3n² − 5n + 2 ∈ Θ(n²)?",
+      c: ["c₁ = 2, c₂ = 3, n₀ = 5", "c₁ = 3, c₂ = 3, n₀ = 1", "c₁ = 2, c₂ = 3, n₀ = 1", "c₁ = 1, c₂ = 2, n₀ = 5"], a: 0,
+      e: "At n = 1, f = 0 &lt; 2, so n₀ = 1 fails the lower side. c₁ = 3 never works. c₂ = 2 fails at n = 5 (52 &gt; 50)." },
+    { q: "Which witnesses prove ½n² − 3n ∈ Θ(n²)?",
+      c: ["c₁ = 1/14, c₂ = ½, n₀ = 7", "c₁ = ½, c₂ = ½, n₀ = 1", "c₁ = 1/14, c₂ = ½, n₀ = 6", "c₁ = 1, c₂ = 1, n₀ = 7"], a: 0,
+      e: "At n = 6 the function is 18 − 18 = 0, below c₁·36. c₁ = ½ or 1 sits at or above the leading coefficient, so it never works." },
+    { q: "Lecture 3's Try it: (n + 1)² ∈ Θ(n²). Which witnesses work?",
+      c: ["c₁ = 1, c₂ = 4, n₀ = 1", "c₁ = 1, c₂ = 1, n₀ = 1", "c₁ = 2, c₂ = 4, n₀ = 1", "c₁ = 1, c₂ = 2, n₀ = 1"], a: 0,
+      e: "n² ≤ n² + 2n + 1 ≤ 4n² for n ≥ 1. c₂ = 2 fails at n = 1 (4 &gt; 2); c₁ = 2 fails at n = 3 (18 &gt; 16)." },
+    { q: "Which claim is FALSE?",
+      c: ["log₂(n²) ∈ O(log₂ n)", "2<sup>n+1</sup> ∈ O(2ⁿ)", "2<sup>2n</sup> ∈ O(2ⁿ)", "5n ∈ O(n³)"], a: 2,
+      e: "2<sup>2n</sup>/2ⁿ = 2ⁿ grows past every constant c." },
+    { q: "To prove 6n³ ∉ O(n²), the contradiction you reach is",
+      c: ["n ≤ c/6 for all n ≥ n₀", "c must be negative", "n₀ must be 0", "6 ≤ c"], a: 0,
+      e: "Divide 6n³ ≤ c·n² by n². A fixed number can't bound every n." },
+    { q: "lim (3n² − 5n + 2)/n² = 3. What does the limit test conclude?",
+      c: ["f ∈ O(n²) only", "f ∈ Θ(n²)", "f ∈ Ω(n³)", "Nothing, limits don't apply"], a: 1,
+      e: "A positive constant limit means Θ, with no witnesses to hunt for." },
+    { q: "Chapter exercise: \"The running time is at least O(n²).\" This statement is",
+      c: ["a valid lower bound", "meaningless; a lower bound uses Ω(n²)", "the same as Θ(n²)", "an upper bound of n²"], a: 1,
+      e: "O is a set of upper bounds. \"At least\" bounded above rules nothing out." },
+    { q: "Slowest growth first, which order is right?",
+      c: ["√n, (log₂ n)², n log₂ n, n^1.5", "(log₂ n)², √n, n log₂ n, n^1.5", "(log₂ n)², √n, n^1.5, n log₂ n", "√n, n log₂ n, (log₂ n)², n^1.5"], a: 1,
+      e: "A log raised to a fixed exponent loses to any positive exponent of n, so (log₂ n)² is below √n. n log₂ n is below n^1.5 since log₂ n is below √n." }
+  ]
+},
+{
+  id: "struct", tag: "Lecture 3", title: "Struct sizes, padding, and space",
+  learn: `
+<div class="tablewrap"><table class="num">
+<thead><tr><th>Type (typical 64-bit)</th><th>Bytes</th></tr></thead>
+<tbody>
+<tr><td>char, bool</td><td>1</td></tr><tr><td>short</td><td>2</td></tr><tr><td>int, float</td><td>4</td></tr><tr><td>long, double, any pointer</td><td>8</td></tr>
+</tbody></table></div>
+<h3>Two rules</h3>
+<ul>
+<li>Each member starts at an offset that's a multiple of its alignment (its size, for these types). The compiler pads in front if needed.</li>
+<li>The total rounds up to a multiple of the largest alignment, so arrays of the struct stay aligned.</li>
+</ul>
+<h3>The lecture's examples</h3>
+<p><code>struct Node { int data; Node* next; };</code> is 16, not 12: 4 bytes of padding so the pointer starts at 8.</p>
+<div class="bytes" data-layout="d4 _4 n8"></div>
+<p class="bytes-cap">data 0 to 3, pad 4 to 7, next 8 to 15.</p>
+<p><code>struct A { char a; int b; char c; };</code> is 12 and <code>struct B { int b; char a; char c; };</code> is 8. Order fields largest to smallest.</p>
+<h3>HW2's Record</h3>
+<div class="bytes" data-layout="t1 _7 v8 f1 _3 i4 k2 _6"></div>
+<p class="bytes-cap">tag 0, pad 1 to 7, value 8 to 15, flag 16, pad 17 to 19, id 20 to 23, kind 24 to 25, tail pad 26 to 31: 32 bytes. Reordered double, int, short, char, char it's 16.</p>
+<h3>Stack, heap, and structures</h3>
+<ul>
+<li>Stack: locals, released when the function returns. Heap: <code>new</code>/<code>delete</code>, lives until freed.</li>
+<li>A list node holds 4 bytes of data and costs 16. N ints: array 4N bytes, linked list 16N. Same order N, a 4× constant.</li>
+<li><code>sizeof(vector&lt;int&gt;)</code> is 24: pointer, size, capacity. It never counts the heap block.</li>
+<li>Capacity doubles: 1, 2, 4, …, 1024 after 1000 pushes. Regrowth copies total 1 + 2 + … + 512 = 1023, fewer than 2N.</li>
+</ul>
+<h3>Auxiliary space</h3>
+<p>Space beyond the input, analyzed like time.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Algorithm</th><th>Time</th><th>Auxiliary space</th></tr></thead>
+<tbody>
+<tr><td>array sum</td><td>N</td><td>1</td></tr>
+<tr><td>brute-force 3-sum</td><td>N³</td><td>1</td></tr>
+<tr><td>fact(n), recursive</td><td>n</td><td>Θ(n) stack frames</td></tr>
+<tr><td>binary search, recursive</td><td>log₂ N</td><td>Θ(log₂ N) frames</td></tr>
+<tr><td>mergesort</td><td>N log₂ N</td><td>Θ(N) buffer (4N bytes) + log₂ N frames</td></tr>
+<tr><td>BFS on an n × n grid</td><td>n²</td><td>n² (1 byte per cell for visited, 4 for distance)</td></tr>
+</tbody></table></div>
+<p>Time and space are separate budgets. You can often spend memory to save time.</p>`,
+  qs: [
+    { q: "<code>struct Node { int data; Node* next; };</code> sizeof(Node)?",
+      c: ["12", "16", "8", "24"], a: 1,
+      e: "The pointer must start at a multiple of 8, so 4 bytes of padding follow data." },
+    { q: "<code>struct A { char a; int b; char c; };</code> sizeof(A)?",
+      c: ["6", "8", "9", "12"], a: 3,
+      e: "3 bytes of padding after a, b at 4 to 7, c at 8, then round 9 up to 12." },
+    { q: "<code>struct B { int b; char a; char c; };</code> sizeof(B)?",
+      c: ["6", "8", "12", "16"], a: 1,
+      e: "The two chars share the tail: 6 rounds up to 8." },
+    { q: "<code>struct S { double d; char c; };</code> sizeof(S)?",
+      c: ["9", "12", "16", "24"], a: 2,
+      e: "Tail padding rounds 9 up to a multiple of 8." },
+    { q: "Heap bytes for N ints stored in a linked list of Node vs an array?",
+      c: ["16N vs 4N: same order, 4× constant", "List is order N², array N", "Both 4N", "12N vs 4N"], a: 0,
+      e: "Each 16-byte node carries 4 bytes of data. The lecture measured a 4.0× ratio." },
+    { q: "A vector&lt;int&gt; holds 1000 elements. sizeof(v)?",
+      c: ["24", "4000", "4024", "8000"], a: 0,
+      e: "sizeof reports only the header: pointer, size, capacity. The block lives on the heap." },
+    { q: "push_back 1000 times from empty. Final capacity and total regrowth copies?",
+      c: ["1000 and 1000", "1024 and 1023", "2048 and 2047", "1024 and 2048"], a: 1,
+      e: "Capacities 1, 2, …, 1024. Copies 1 + 2 + … + 512 = 1023, under 2N." },
+    { q: "Auxiliary space of brute-force 3-sum?",
+      c: ["Θ(1)", "Θ(N)", "Θ(N²)", "Θ(N³)"], a: 0,
+      e: "Just loop counters and a count. Time N³, space 1." },
+    { q: "Auxiliary space of recursive binary search?",
+      c: ["Θ(1)", "Θ(log₂ N)", "Θ(N)", "Θ(N log₂ N)"], a: 1,
+      e: "⌊log₂ N⌋ + 1 frames are alive at the deepest point." }
+  ]
+},
+{
+  id: "cases", tag: "Lecture 3", title: "Best and worst case versus the bound",
+  learn: `
+<p>Two independent questions. <strong>Which input?</strong> Best, worst, or average case. <strong>Which set?</strong> O, Ω, or Θ. Any bound can describe any case. "The worst case is in Θ(n)" makes one choice of each.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Compares</th><th>Best case</th><th>Worst case</th></tr></thead>
+<tbody>
+<tr><td>linear search</td><td>Θ(1): first element</td><td>Θ(n): absent</td></tr>
+<tr><td>binary search, sorted</td><td>Θ(1): the middle</td><td>Θ(log₂ n): absent</td></tr>
+</tbody></table></div>
+<p>"Binary search is O(log₂ n)" usually means its worst case is in Θ(log₂ n).</p>
+<h3>Insertion sort, counted</h3>
+<div class="tablewrap"><table class="num">
+<thead><tr><th>Case</th><th>Input</th><th>Compares</th><th>At n = 1000</th><th>Set</th></tr></thead>
+<tbody>
+<tr><td>best</td><td>already sorted</td><td>n − 1</td><td>999</td><td>Θ(n)</td></tr>
+<tr><td>worst</td><td>reverse sorted</td><td>n(n−1)/2</td><td>499,500</td><td>Θ(n²)</td></tr>
+<tr><td>average</td><td>random</td><td>about n²/4</td><td>about 250,000</td><td>Θ(n²)</td></tr>
+</tbody></table></div>
+<p>"Θ(n²)" holds only for the worst and average cases.</p>
+<h3>Chapter exercise</h3>
+<p>An algorithm's running time is Θ(g) exactly when its worst case is O(g) <em>and</em> its best case is Ω(g). Every input sits between the best and the worst.</p>
+<h3>Amortized is not average</h3>
+<p>One <code>push_back</code> that regrows copies every element: Θ(N) for that call. N pushes cost under 3N in total, so the amortized cost is Θ(1) per push. Amortized is a worst-case promise about totals with no probability involved.</p>
+<h3>When there's no single Θ</h3>
+<p>Grid BFS that stores only the R cells reached: memory Θ(R). A walled-in start gives Θ(1), a corridor Θ(n), an open grid Θ(n²). Over all mazes the cost is in O(n²) and Ω(1), and in no single Θ(g(n)).</p>
+<h3>Reading the documentation</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Operation</th><th>Precisely</th></tr></thead>
+<tbody>
+<tr><td>vector::push_back</td><td>amortized Θ(1); one call Θ(N)</td></tr>
+<tr><td>vector::operator[]</td><td>Θ(1) every call</td></tr>
+<tr><td>map::find</td><td>worst case Θ(log₂ N)</td></tr>
+<tr><td>unordered_map::find</td><td>average Θ(1), worst Θ(N)</td></tr>
+<tr><td>std::sort</td><td>worst case O(N log N) compares (C++11 on)</td></tr>
+</tbody></table></div>`,
+  qs: [
+    { q: "Insertion sort on an already sorted array of n = 1000. Compares?",
+      c: ["999", "499,500", "about 250,000", "about 10,000"], a: 0,
+      e: "Each element is checked once against its left neighbor: n − 1." },
+    { q: "Insertion sort on a reverse-sorted array of n = 1000. Compares?",
+      c: ["999", "about 250,000", "499,500", "1,000,000"], a: 2,
+      e: "n(n−1)/2 = 1000 × 999 / 2." },
+    { q: "\"Insertion sort is in Θ(n²)\" is true for",
+      c: ["every case", "the worst and average cases only", "the best case only", "no case"], a: 1,
+      e: "The best case is linear, so no single Θ(n²) covers every input." },
+    { q: "Best case Θ(N), worst case Θ(N²). What holds for ALL inputs?",
+      c: ["Θ(N²)", "Θ(N)", "O(N²) and Ω(N)", "O(N) and Ω(N²)"], a: 2,
+      e: "Every input costs at most the worst and at least the best." },
+    { q: "Chapter exercise: an algorithm's running time is Θ(g) if and only if",
+      c: ["its worst case is O(g) and its best case is Ω(g)", "its worst case is Ω(g) and its best case is O(g)", "its average case is Θ(g)", "its worst case is Θ(g)"], a: 0,
+      e: "That squeezes every input between c₁g and c₂g." },
+    { q: "What does \"push_back is amortized constant\" mean?",
+      c: ["Every call is Θ(1)", "One call can be Θ(N), but any N calls total Θ(N), so Θ(1) per call", "It's Θ(1) with high probability on random input", "It's Θ(log N)"], a: 1,
+      e: "Amortized divides the total of any sequence by its length. No probability involved." },
+    { q: "Grid BFS storing only reached cells, over all n × n mazes, uses memory in",
+      c: ["Θ(n²)", "O(n²) and Ω(1), no single Θ", "Θ(n)", "Θ(1)"], a: 1,
+      e: "The maze decides R, anywhere from 1 to about n²." },
+    { q: "unordered_map::find is",
+      c: ["Θ(1) in the worst case", "average Θ(1), worst Θ(N)", "Θ(log₂ N) always", "amortized Θ(1)"], a: 1,
+      e: "Hash collisions can push one lookup to linear." }
+  ]
+},
+{
+  id: "problem", tag: "Lecture 3", title: "What an algorithm establishes about a problem",
+  learn: `
+<p>Every Θ so far belongs to <strong>one algorithm</strong>: brute-force 3-sum Θ(N³), sort + binary search Θ(N² log₂ N), two pointers Θ(N²). The problem 3-sum is a different subject.</p>
+<h3>An algorithm is an upper bound on the problem</h3>
+<p>An algorithm that solves the problem in Θ(f) shows the problem is in <strong>O(f)</strong>. Each algorithm is a witness: the cost is achievable, never proved necessary. A better algorithm lowers it.</p>
+<ul><li>brute force: 3-sum ∈ O(N³)</li><li>sort + binary search: 3-sum ∈ O(N² log₂ N)</li><li>two pointers: 3-sum ∈ O(N²), about the best known</li></ul>
+<h3>A lower bound belongs to the problem</h3>
+<p>Every algorithm needs at least this much, so it must be proved.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Problem</th><th>Upper (algorithm)</th><th>Lower bound</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>comparison sorting</td><td>O(N log₂ N)</td><td>Ω(N log₂ N)</td><td>settled</td></tr>
+<tr><td>3-sum</td><td>O(N²)</td><td>Ω(N): must read the input</td><td>gap: open</td></tr>
+</tbody></table></div>
+<p>When upper meets lower, the problem is in Θ and optimizing is finished. For 3-sum, Grønlund and Pettie (2014) shaved only logarithmic factors off N²; whether much less is possible is open.</p>
+<h3>A lower bound you can prove: searching a sorted array</h3>
+<ul>
+<li>N + 1 possible answers: a position, or absent.</li>
+<li>A comparison algorithm is a decision tree of height h with at most 2ʰ leaves.</li>
+<li>Every answer needs a leaf: 2ʰ ≥ N + 1, so h ≥ ⌈log₂(N + 1)⌉.</li>
+<li>Binary search's worst case ⌊log₂ N⌋ + 1 matches: 10 at N = 1000, 20 at 10⁶.</li>
+</ul>
+<h3>Reading a claim</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Claim</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>"mergesort is in Θ(N log₂ N)"</td><td>every input, at least and at most c·N log₂ N</td></tr>
+<tr><td>"quicksort's worst case is in Θ(N²)"</td><td>the worst input costs order N²</td></tr>
+<tr><td>"sorting is in Ω(N log₂ N)"</td><td>no comparison sort does better</td></tr>
+<tr><td>"3-sum is in O(N²)"</td><td>some algorithm achieves N²</td></tr>
+</tbody></table></div>
+<p>Name the case, the set, and whether the subject is an algorithm or a problem.</p>
+<h3>Lecture 3's Your turn</h3>
+<ul>
+<li>"Linear search is in Ω(n)": worst case only.</li>
+<li>"Sorted-array search is in Ω(log₂ n)": true, by the decision tree.</li>
+<li>"push_back is in O(1)": amortized only.</li>
+<li>"Insertion sort is in Θ(n²)": worst and average only.</li>
+</ul>`,
+  qs: [
+    { q: "Two-pointer 3-sum runs in Θ(N²). What does that establish about the problem 3-sum?",
+      c: ["3-sum ∈ Θ(N²)", "3-sum ∈ O(N²)", "3-sum ∈ Ω(N²)", "Nothing"], a: 1,
+      e: "One algorithm shows N² is achievable. It can't show N² is necessary." },
+    { q: "How do you establish that a problem is in Ω(N)?",
+      c: ["Run a doubling experiment and get ratio 2", "Argue that every algorithm must read all N inputs", "Find a slow algorithm for it", "Show your algorithm's best case is N"], a: 1,
+      e: "A lower bound has to cover every algorithm, including ones not yet invented." },
+    { q: "The decision-tree argument for comparison search of a sorted array of N gives",
+      c: ["h ≥ ⌈log₂(N + 1)⌉", "h ≥ N", "h ≤ log₂ N", "h = N log₂ N"], a: 0,
+      e: "N + 1 answers need N + 1 leaves, and a tree of height h has at most 2ʰ." },
+    { q: "At N = 10⁶, any comparison-based search of a sorted array needs, in the worst case, at least about",
+      c: ["6 compares", "20 compares", "1000 compares", "10⁶ compares"], a: 1,
+      e: "⌈log₂(10⁶ + 1)⌉ = 20, and binary search meets it." },
+    { q: "Comparison sorting has O(N log₂ N) algorithms and an Ω(N log₂ N) lower bound. So",
+      c: ["the problem is settled: Θ(N log₂ N), and mergesort is optimal", "the gap is open", "only the upper bound is known", "a linear comparison sort might exist"], a: 0,
+      e: "Upper meets lower." },
+    { q: "3-sum: O(N²) from two pointers, Ω(N) proven. Which is true?",
+      c: ["3-sum is Θ(N²)", "3-sum is Θ(N)", "Whether much less than N² is possible is open", "Brute force is optimal"], a: 2,
+      e: "The bounds don't meet." },
+    { q: "\"Linear search is in Ω(n)\" is true for",
+      c: ["every input", "the worst case only", "the best case only", "no case"], a: 1,
+      e: "If the key is first, it takes one compare." },
+    { q: "A doubling experiment on your 3-sum program shows ratio 8. What does it say about the 3-sum PROBLEM?",
+      c: ["The problem is Θ(N³)", "Every 3-sum algorithm needs about N³", "It describes this program; it gives no lower bound for the problem", "The problem can't be solved in N²"], a: 2,
+      e: "Two pointers already beats N³, so the problem clearly isn't Ω(N³)." }
+  ]
+}
+];
+
+const MOCK = [
+  { q: "Array-access counts: N = 1000 → 10,979; 2000 → 23,937; 4000 → 51,928. Order of growth?",
+    c: ["N", "N log₂ N", "N²", "N³"], a: 1, e: "Ratios 2.18 and 2.17: just over 2 and settling. That's the sorted 2-sum, N log₂ N." },
+  { q: "A quadratic program takes 5 s at N = 4,000. Predict N = 12,000.",
+    c: ["15 s", "20 s", "45 s", "135 s"], a: 2, e: "N × 3, time × 3² = 9. 5 × 9 = 45 s." },
+  { q: `Tilde count of op()?<pre><code>for (int i = 0; i &lt; N; i++)
+  for (int j = 0; j &lt; i; j++)
+    for (int k = 0; k &lt; 3; k++) op();</code></pre>`,
+    c: ["~3N²", "~N²/2", "~N³/6", "~3N²/2"], a: 3, e: "3 · N(N−1)/2 ~ 3N²/2." },
+  { q: `At N = 1024, how many calls and what order?<pre><code>for (int i = 1; i &lt; N; i *= 2)
+  for (int j = 0; j &lt; i; j++) op();</code></pre>`,
+    c: ["1023, linear", "10,240, N log₂ N", "9,207, N log₂ N", "10, log₂ N"], a: 0, e: "1 + 2 + … + 512 = 1023. A sum, not a product." },
+  { q: "Which witnesses prove 5n³ + 2n ∈ Θ(n³)?",
+    c: ["c₁ = 5, c₂ = 7, n₀ = 1", "c₁ = 5, c₂ = 5, n₀ = 1", "c₁ = 7, c₂ = 7, n₀ = 1", "c₁ = 6, c₂ = 7, n₀ = 1"], a: 0,
+    e: "5n³ ≤ 5n³ + 2n ≤ 7n³ for n ≥ 1. c₁ = 6 fails at n = 2 (48 &gt; 44)." },
+  { q: "Which function is in O(log₂ n)?",
+    c: ["√n", "log₂(n²)", "n / log₂ n", "2<sup>log₂ n</sup>"], a: 1, e: "log₂(n²) = 2 log₂ n, so c = 2. 2<sup>log₂ n</sup> = n." },
+  { q: "<code>struct S { char c; double d; int i; char e; };</code> sizeof(S) on a 64-bit machine?",
+    c: ["14", "16", "24", "32"], a: 2, e: "c 0, pad 1 to 7, d 8 to 15, i 16 to 19, e 20, tail pad to 24. Reordered it would be 16." },
+  { q: "N ints in a linked list of <code>struct Node { int data; Node* next; }</code>. Heap bytes?",
+    c: ["4N", "12N", "24N", "16N"], a: 3, e: "Each node is 16 bytes with padding." },
+  { q: "Which statement is correct?",
+    c: ["Big O means worst case", "Insertion sort's best case is in Θ(n)", "Binary search is Θ(log₂ n) on every input", "Best Θ(n), worst Θ(n²) means Θ(n²) overall"], a: 1,
+    e: "Sorted input needs n − 1 compares. Binary search's best case is Θ(1)." },
+  { q: "Any comparison-based search of a sorted array of 10⁶ needs, in the worst case, at least about",
+    c: ["1000 compares", "10⁶ compares", "20 compares", "6 compares"], a: 2, e: "⌈log₂(10⁶ + 1)⌉ = 20 by the decision tree." }
+];
+
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+let answers = store.get("q2v2-answers") || {};
+let qPos = store.get("q2v2-pos") || {};
+let modIdx = store.get("q2v2-mod");
+if (typeof modIdx !== "number" || modIdx < 0 || modIdx >= MODS.length) modIdx = 0;
+let mock = store.get("q2v2-mock");
+if (!mock || !Array.isArray(mock.picks) || mock.picks.length !== MOCK.length) mock = { picks: Array(MOCK.length).fill(null), submitted: false, endsAt: null };
+let tick = null;
+
+const $ = s => document.querySelector(s);
+function save() { store.set("q2v2-answers", answers); store.set("q2v2-pos", qPos); store.set("q2v2-mod", modIdx); store.set("q2v2-mock", mock); }
+
+function score(m) {
+  const a = answers[m.id] || [];
+  let done = 0, right = 0;
+  m.qs.forEach((q, i) => { if (a[i] != null) { done++; if (a[i] === q.a) right++; } });
+  return { done, right };
+}
+
+function renderMods() {
+  $("#mods").innerHTML = MODS.map((m, i) => {
+    const s = score(m);
+    const full = s.right === m.qs.length;
+    return `<button class="mod ${i === modIdx ? "on" : ""}" data-i="${i}" id="mod-${m.id}">
+      <span class="mod-tag">${m.tag}</span>
+      <span class="mod-t">${m.title}</span>
+      <span class="mod-s ${full ? "full" : ""}">${s.right} of ${m.qs.length} correct${s.done && !full ? ` · ${s.done} tried` : ""}</span>
+    </button>`;
+  }).join("");
+}
+
+function fillBytes(root) {
+    root.querySelectorAll(".bytes").forEach(el => {
+    let html = "";
+    el.dataset.layout.split(" ").forEach(part => {
+      const key = part[0], n = parseInt(part.slice(1), 10);
+      for (let j = 0; j < n; j++) html += key === "_" ? `<span class="byte pad"></span>` : `<span class="byte mem">${key}</span>`;
+    });
+    el.innerHTML = html;
+  });
+}
+
+function renderLesson() {
+  const m = MODS[modIdx];
+  $("#lesson").innerHTML = `<p class="eyebrow">${m.tag}</p><h2>${m.title}</h2>${m.learn}`;
+  fillBytes($("#lesson"));
+}
+
+function renderPractice() {
+  const m = MODS[modIdx];
+  let i = qPos[m.id] || 0;
+  if (i >= m.qs.length) i = 0;
+  const q = m.qs[i];
+  const a = (answers[m.id] || [])[i];
+  const locked = a != null;
+  const dots = m.qs.map((qq, k) => {
+    const ak = (answers[m.id] || [])[k];
+    const cls = ak == null ? "" : (ak === qq.a ? "ok" : "bad");
+    return `<button class="dot ${cls} ${k === i ? "cur" : ""}" data-jump="${k}" aria-label="Question ${k + 1}">${k + 1}</button>`;
+  }).join("");
+  const choices = q.c.map((t, k) => {
+    let cls = "choice";
+    if (locked) cls += k === q.a ? " right" : (k === a ? " wrong" : " dim");
+    return `<button class="${cls}" data-pick="${k}" ${locked ? "disabled" : ""}><span class="letter">${L[k]}</span><span class="ctext">${t}</span></button>`;
+  }).join("");
+  const fb = locked ? `<div class="fb ${a === q.a ? "ok" : "no"}"><strong>${a === q.a ? "Correct." : "Not quite. The answer is " + L[q.a] + "."}</strong>${q.e}</div>` : "";
+  const last = i === m.qs.length - 1;
+  const nextLabel = last ? (modIdx < MODS.length - 1 ? "Next lesson" : "Take the mock quiz") : "Next question";
+  $("#practice").innerHTML = `
+    <div class="p-head"><p class="eyebrow" style="margin:0">Practice · question ${i + 1} of ${m.qs.length}</p><div class="dots">${dots}</div></div>
+    <div class="stem">${q.q}</div>
+    <div class="choices">${choices}</div>
+    ${fb}
+    <div class="nav">
+      <button class="btn ghost" data-act="reset">Reset this lesson</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" data-act="prev" ${i === 0 ? "disabled" : ""}>Back</button>
+        <button class="btn primary" data-act="next">${nextLabel}</button>
+      </div>
+    </div>`;
+}
+
+function renderLearn() { renderMods(); renderLesson(); renderPractice(); }
+
+$("#mods").addEventListener("click", e => {
+  const b = e.target.closest(".mod"); if (!b) return;
+  modIdx = +b.dataset.i; save(); renderLearn();
+  $("#lesson").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+$("#practice").addEventListener("click", e => {
+  const m = MODS[modIdx];
+  const i = qPos[m.id] || 0;
+  const pick = e.target.closest("[data-pick]");
+  const jump = e.target.closest("[data-jump]");
+  const act = e.target.closest("[data-act]");
+  if (pick && !pick.disabled) {
+    answers[m.id] = answers[m.id] || Array(m.qs.length).fill(null);
+    answers[m.id][i] = +pick.dataset.pick;
+    save(); renderMods(); renderPractice();
+  } else if (jump) {
+    qPos[m.id] = +jump.dataset.jump; save(); renderPractice();
+  } else if (act) {
+    const a = act.dataset.act;
+    if (a === "prev") { qPos[m.id] = Math.max(0, i - 1); save(); renderPractice(); }
+    if (a === "next") {
+      if (i < m.qs.length - 1) { qPos[m.id] = i + 1; save(); renderPractice(); }
+      else if (modIdx < MODS.length - 1) { modIdx++; save(); renderLearn(); $("#lesson").scrollIntoView({ behavior: "smooth", block: "start" }); }
+      else { show("mock"); }
+    }
+    if (a === "reset") { answers[m.id] = Array(m.qs.length).fill(null); qPos[m.id] = 0; save(); renderMods(); renderPractice(); }
+  }
+});
+
+function fmt(ms) {
+  const s = Math.max(0, Math.ceil(ms / 1000));
+  return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+}
+
+function renderMock() {
+  const v = $("#view-mock");
+  const started = mock.endsAt != null;
+  const left = started ? mock.endsAt - Date.now() : 20 * 60 * 1000;
+  let right = 0;
+  MOCK.forEach((q, i) => { if (mock.picks[i] === q.a) right++; });
+  const blanks = mock.picks.filter(p => p == null).length;
+
+  const grid = MOCK.map((q, i) => {
+    const p = mock.picks[i];
+    const cls = mock.submitted ? (p === q.a ? "ok" : "bad") : "";
+    return `<div class="cell ${cls}"><span class="n">${i + 1}</span><span class="l">${p == null ? "" : L[p]}</span></div>`;
+  }).join("");
+
+  const bar = mock.submitted
+    ? `<div class="score"><p class="eyebrow">Your score</p><div class="score-big">${(right * 3.5).toFixed(1)} / 35</div><p style="margin:4px 0 12px">${right} of 10 correct. Missed ones are marked below with the reason.</p><button class="btn primary" data-act="retake">Retake</button></div>`
+    : `<div class="mockbar">
+        <div><p class="eyebrow" style="margin:0">Time left</p><div class="clock ${started && left < 3 * 60 * 1000 ? "low" : ""}" id="clock">${fmt(left)}</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${started ? "" : `<button class="btn primary" data-act="start">Start 20:00</button>`}
+          <button class="btn ${started ? "primary" : ""}" data-act="submit">${blanks && started ? `Submit (${blanks} blank)` : "Submit"}</button>
+        </div>
+      </div>`;
+
+  const qs = MOCK.map((q, i) => {
+    const p = mock.picks[i];
+    const choices = q.c.map((t, k) => {
+      let cls = "choice";
+      if (mock.submitted) cls += k === q.a ? " right" : (k === p ? " wrong" : " dim");
+      else if (k === p) cls += " picked";
+      return `<button class="${cls}" data-q="${i}" data-k="${k}" ${mock.submitted ? "disabled" : ""}><span class="letter">${L[k]}</span><span class="ctext">${t}</span></button>`;
+    }).join("");
+    const fb = mock.submitted ? `<div class="fb ${p === q.a ? "ok" : "no"}"><strong>${p === q.a ? "Correct." : (p == null ? "Left blank. " : "") + "Answer: " + L[q.a] + "."}</strong>${q.e}</div>` : "";
+    return `<div class="mq"><span class="mq-n">Question ${i + 1}</span><div class="stem">${q.q}</div><div class="choices">${choices}</div>${fb}</div>`;
+  }).join("");
+
+  v.innerHTML = `
+    <p class="lede" style="margin-top:0">Ten new questions in the real format: one per topic area, four choices, 3.5 points each. Start the clock, answer in order, and watch the letter grid fill in like the one on the paper.</p>
+    ${bar}
+    <div class="grid10" aria-label="Answer grid">${grid}</div>
+    ${qs}`;
+
+  clearInterval(tick);
+  if (started && !mock.submitted) {
+    tick = setInterval(() => {
+      const l = mock.endsAt - Date.now();
+      const c = document.getElementById("clock");
+      if (l <= 0) { mock.submitted = true; save(); clearInterval(tick); renderMock(); return; }
+      if (c) { c.textContent = fmt(l); c.classList.toggle("low", l < 3 * 60 * 1000); }
+    }, 500);
+  }
+}
+
+$("#view-mock").addEventListener("click", e => {
+  const pick = e.target.closest("[data-q]");
+  const act = e.target.closest("[data-act]");
+  if (pick && !mock.submitted) {
+    const qi = +pick.dataset.q, k = +pick.dataset.k;
+    mock.picks[qi] = mock.picks[qi] === k ? null : k;
+    if (mock.endsAt == null) mock.endsAt = Date.now() + 20 * 60 * 1000;
+    save(); const y = window.scrollY; renderMock(); window.scrollTo(0, y);
+  } else if (act) {
+    const a = act.dataset.act;
+    if (a === "start") { mock.endsAt = Date.now() + 20 * 60 * 1000; save(); renderMock(); }
+    if (a === "submit") { mock.submitted = true; save(); renderMock(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+    if (a === "retake") { mock = { picks: Array(MOCK.length).fill(null), submitted: false, endsAt: null }; save(); renderMock(); }
+  }
+});
+
+function show(view) {
+  document.querySelectorAll(".switch button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === view ? "true" : "false"));
+  $("#view-learn").hidden = view !== "learn";
+  $("#view-mock").hidden = view !== "mock";
+  $("#view-cram").hidden = view !== "cram";
+  if (view === "mock") renderMock(); else clearInterval(tick);
+  store.set("q2v2-view", view);
+  window.scrollTo({ top: 0 });
+}
+document.querySelector(".switch").addEventListener("click", e => {
+  const b = e.target.closest("button[data-view]"); if (b) show(b.dataset.view);
+});
+
+renderLearn();
+const startView = location.hash === "#mock" ? "mock" : location.hash === "#cram" ? "cram" : (store.get("q2v2-view") || "learn");
+show(["learn", "mock", "cram"].includes(startView) ? startView : "learn");
+</script>
+
+</body></html>
