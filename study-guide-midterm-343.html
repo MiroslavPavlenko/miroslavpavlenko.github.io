@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS 343 Midterm — Complete Study Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a single narrow study column; hash tables drawn as real slot rows, graphs as adjacency lists. */
+:root {
+  --bg: #f3f5f8;
+  --panel: #ffffff;
+  --ink: #18202c;
+  --muted: #5b6676;
+  --line: #d9dfe8;
+  --accent: #2346c8;
+  --accent-soft: #e6ebfb;
+  --probe: #b86a00;
+  --probe-soft: #fbf0de;
+  --good: #1d7a46;
+  --good-soft: #e2f3e8;
+  --bad: #b3261e;
+  --bad-soft: #fbe5e3;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --panel: #1a2029; --ink: #e6ebf2; --muted: #9aa5b5; --line: #2c3542;
+    --accent: #8aa4ff; --accent-soft: #232d4a; --probe: #f0a845; --probe-soft: #3a2c15;
+    --good: #5fcf8c; --good-soft: #17301f; --bad: #ff8a80; --bad-soft: #3a1c1a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --panel: #1a2029; --ink: #e6ebf2; --muted: #9aa5b5; --line: #2c3542;
+  --accent: #8aa4ff; --accent-soft: #232d4a; --probe: #f0a845; --probe-soft: #3a2c15;
+  --good: #5fcf8c; --good-soft: #17301f; --bad: #ff8a80; --bad-soft: #3a1c1a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); }
+.wrap { max-width: 720px; margin: 0 auto; padding: 18px 16px 64px; display: flex; flex-direction: column; gap: 16px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: 1.65rem; font-weight: 700; }
+h2 { font-size: 1.3rem; font-weight: 600; }
+h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin-top: 6px; }
+p { margin: 0; }
+code, .mono { font-family: var(--mono); font-size: 0.9em; }
+.meta { color: var(--muted); font-size: 0.92rem; }
+.examcard { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 0.78rem/1 var(--body); padding: 5px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+.chip.good { background: var(--good-soft); color: var(--good); }
+.chip.warn { background: var(--probe-soft); color: var(--probe); }
+.chip.idle { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+nav.tabs { display: flex; gap: 6px; position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 8px 0; }
+nav.tabs button { flex: 1; }
+button { font: 600 0.95rem var(--body); border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 10px 14px; cursor: pointer; }
+button:focus-visible, .opt:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+:root[data-theme="dark"] button.primary { color: #0d1220; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) button.primary { color: #0d1220; } }
+button.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.mode-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mode-picker button { padding: 12px 8px; }
+.progress { display: flex; flex-direction: column; gap: 6px; }
+.bar { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--good); width: 0; transition: width .3s; }
+.topics { display: flex; flex-direction: column; gap: 8px; }
+.topic { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; text-align: left; padding: 12px; background: var(--panel); }
+.topic .num { font: 600 0.95rem var(--mono); color: var(--muted); }
+.topic .t { font-weight: 600; }
+.topic .s { font-weight: 400; color: var(--muted); font-size: 0.85rem; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.lesson ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 5px; }
+.lesson li::marker { color: var(--accent); }
+.note { border-left: 3px solid var(--probe); background: var(--probe-soft); padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 0.95rem; }
+pre { margin: 0; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font: 0.84rem/1.5 var(--mono); }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+th { font-family: var(--display); font-weight: 600; color: var(--muted); }
+.slots { display: inline-flex; flex-direction: column; gap: 2px; overflow-x: auto; max-width: 100%; }
+.slotrow { display: flex; gap: 2px; }
+.slot { min-width: 32px; height: 30px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); background: var(--panel); font: 500 0.85rem var(--mono); border-radius: 4px; padding: 0 3px; }
+.slot.full { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.slot.hit { background: var(--probe-soft); border-color: var(--probe); color: var(--probe); }
+.idx { min-width: 32px; text-align: center; font: 0.7rem var(--mono); color: var(--muted); padding: 0 3px; }
+.slotwrap { overflow-x: auto; }
+.qhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.qtext { font-size: 1.05rem; font-weight: 500; }
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opt { text-align: left; font-weight: 500; padding: 12px 14px; display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: start; }
+.opt .k { font: 600 0.85rem var(--mono); color: var(--muted); padding-top: 1px; }
+.opt.right { border-color: var(--good); background: var(--good-soft); color: var(--good); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.opt[disabled] { cursor: default; }
+.explain { border-radius: 8px; padding: 12px 14px; font-size: 0.95rem; display: flex; flex-direction: column; gap: 6px; }
+.explain.ok { background: var(--good-soft); }
+.explain.no { background: var(--bad-soft); }
+.explain b { font-family: var(--display); }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.row > button { flex: 1 1 140px; }
+.cram { display: flex; flex-direction: column; gap: 14px; }
+.cram section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.cram ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 0.93rem; }
+.hidden { display: none !important; }
+.qtext { white-space: pre-line; }
+@media (min-width: 640px) { .cram { display: grid; grid-template-columns: 1fr 1fr; } }
+.cram h2 { font-size: 1.05rem; color: var(--accent); }
+@media (max-width: 420px) { .slot, .idx { min-width: 26px; } .slot { font-size: 0.78rem; } .card { padding: 14px; } }
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="examcard">
+    <h1>CSS 343 Midterm Study Hub</h1>
+    <p class="meta">Mon Nov 9 · Lectures 1–11 + PA review · Switch between the complete study guide and the quick last-night cram. Missed questions repeat until you get them right.</p>
+    <div class="facts">
+      <span class="chip">11 lectures + PA review</span>
+      <span class="chip" id="question-count">165 questions in full mode</span>
+      <span class="chip warn">Separate progress for each mode</span>
+    </div>
+  </header>
+
+  <div class="mode-picker" aria-label="Study mode"><button id="mode-full" class="on" type="button">Full study · 165 questions</button><button id="mode-quick" type="button">Quick cram · 66 questions</button></div>
+  <nav class="tabs" aria-label="Sections">
+    <button id="tab-study" class="on" type="button">Learn + quiz</button>
+    <button id="tab-cram" type="button">Cheat sheet</button>
+  </nav>
+
+  <main id="view"></main>
+</div>
+
+<script>
+// ---------- helpers ----------
+function slots(str, opts) {
+  opts = opts || {};
+  const cells = str.trim().split(/\s+/);
+  const hit = opts.hit || [];
+  let a = '<div class="slotwrap"><div class="slots" role="img" aria-label="table ' + str + '"><div class="slotrow">';
+  cells.forEach((c, i) => {
+    const cls = c === '_' ? 'slot' : (hit.includes(i) ? 'slot hit' : 'slot full');
+    a += '<div class="' + cls + '">' + (c === '_' ? '' : c) + '</div>';
+  });
+  a += '</div><div class="slotrow">';
+  cells.forEach((c, i) => { a += '<div class="idx">' + i + '</div>'; });
+  return a + '</div></div></div>';
+}
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+// ---------- content ----------
+let TOPICS = [
+{
+  id: 'l01', title: 'L01 Recursion, counting, C++ memory', sub: 'loops, recurrences, Rule of Three, passing',
+  cram: `<ul>
+<li>Dependent loop <code>j = i+1..n</code>: n(n−1)/2. Halving loop from n: ⌊log₂ n⌋ + 1 passes (16 → 5).</li>
+<li>Recurrences: length T = 1 + T(n−1) → n + 1. Binary search 1 + T(n/2) → ⌊log₂ n⌋ + 1. Hanoi 1 + 2T(n−1) → 2ⁿ − 1.</li>
+<li>k-sum checks = C(n, k). 3-sum: n(n−1)(n−2)/6.</li>
+<li>Print before and after the recursive call: downUp(3) → 3 2 1 1 2 3.</li>
+<li>Default copy is shallow: two objects share nodes → double delete. Rule of Three: destructor, copy ctor, operator= (self-check, free, deep copy, return *this).</li>
+<li>by value = copy; <code>int&amp;</code> and <code>int*</code> change the caller; <code>const T&amp;</code> = no copy, read-only.</li>
+</ul>`,
+  lesson: `
+<h3>Counting loops</h3>
+<ul>
+<li>Pick one basic operation and count exactly how often it runs, as a function of n.</li>
+<li>Nested n × n: n². Dependent <code>for j = i+1; j &lt; n</code>: (n−1) + … + 1 = <b>n(n−1)/2</b> (n = 5 → 10, n = 1000 → 499,500).</li>
+<li>Halving <code>for (i = n; i &gt;= 1; i /= 2)</code>: <b>⌊log₂ n⌋ + 1</b> passes (16 → 5, 1000 → 10, 10⁶ → 20).</li>
+<li>Sequence adds (n + n²). Nesting multiplies (n · log n).</li>
+</ul>
+<h3>Recurrences, by unrolling</h3>
+<div class="tbl"><table>
+<tr><th>Function</th><th>T(n)</th><th>Solution</th></tr>
+<tr><td>list length (calls)</td><td>T(0) = 1, T(n) = 1 + T(n−1)</td><td>n + 1</td></tr>
+<tr><td>binary search (probes)</td><td>1 + T(n/2)</td><td>⌊log₂ n⌋ + 1</td></tr>
+<tr><td>Towers of Hanoi (moves)</td><td>T(0) = 0, 1 + 2T(n−1)</td><td>2ⁿ − 1 (10 → 1023)</td></tr>
+</table></div>
+<ul>
+<li>k-sum by recursion: checks L(m, k) = L(m−1, k−1) + L(m−1, k) = Pascal's rule, so <b>C(n, k)</b>. 3-sum on n = 10 → 120 checks.</li>
+<li>Naive Fibonacci recomputes: fib(10) makes 177 calls.</li>
+<li>Binary search worst case: 15 keys → 4 probes, 16 → 5, 1000 → 10.</li>
+</ul>
+<h3>Recursion basics</h3>
+<ul>
+<li>Base case + recursive case on a smaller input. Each call has its own stack frame.</li>
+<li>Code before the call runs on the way down, code after runs on the way back up: <code>downUp(3)</code> prints <b>3 2 1 1 2 3</b>.</li>
+<li>Failure modes: no base case, argument doesn't shrink, recomputation, too deep a stack.</li>
+<li>Tree height in L01 code counts nodes (empty = 0). The textbook counts links (empty = −1, one node = 0).</li>
+</ul>
+<h3>Owning memory</h3>
+<ul>
+<li>Returning the address of a local is a dangling pointer. <code>new</code> lives until <code>delete</code>.</li>
+<li>Destructor: read <code>head-&gt;next</code> before deleting <code>head</code>.</li>
+<li>No copy constructor → <code>b = a</code> copies the head pointer. <code>b.setFirst(99)</code> changes a too, and both destructors free the same nodes: <b>double delete</b>.</li>
+<li><b>Rule of Three:</b> if a class needs a destructor, it needs a copy constructor and copy assignment too.</li>
+<li>operator=: <code>if (this != &amp;other) { clear(); copyFrom(other); } return *this;</code>. Without the check, <code>c = c</code> copies from freed memory.</li>
+<li>Valgrind clean report: "All heap blocks were freed", "0 errors".</li>
+</ul>
+<h3>Passing arguments</h3>
+<pre>byValue(a); byRef(b); byPtr(&amp;c);   // each sets its parameter to 99
+cout &lt;&lt; a &lt;&lt; b &lt;&lt; c;                // 1 99 99</pre>
+<p>Pass big objects by <code>const T&amp;</code>: zero copies instead of N.</p>`,
+  qs: [
+    { c: 1, q: 'How many times does ops++ run when n = 6?\nfor (i = 0; i < n; i++)\n  for (j = i + 1; j < n; j++) ops++;',
+      o: ['15', '36', '21', '6'], a: 0, e: 'The inner loop runs 5, 4, 3, 2, 1, 0 times: n(n − 1)/2 = 6·5/2 = 15.' },
+    { c: 1, q: 'How many times does the body run for n = 100?\nfor (i = n; i >= 1; i /= 2) ops++;',
+      o: ['7', '6', '50', '100'], a: 0, e: 'i = 100, 50, 25, 12, 6, 3, 1: seven values. ⌊log₂ 100⌋ + 1 = 6 + 1 = 7.' },
+    { c: 1, q: 'Towers of Hanoi satisfies T(0) = 0, T(n) = 1 + 2T(n − 1). How many moves for n = 6?',
+      o: ['63', '64', '12', '32'], a: 0, e: 'Unrolling gives 1 + 2 + 4 + … + 2ⁿ⁻¹ = 2ⁿ − 1 = 63.' },
+    { q: 'void downUp(int n) { if (n == 0) return; cout << n; downUp(n − 1); cout << n; }\nWhat does downUp(3) print?',
+      o: ['3 2 1 1 2 3', '3 2 1', '1 2 3 3 2 1', '3 2 1 3 2 1'], a: 0, e: 'The first print runs on the way down (3 2 1), the second on the way back up (1 2 3).' },
+    { c: 1, q: 'ShallowList has a destructor but no copy constructor. a holds 3 → 5 → 8. After ShallowList b = a; b.setFirst(99); what does a.print() show, and what happens at scope end?',
+      o: ['99 → 5 → 8, then a double delete', '3 → 5 → 8, then a clean exit', '99 → 5 → 8, then a clean exit', 'Compile error'], a: 0,
+      e: 'The default copy duplicates the head pointer, so a and b share one chain. Both destructors free the same three nodes.' },
+    { q: 'void byValue(int x){x = 99;} void byRef(int& x){x = 99;} void byPtr(int* x){*x = 99;}\nWith a = b = c = 1: byValue(a); byRef(b); byPtr(&c); What prints for a b c?',
+      o: ['1 99 99', '99 99 99', '1 1 99', '1 99 1'], a: 0, e: 'byValue changes its own copy. A reference and a pointer both reach the caller\'s variable.' },
+    { q: 'The recursive k-sum counter makes L(m, k) = L(m − 1, k − 1) + L(m − 1, k) checks. How many checks for 3-sum on n = 10?',
+      o: ['120', '1000', '720', '30'], a: 0, e: 'Pascal\'s rule makes L(n, k) = C(n, k). C(10, 3) = 10·9·8/6 = 120, the same as the triple loop.' },
+    { q: 'Worst-case probes for binary search on a sorted array of 1000 keys?',
+      o: ['10', '9', '500', '11'], a: 0, e: '⌊log₂ 1000⌋ + 1 = 9 + 1 = 10.' },
+    { q: 'Why must operator= check if (this != &other) before freeing?',
+      o: ['So c = c doesn\'t free the list it is about to copy', 'To avoid a compile error', 'So the destructor isn\'t called', 'To make the copy shallow'], a: 0,
+      e: 'Self-assignment would clear the object, then deep-copy from the nodes it just deleted.' }
+  ]
+},
+{
+  id: 'l02', title: 'L02 Time analysis', sub: 'doubling, tilde, cost models, the 3-sum ladder',
+  cram: `<ul>
+<li>Doubling ratio r = T(2N)/T(N) → exponent b = log₂ r. Ratio 4 → N², 8 → N³.</li>
+<li>Find a from one point: a = T(N)/N^b, then predict.</li>
+<li>Tilde keeps the leading term with its constant: N(N−1)(N−2)/6 ~ N³/6. Order of growth drops the constant too.</li>
+<li>Sum rule: sequential steps add, biggest wins. Product rule: nested work multiplies.</li>
+<li>Outer i doubles, inner runs i times → 1 + 2 + … ≈ N (linear, not N log N).</li>
+<li>3-sum ladder: brute N³ → sort + binary search N² log N → sort + two pointers N².</li>
+</ul>`,
+  lesson: `
+<h3>Doubling experiment</h3>
+<ul>
+<li>If T(N) = aN^b, then T(2N)/T(N) = 2^b. The constant a cancels, so <b>b = log₂(ratio)</b>.</li>
+<li>Ratio ×2 linear, ×4 quadratic, ×8 cubic. Log-log plot: a straight line with slope b.</li>
+<li>Get a from one row: a = T(N)/N^b. Example: T(2000) = 1.05 s, b = 3 → a = 1.31 × 10⁻¹⁰, T(4000) ≈ 8.4 s.</li>
+<li>Different machine or language changes a, never b.</li>
+<li>Time ratios wobble (small N, warm-up, caches). Count ratios are exact.</li>
+</ul>
+<h3>Model: count from the code</h3>
+<ul>
+<li>Total time = Σ cost × frequency. Frequency belongs to the algorithm.</li>
+<li>3-sum inner <code>if</code>: C(N, 3) = N³/6 − N²/2 + N/3 = 166,167,000 at N = 1000.</li>
+<li><b>Tilde:</b> f ~ g when f/g → 1. Keeps the constant: ~N³/6. <b>Order of growth</b> drops it: N³.</li>
+</ul>
+<div class="tbl"><table>
+<tr><th>Sum</th><th>Exact</th><th>Tilde</th></tr>
+<tr><td>1 + 2 + … + N</td><td>N(N+1)/2</td><td>~N²/2</td></tr>
+<tr><td>pairs i &lt; j</td><td>N(N−1)/2</td><td>~N²/2</td></tr>
+<tr><td>1² + … + N²</td><td>N(N+1)(2N+1)/6</td><td>~N³/3</td></tr>
+<tr><td>triples</td><td>N(N−1)(N−2)/6</td><td>~N³/6</td></tr>
+<tr><td>1 + 2 + 4 + … + N</td><td>2N − 1</td><td>~2N</td></tr>
+</table></div>
+<h3>Loop shapes</h3>
+<ul>
+<li><code>for i &lt; N; for j = 1; j &lt; N; j *= 2</code>: N log₂ N.</li>
+<li><code>for i = 1; i &lt; N; i *= 2; for j &lt; i</code>: 1 + 2 + … + N/2 = N − 1 → <b>linear</b> (a sum, not a product).</li>
+<li><code>for i = N; i &gt; 0; i /= 2; for j &lt; i</code>: N + N/2 + … ~ 2N → linear.</li>
+<li><code>for i; for j = i..N; for k &lt; 3</code>: 3N(N+1)/2 ~ 3N²/2.</li>
+<li><code>for (i = 0; i*i &lt; N; i++)</code>: √N.</li>
+</ul>
+<h3>Cost models</h3>
+<p>RAM (every primitive op = 1), inner-loop executions, array accesses (3-sum ~N³/2), compares, probes (binary search), vertices + edges (graph search).</p>
+<h3>The 3-sum ladder</h3>
+<div class="tbl"><table>
+<tr><th>Algorithm</th><th>Idea</th><th>Order</th><th>Doubling ratio</th></tr>
+<tr><td>brute force</td><td>every triple</td><td>N³</td><td>8</td></tr>
+<tr><td>sort + binary search</td><td>search −(a[i] + a[j]) for each pair</td><td>N² log N</td><td>just over 4</td></tr>
+<tr><td>sort + two pointers</td><td>lo++ when s &lt; 0, hi−− when s &gt; 0</td><td>N²</td><td>4</td></tr>
+</table></div>
+<ul>
+<li>2-sum: brute N², sort + binary search N log N.</li>
+<li><b>Sum rule:</b> N log N + N² → N². <b>Product rule:</b> N iterations × log N each → N log N.</li>
+<li>Lower bound for 3-sum is only Ω(N) (must read input); N² is the best known.</li>
+</ul>
+<h3>Growth classes</h3>
+<p>1 &lt; log N &lt; N &lt; N log N &lt; N² &lt; N³ &lt; 2ᴺ. At 10⁶ items and 10⁹ ops/s: N log N ≈ 20 ms, N² ≈ 17 min, N³ ≈ 31 years. A 2× machine grows feasible N by 2^(1/b): ×2 for N, ×1.41 for N², ×1.26 for N³, +1 for 2ᴺ.</p>`,
+  qs: [
+    { c: 1, q: 'Running times: N = 1000 → 0.21 s, 2000 → 0.83 s, 4000 → 3.32 s. Estimate T(8000).',
+      o: ['About 13.3 s', 'About 6.6 s', 'About 26.6 s', 'About 4.2 s'], a: 0, e: 'Ratios ≈ 4, so b = 2. Each doubling multiplies time by 4: 3.32 × 4 ≈ 13.3 s.' },
+    { c: 1, q: 'A program\'s running time grows by a factor of 8 each time N doubles. Its order of growth is…',
+      o: ['N³', 'N⁸', '2ᴺ', 'N log N'], a: 0, e: 'Ratio = 2^b, so b = log₂ 8 = 3.' },
+    { q: 'An N³ algorithm takes 1.05 s at N = 2000. About how long at N = 4000?',
+      o: ['8.4 s', '2.1 s', '4.2 s', '16.8 s'], a: 0, e: 'Doubling N multiplies an N³ cost by 8: 1.05 × 8 = 8.4 s.' },
+    { c: 1, q: 'How many times does op() run for N = 1024, and what is the order of growth?\nfor (i = 1; i < N; i *= 2)\n  for (j = 0; j < i; j++) op();',
+      o: ['1023, linear', '10,240, N log N', '1024², quadratic', '10, logarithmic'], a: 0, e: 'The inner count changes with i, so it is a sum: 1 + 2 + 4 + … + 512 = 1023 ~ N.' },
+    { q: 'What is the tilde approximation of N(N − 1)(N − 2)/6?',
+      o: ['~N³/6', '~N³', '~N²/2', '~N³/3'], a: 0, e: 'Keep the leading term with its coefficient. The lower terms vanish in proportion.' },
+    { q: 'for (i = 0; i < N; i++) for (j = i; j < N; j++) for (k = 0; k < 3; k++) op();\nHow many calls, in tilde notation?',
+      o: ['~3N²/2', '~3N²', '~N²/2', '~N³/6'], a: 0, e: 'For each i, j runs N − i times: N(N + 1)/2 total, times 3.' },
+    { c: 1, q: 'Sort the array, then for each pair (i, j) binary-search for −(a[i] + a[j]). Order of growth?',
+      o: ['N² log N', 'N³', 'N²', 'N log N'], a: 0, e: 'Sort N log N, plus N² pairs × log N per search. Product rule, then sum rule.' },
+    { q: 'Which change gets 3-sum from N² log N down to N²?',
+      o: ['Two pointers that close in from both ends', 'A newer machine', 'A second binary search', 'Sorting with mergesort instead of quicksort'], a: 0,
+      e: 'For each i, lo and hi move inward; each test retires an index, so at most N tests per i.' },
+    { q: 'for (int i = 0; i * i < N; i++) op();  Order of growth?',
+      o: ['√N', 'log N', 'N', 'N²'], a: 0, e: 'i stops when i² reaches N, so i runs to √N (32 at N = 1024).' }
+  ]
+},
+{
+  id: 'l03', title: 'L03 Asymptotics, cases, memory', sub: 'O/Ω/Θ witnesses, best/worst/amortized, sizeof, padding',
+  cram: `<ul>
+<li>O(g): f ≤ c·g for n ≥ n₀ (upper). Ω: f ≥ c·g (lower). Θ = O ∩ Ω (tight).</li>
+<li>Witnesses: 2n² + 8n + 5 ≤ 15n² from n₀ = 1; any c &gt; 2 works with a later n₀; c = 2 never works.</li>
+<li>Limit f/g → 0: f ∈ O(g) not Ω; → constant: Θ; → ∞: Ω not O. Log base doesn't matter.</li>
+<li>Case (best/worst/average/amortized) and bound (O/Ω/Θ) are separate choices. Insertion sort: best n − 1, worst n(n−1)/2 compares.</li>
+<li>Algorithm = upper bound on a problem; a lower bound belongs to the problem (search: ⌈log₂(N+1)⌉).</li>
+<li>sizeof: char 1, int 4, pointer/long/double 8. {int; Node*} = 16. {char; int; char} = 12, {int; char; char} = 8. vector header 24.</li>
+</ul>`,
+  lesson: `
+<h3>Definitions (sets of functions)</h3>
+<ul>
+<li><b>O(g)</b>: ∃ c, n₀ &gt; 0 with 0 ≤ f(n) ≤ c·g(n) for all n ≥ n₀. Upper bound.</li>
+<li><b>Ω(g)</b>: c·g(n) ≤ f(n) for n ≥ n₀. Lower bound.</li>
+<li><b>Θ(g)</b>: c₁g ≤ f ≤ c₂g. Tight. Theorem: Θ = O ∩ Ω.</li>
+<li>O is not "the running time": 5n ∈ O(n³) is true. "At least n" is Ω(n), not O.</li>
+</ul>
+<h3>Witnesses</h3>
+<div class="tbl"><table>
+<tr><th>c for 2n² + 8n + 5 ≤ c·n²</th><th>smallest n₀</th></tr>
+<tr><td>15 (term by term)</td><td>1</td></tr>
+<tr><td>3</td><td>9</td></tr>
+<tr><td>2.5</td><td>17</td></tr>
+<tr><td>2</td><td>none: 8n + 5 ≤ 0 never holds</td></tr>
+</table></div>
+<ul>
+<li>Non-membership: assume witnesses, derive n ≤ constant for all n: contradiction. 6n³ ∉ O(n²).</li>
+<li>Polynomial with leading coefficient a_k &gt; 0 is Θ(n^k).</li>
+<li>Constants that depend on n prove nothing. Checking a few values proves nothing.</li>
+<li>Tilde is stronger than Θ: 2N³ ∈ Θ(N³) but 2N³ ≁ N³.</li>
+</ul>
+<h3>Limit test and hierarchy</h3>
+<ul>
+<li>lim f/g = 0 → g wins (g grows strictly quicker). = L &gt; 0 → Θ. = ∞ → f wins.</li>
+<li>1 ≺ log n ≺ √n ≺ n ≺ n log n ≺ n² ≺ n³ ≺ 2ⁿ ≺ n!.</li>
+<li>log₂(n!) ∈ Θ(n log n). 2^(log₂ n) = n. log(n²) = 2 log n ∈ O(log n). 2^(2n) ∉ O(2ⁿ).</li>
+<li>Log bases differ by a constant: O(log₂ n) = O(ln n).</li>
+</ul>
+<h3>Cases vs bounds</h3>
+<div class="tbl"><table>
+<tr><th>Insertion sort (compares)</th><th>Count</th><th>Set</th></tr>
+<tr><td>best: sorted</td><td>n − 1</td><td>Θ(n)</td></tr>
+<tr><td>worst: reversed</td><td>n(n − 1)/2</td><td>Θ(n²)</td></tr>
+<tr><td>average: random</td><td>≈ n²/4</td><td>Θ(n²)</td></tr>
+</table></div>
+<ul>
+<li><b>Amortized:</b> total over any sequence ÷ n, with no probability. push_back: one call can be Θ(N), amortized Θ(1). Capacities 1, 2, 4, …, 1024; regrowth copies 1023 for N = 1000.</li>
+<li>An algorithm's bound is an <b>upper bound on the problem</b>. A lower bound must hold for every algorithm. Comparison sorting Ω(N log N) is settled; 3-sum O(N²) vs Ω(N) is open.</li>
+<li>Comparison search lower bound: decision tree with N + 1 leaves → height ≥ ⌈log₂(N + 1)⌉.</li>
+</ul>
+<h3>Memory</h3>
+<ul>
+<li>char 1, bool 1, int 4, long 8, double 8, pointer 8.</li>
+<li>Alignment: <code>struct {int data; Node* next;}</code> = <b>16</b> (4 bytes padding). <code>{char; int; char}</code> = 12, <code>{int; char; char}</code> = 8. Order fields largest first.</li>
+<li>Array of N ints: 4N bytes. Linked list: 16N. Same order, 4× constant.</li>
+<li><code>sizeof(vector&lt;int&gt;)</code> = 24 (pointer, size, capacity); sizeof never counts the heap block.</li>
+<li>Auxiliary space = beyond the input. Recursion costs one frame per live call: fact(n) Θ(n), binary search Θ(log N), mergesort Θ(N) buffer + Θ(log N) stack.</li>
+</ul>
+<h3>Machine models</h3>
+<p>If every operation costs between two constants independent of N, the order of growth doesn't change: swapping and thrashing are huge constants, not new exponents. The exponent changes only when one access costs more as N grows (physical distance, hierarchical memory).</p>`,
+  qs: [
+    { c: 1, q: 'To show 2n² + 8n + 5 ∈ O(n²), which constant c can NEVER work, no matter how large n₀ is?',
+      o: ['c = 2', 'c = 3', 'c = 2.5', 'c = 15'], a: 0, e: 'With c = 2 you need 8n + 5 ≤ 0, which never holds. Any c above the leading coefficient 2 works eventually.' },
+    { q: 'Which statement is TRUE?',
+      o: ['5n ∈ O(n³)', 'n² ∈ O(n log n)', '2²ⁿ ∈ O(2ⁿ)', '6n³ ∈ O(n²)'], a: 0, e: 'O is only an upper bound, so a linear function is in O(n³). The other three fail the limit test.' },
+    { c: 1, q: 'lim (3n² − 5n + 2)/n² = 3. What does the limit test conclude?',
+      o: ['3n² − 5n + 2 ∈ Θ(n²)', 'It is in O(n²) but not Ω(n²)', 'It is in Ω(n²) but not O(n²)', 'Nothing; the limit must be 0'], a: 0, e: 'A positive constant limit means Θ.' },
+    { q: 'log₂(n!) is in the same Θ class as…',
+      o: ['n log n', 'n', 'n²', 'log n'], a: 0, e: 'From the slides\' ranking: log₂(n!) and n log₂ n share a Θ class.' },
+    { c: 1, q: 'Insertion sort on 1000 keys: compares in the best case (already sorted) and worst case (reversed)?',
+      o: ['999 and 499,500', '1000 and 1,000,000', '0 and 499,500', '999 and 250,000'], a: 0, e: 'Best: n − 1. Worst: n(n − 1)/2. About 250,000 is the average.' },
+    { q: '"vector::push_back is O(1)" is true in which sense?',
+      o: ['Amortized: one call can cost Θ(N)', 'Every single call', 'Average case under random inputs', 'Only for vectors under 1024 elements'], a: 0,
+      e: 'A regrowth copies every element. Over N pushes the copies total under 2N, so the amortized cost is Θ(1).' },
+    { c: 1, q: 'On a 64-bit machine, sizeof(struct A { char a; int b; char c; })?',
+      o: ['12', '6', '8', '16'], a: 0, e: '1 + 3 padding + 4 + 1 + 3 padding to round to a multiple of 4. Reordered as {int; char; char} it is 8.' },
+    { q: 'sizeof(struct Node { int data; Node* next; }) on a 64-bit machine?',
+      o: ['16', '12', '8', '24'], a: 0, e: 'The 8-byte pointer must start at a multiple of 8, so 4 bytes of padding follow data.' },
+    { q: 'Any comparison-based search of a sorted array of N keys needs at least how many compares in the worst case?',
+      o: ['⌈log₂(N + 1)⌉', 'N', '1', 'N log N'], a: 0, e: 'A decision tree needs N + 1 leaves (N positions or absent), so height ≥ ⌈log₂(N + 1)⌉. Binary search matches it.' },
+    { q: 'Auxiliary space of recursive mergesort on N ints?',
+      o: ['Θ(N): the merge buffer, plus Θ(log N) stack', 'Θ(1)', 'Θ(log N) only', 'Θ(N log N)'], a: 0, e: 'The top merge needs an N-element buffer. The recursion is only about log₂ N deep.' }
+  ]
+},
+{
+  id: 'l04', title: 'L04 Trees and BSTs', sub: 'shapes, traversals, search/insert, ordered ops, Hibbard',
+  cram: `<ul>
+<li>Depth: links from root (root 0). Height: max depth. n nodes: height ⌊log₂ n⌋ to n − 1.</li>
+<li>Full = 0 or 2 children. Perfect = full + leaves level. Complete = levels full except last, packed left.</li>
+<li>Pre: node L R. In: L node R (sorted for a BST). Post: L R node. Level: queue.</li>
+<li>Insert grows at a null link; shape depends on insertion order. Sorted input → a path.</li>
+<li>floor = largest ≤ k, ceiling = smallest ≥ k, rank(k) = # keys &lt; k, select(i) = key of rank i.</li>
+<li>Hibbard delete, two children: copy the in-order successor (min of right subtree) up, deleteMin from the right subtree.</li>
+</ul>`,
+  lesson: `
+<h3>Vocabulary and shapes</h3>
+<ul>
+<li>Root, parent, child, leaf, internal node, subtree. Depth of a node = links from the root (root = 0). Height = maximum depth.</li>
+<li><b>Full:</b> every node has 0 or 2 children. <b>Perfect:</b> full and all leaves on one level. <b>Complete:</b> all levels full except possibly the last, packed left. <b>Balanced:</b> subtree heights differ by ≤ 1 everywhere.</li>
+<li>Every complete tree is balanced, not the other way around.</li>
+<li>Height of n nodes: minimum ⌊log₂ n⌋, maximum n − 1 (a path).</li>
+</ul>
+<h3>Traversals</h3>
+<p>Running example: insert 50, 30, 70, 20, 40, 60, 80, 45.</p>
+<pre>        50
+      /    \\
+    30      70
+   /  \\    /  \\
+  20  40  60  80
+        \\
+        45</pre>
+<div class="tbl"><table>
+<tr><th>Order</th><th>Rule</th><th>Result</th></tr>
+<tr><td>pre</td><td>node, L, R</td><td>50 30 20 40 45 70 60 80</td></tr>
+<tr><td>in</td><td>L, node, R</td><td>20 30 40 45 50 60 70 80 (sorted)</td></tr>
+<tr><td>post</td><td>L, R, node</td><td>20 45 40 30 60 80 70 50</td></tr>
+<tr><td>level</td><td>queue, top to bottom</td><td>50 30 70 20 40 60 80 45</td></tr>
+</table></div>
+<ul>
+<li>Expression trees: operators internal, operands leaves. Evaluation is post-order (children first). (2 + 3) × (4 − 1) = 15.</li>
+</ul>
+<h3>Search and insert</h3>
+<ul>
+<li>Invariant at <b>every</b> node: left subtree keys &lt; node &lt; right subtree keys.</li>
+<li>Search: compare and go left or right; hit, or miss at a null link.</li>
+<li>Insert: search, then hang a new node at the null link; recompute <code>size</code> on the way back up. Equal key updates the value.</li>
+</ul>
+<h3>Ordered operations (all Θ(height))</h3>
+<ul>
+<li>min/max: follow left/right links to the end.</li>
+<li>floor(k) = largest key ≤ k. ceiling(k) = smallest ≥ k. In the example: floor(55) = 50, ceiling(55) = 60.</li>
+<li>rank(k) = number of keys &lt; k: rank(45) = 3. select(i) = key of rank i (0-based): select(4) = 50.</li>
+<li>Range keys(lo, hi): pruned in-order, cost height + output.</li>
+</ul>
+<h3>Deletion</h3>
+<ul>
+<li>0 or 1 child: splice it out.</li>
+<li>2 children (<b>Hibbard</b>): copy the <b>in-order successor</b> (min of the right subtree, which has no left child) into the node, then deleteMin on the right subtree.</li>
+<li>Delete 50 above → successor 60 moves up: preorder 60 30 20 40 45 70 80.</li>
+<li>Delete 30 → successor 40 moves up: preorder 50 40 20 45 70 60 80.</li>
+<li>Always using the successor skews the tree (≈ √n average path length over many updates).</li>
+</ul>
+<h3>Analysis</h3>
+<ul>
+<li>Random insert order: average depth ~1.39 log₂ N, average height ~2.99 log₂ N.</li>
+<li>Sorted input: a path, Θ(n) per op. That is why balanced trees exist.</li>
+<li>Sorted array: search Θ(log n) but insert Θ(n) (shifting). BST: insert Θ(log n) on average.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'Insert 50, 30, 70, 20, 40, 60, 80, 45 into an empty BST. What is the PREORDER traversal?',
+      o: ['50 30 20 40 45 70 60 80', '20 30 40 45 50 60 70 80', '20 45 40 30 60 80 70 50', '50 30 70 20 40 60 80 45'], a: 0,
+      e: 'Node, left, right. The other options are inorder, postorder and level order.' },
+    { q: 'Same BST (50, 30, 70, 20, 40, 60, 80, 45). POSTORDER traversal?',
+      o: ['20 45 40 30 60 80 70 50', '20 40 45 30 60 80 70 50', '45 40 20 30 80 60 70 50', '50 70 80 60 30 40 45 20'], a: 0,
+      e: 'Left, right, node. 40\'s right child 45 comes before 40, and 30 comes after its whole subtree.' },
+    { c: 1, q: 'Same BST. Delete 50 with Hibbard deletion (in-order successor). What is the new preorder?',
+      o: ['60 30 20 40 45 70 80', '45 30 20 40 70 60 80', '70 30 20 40 45 60 80', '60 30 20 40 45 80 70'], a: 0,
+      e: 'Successor = min of the right subtree = 60. Copy 60 into the root, then remove the old 60 (a leaf).' },
+    { q: 'Same BST. Delete 30 (two children) with Hibbard deletion. New preorder?',
+      o: ['50 40 20 45 70 60 80', '50 20 40 45 70 60 80', '50 45 20 40 70 60 80', '50 40 45 20 70 60 80'], a: 0,
+      e: 'Successor of 30 = min of its right subtree = 40. 40 moves up; its right child 45 takes its old spot.' },
+    { c: 1, q: 'Keys {20, 30, 40, 45, 50, 60, 70, 80}. What are floor(55) and ceiling(55)?',
+      o: ['50 and 60', '60 and 50', '45 and 60', '50 and 70'], a: 0, e: 'Floor is the largest key ≤ 55; ceiling is the smallest key ≥ 55.' },
+    { q: 'Keys {20, 30, 40, 45, 50, 60, 70, 80}. What are rank(45) and select(4) (0-based)?',
+      o: ['3 and 50', '4 and 50', '3 and 45', '4 and 60'], a: 0, e: 'Three keys are below 45. Ranks 0..4 are 20, 30, 40, 45, 50.' },
+    { q: 'Which definition is "complete"?',
+      o: ['Every level full except possibly the last, filled left to right', 'Every node has 0 or 2 children', 'All leaves at the same level', 'Subtree heights differ by at most 1 everywhere'], a: 0,
+      e: 'The others are full, perfect (partly) and balanced.' },
+    { q: 'Inserting keys 1..7 in sorted order into a plain BST gives height (in links)…',
+      o: ['6', '2', '3', '7'], a: 0, e: 'Each key hangs off the right: a path of 7 nodes has 6 links.' },
+    { q: 'Evaluating an expression tree is which traversal?',
+      o: ['Post-order', 'Pre-order', 'In-order', 'Level-order'], a: 0, e: 'Both operands must be evaluated before the operator is applied.' }
+  ]
+},
+{
+  id: 'l05', title: 'L05 AVL trees', sub: 'balance factor, rotations, four cases, height bound',
+  cram: `<ul>
+<li>bf = height(left) − height(right), must stay in {−1, 0, +1}. height(null) = −1, leaf = 0.</li>
+<li>LL → rotate right. RR → rotate left. LR → left on child, then right. RL → right on child, then left.</li>
+<li>Rotations keep in-order; only the middle subtree changes parent.</li>
+<li>Insert: at most one (single or double) rotation. Delete: may rotate at every level, O(log n).</li>
+<li>Min nodes N(h) = 1 + N(h−1) + N(h−2): 1, 2, 4, 7, 12, 20, 33. Height ≤ 1.44 log₂ n (10⁹ keys → 43).</li>
+<li>Sorted 1..7 → root 4, height 2. 30,10,20 → LR, root 20.</li>
+</ul>`,
+  lesson: `
+<h3>The invariant</h3>
+<ul>
+<li>AVL = Adelson-Velsky and Landis (1962), the first self-balancing BST.</li>
+<li><b>bf(x) = height(left) − height(right)</b> ∈ {−1, 0, +1} at every node. height(null) = −1, leaf = 0.</li>
+<li>Only nodes on the insert/delete path can reach ±2; fix them on the way back up.</li>
+</ul>
+<h3>Rotations</h3>
+<pre>rotateRight(y):       y            x
+                     / \\          / \\
+                    x   C   →    A   y
+                   / \\              / \\
+                  A   B            B   C
+x = y-&gt;left; y-&gt;left = x-&gt;right; x-&gt;right = y; fix(y); fix(x);</pre>
+<ul>
+<li>In-order stays A x B y C. Only B (keys between x and y) changes parent. O(1).</li>
+</ul>
+<h3>Four cases (two steps down the tall side)</h3>
+<div class="tbl"><table>
+<tr><th>Case</th><th>Steps</th><th>Fix</th></tr>
+<tr><td>LL</td><td>left, left</td><td>rotate right</td></tr>
+<tr><td>RR</td><td>right, right</td><td>rotate left</td></tr>
+<tr><td>LR</td><td>left, right</td><td>rotate left on child, then right</td></tr>
+<tr><td>RL</td><td>right, left</td><td>rotate right on child, then left</td></tr>
+</table></div>
+<p>In code: bf(t) &gt; 1 and bf(t-&gt;left) &lt; 0 → LR. bf(t) &lt; −1 and bf(t-&gt;right) &gt; 0 → RL.</p>
+<h3>Worked inserts</h3>
+<ul>
+<li>30, 10, 20 → LR at 30 → root 20.</li>
+<li>1..7 sorted → 4(2(1, 3), 6(5, 7)), height 2, 4 rotations.</li>
+<li>50, 30, 70, 20, 40, 35 → 50 at +2, 35 in 30's right → LR → root 40: preorder 40 30 20 35 50 70.</li>
+<li>10, 20, 30, 40, 50, then 25 → root 20 at −2, right child 40 at +1 → RL → root 30: preorder 30 20 10 25 40 50.</li>
+</ul>
+<h3>Insert vs delete</h3>
+<ul>
+<li>Insert: the first unbalanced node gets <b>one</b> rotation (single or double), and that restores the old subtree height, so the whole tree is fixed.</li>
+<li>Delete: BST delete (successor), then rebalance up. A rotation can shorten the parent, so rotations may be needed at <b>every</b> level: O(log n).</li>
+<li>Delete 1 from 3(1, 4(−, 5)): bf(3) = −2, RR → rotate left → 4(3, 5).</li>
+</ul>
+<h3>Height bound</h3>
+<ul>
+<li>Fewest nodes at height h: <b>N(h) = 1 + N(h−1) + N(h−2)</b>, N(0) = 1, N(1) = 2 → 1, 2, 4, 7, 12, 20, 33, 54. N(h) + 1 is Fibonacci.</li>
+<li>N(h) ≥ φʰ → <b>h ≤ 1.44 log₂ n</b>. Lower bound ⌊log₂ n⌋. 10⁹ keys → at most ~43 levels.</li>
+<li>AVL vs red-black: AVL tighter (1.44 vs 2 log₂ n), better for read-heavy; red-black fewer rotations, better for write-heavy.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'Insert 30, 10, 20 into an empty AVL tree. Which case occurs, and what is the root afterward?',
+      o: ['LR, root 20', 'LL, root 10', 'RL, root 20', 'RR, root 30'], a: 0, e: '30 is at +2 and 20 went into 10\'s right subtree. Rotate left at 10, then right at 30.' },
+    { c: 1, q: 'Insert 10, 20, 30, 40, 50, then 25 into an AVL tree. After 25, what is the root?',
+      o: ['30', '20', '25', '40'], a: 0, e: 'Before 25: 20(10, 40(30, 50)). 25 lands under 30, making 20 −2 with right child 40 at +1: RL. Result 30(20(10, 25), 40(−, 50)).' },
+    { q: 'Insert 50, 30, 70, 20, 40, then 35. What is the preorder afterward?',
+      o: ['40 30 20 35 50 70', '30 20 50 40 35 70', '40 30 20 50 35 70', '35 30 20 40 50 70'], a: 0,
+      e: '50 hits +2; 35 is in 30\'s right subtree (LR). Rotate left at 30, right at 50.' },
+    { c: 1, q: 'What is the minimum number of nodes in an AVL tree of height 5 (leaf = height 0)?',
+      o: ['20', '12', '32', '33'], a: 0, e: 'N(h) = 1 + N(h−1) + N(h−2): 1, 2, 4, 7, 12, 20.' },
+    { q: 'Insert 1, 2, 3, 4, 5, 6, 7 into an AVL tree. What is the root and the height?',
+      o: ['Root 4, height 2', 'Root 1, height 6', 'Root 4, height 3', 'Root 2, height 3'], a: 0, e: 'Rotations keep it perfect: 4(2(1, 3), 6(5, 7)).' },
+    { c: 1, q: 'How many rotations can an AVL INSERT need, and how many can a DELETE need?',
+      o: ['Insert: one (single or double). Delete: up to O(log n)', 'Both: one', 'Both: O(log n)', 'Insert: O(log n). Delete: one'], a: 0,
+      e: 'The insert fix restores the subtree\'s old height. A delete fix can shorten the parent, so it may cascade.' },
+    { q: 'What does a rotation preserve?',
+      o: ['The in-order sequence of keys', 'The height of every node', 'The root', 'Every parent pointer'], a: 0, e: 'A x B y C before and after. Search still works.' },
+    { q: 'An AVL tree holds 10⁹ keys. About how many levels at most?',
+      o: ['43', '30', '1,000', '10'], a: 0, e: 'h ≤ 1.44 log₂ n ≈ 1.44 · 30 ≈ 43.' }
+  ]
+},
+{
+  id: 'l06', title: 'L06 2-3, red-black, B-trees', sub: 'split and promote, LLRB rules, B/B+ on disk',
+  cram: `<ul>
+<li>2-3: 2-nodes and 3-nodes, all leaves at one depth. Insert in a leaf; a 4-node splits, middle key moves up. Height grows only by a root split.</li>
+<li>2-3 delete: remove in a leaf (swap with predecessor); underflow → borrow from a 3-node sibling, else merge with the parent key.</li>
+<li>LLRB: root black, red links lean left, no node with two red links, perfect black balance. New node red.</li>
+<li>fixUp: right red &amp; left black → rotateLeft; left red &amp; left.left red → rotateRight; both red → flipColors (= split).</li>
+<li>RB height ≤ 2 log₂ n. 1..1023 → 1013 rotations, 1013 flips.</li>
+<li>B-tree order M: ≤ M − 1 keys, non-root ≥ ⌈M/2⌉ children. M = 1000 → 10⁹ keys in 3 reads. B+: values in linked leaves, range scans.</li>
+</ul>`,
+  lesson: `
+<h3>2-3 trees</h3>
+<ul>
+<li>2-node: 1 key, 2 children. 3-node: 2 keys, 3 children (&lt; a, between, &gt; c). Perfect balance: every leaf at the same depth.</li>
+<li>Height: log₃(n+1) − 1 ≤ h ≤ log₂(n+1) − 1.</li>
+<li><b>Insert:</b> search to a leaf, add the key. 2-node → 3-node, done. 3-node → temporary 4-node → <b>split</b>: middle key moves up, two 2-nodes remain. Can cascade to the root; a root split makes a new root (the only way height grows).</li>
+</ul>
+<pre>50, 30, 70, 10, 20:
+[50] → [30|50] → [30|50|70] splits → [50] over [30] [70]
+10 → [10|30]; 20 → [10|20|30] splits, 20 up → root [20|50] over [10] [30] [70]</pre>
+<ul>
+<li>Insert 65 into [40] over [20|30], [60|70]: [60|65|70] splits, 65 up → [40|65] over [20|30] [60] [70].</li>
+<li><b>Delete:</b> always from a leaf (internal key → swap with in-order predecessor). Empty node: <b>borrow</b> through the parent from a 3-node sibling, otherwise <b>merge</b> with the parent's key. An emptied root disappears (height shrinks).</li>
+</ul>
+<h3>Left-leaning red-black (LLRB)</h3>
+<ul>
+<li>A 2-3 tree stored as a BST: a 3-node = two nodes joined by a <b>red</b> link leaning left.</li>
+<li>Rules: (1) root black, (2) red links lean left, (3) no node has two red links, (4) every root-to-null path has the same number of black links.</li>
+<li>Insert: plain BST insert, new node <b>red</b> (a black leaf would break black balance on every insert).</li>
+</ul>
+<pre>fixUp(h):
+if (isRed(h-&gt;right) &amp;&amp; !isRed(h-&gt;left))      h = rotateLeft(h);
+if (isRed(h-&gt;left) &amp;&amp; isRed(h-&gt;left-&gt;left))  h = rotateRight(h);
+if (isRed(h-&gt;left) &amp;&amp; isRed(h-&gt;right))       flipColors(h);
+root-&gt;red = false;</pre>
+<ul>
+<li>flipColors = a 2-3 split: children turn black, h turns red (joins its parent).</li>
+<li>10, 20, 30 → one rotateLeft, one flip: 20 black over 10, 30 black.</li>
+<li>Height ≤ 2 log₂ n (black height = 2-3 height; reds at most alternate). Sorted 1..1023: 1013 rotations, 1013 flips.</li>
+<li>Used in std::map, Java TreeMap. ≤ 2 rotations per insert, ≤ 3 per delete.</li>
+</ul>
+<h3>B-trees and B+ trees</h3>
+<ul>
+<li>Order M: ≤ M children (M − 1 keys); non-root ≥ <b>⌈M/2⌉</b> children; root ≥ 2 children unless a leaf; all leaves same depth. 2-3 tree = order 3.</li>
+<li>Cost = disk reads (block transfers). One node = one block. M = 1000: 10⁹ keys in 3 levels vs ~30 for a binary tree.</li>
+<li>Insert: split at M keys, promote the middle.</li>
+<li>Choose M to fill a block: 4096 B, 8-byte keys and pointers → 8M + 8(M − 1) ≤ 4096 → M = 256.</li>
+<li><b>B+ tree:</b> internal nodes are routers (keys only, equal goes right), all records in leaves, leaves linked → range scans walk the chain. A leaf split copies a key up; a router split moves it.</li>
+</ul>
+<div class="tbl"><table>
+<tr><th>Tree</th><th>Height</th><th>Best for</th></tr>
+<tr><td>AVL</td><td>≤ 1.44 log₂ n</td><td>read-heavy in RAM</td></tr>
+<tr><td>red-black</td><td>≤ 2 log₂ n</td><td>write-heavy, std lib</td></tr>
+<tr><td>2-3</td><td>≤ log₂ n</td><td>explains red-black</td></tr>
+<tr><td>B / B+</td><td>≈ log_M n</td><td>disk, databases</td></tr>
+</table></div>`,
+  qs: [
+    { c: 1, q: 'Insert 50, 30, 70, 10, 20 into an empty 2-3 tree. What is the final tree?',
+      o: ['Root [20|50] over [10], [30], [70]', 'Root [30] over [10|20], [50|70]', 'Root [50] over [10|20|30], [70]', 'Root [20] over [10], [30|50|70]'], a: 0,
+      e: '70 splits [30|50|70] and promotes 50. Then 20 splits [10|20|30], promoting 20 into the root: [20|50].' },
+    { q: 'Insert 65 into the 2-3 tree [40] over [20|30], [60|70]. Result?',
+      o: ['[40|65] over [20|30], [60], [70]', '[40] over [20|30], [60|65|70]', '[65] over [20|30|40], [60|70]', '[40|60] over [20|30], [65], [70]'], a: 0,
+      e: 'The leaf overflows to [60|65|70]; the middle key 65 moves up into the 2-node root.' },
+    { q: 'The only way a 2-3 tree\'s height increases is…',
+      o: ['A split that reaches the root creates a new root', 'Adding a new leaf below the deepest level', 'A rotation at the root', 'A merge of two siblings'], a: 0, e: 'Growth happens at the top, so every leaf drops one level together.' },
+    { c: 1, q: 'Which is NOT a left-leaning red-black rule?',
+      o: ['Every node has exactly one red child', 'The root is black', 'Red links lean left', 'Every root-to-null path has the same number of black links'], a: 0,
+      e: 'The real rule is the opposite: no node may have two red links.' },
+    { c: 1, q: 'In LLRB insertion, a node has two red children. What does fixUp do?',
+      o: ['flipColors: children turn black, the node turns red', 'rotateLeft', 'rotateRight', 'Deletes one child'], a: 0, e: 'Two red children = a temporary 4-node. flipColors is the 2-3 split: the middle key joins its parent.' },
+    { q: 'Why does an LLRB insert color the new node RED?',
+      o: ['A black leaf would break black balance on every insert', 'Red nodes are cheaper to store', 'So rotations are never needed', 'The root must be red'], a: 0, e: 'A red link adds no black link to any path, so rule 4 survives. Only the red-link rules can break.' },
+    { c: 1, q: 'A B-tree of order M = 5. What is the minimum number of KEYS in a non-root node?',
+      o: ['2', '3', '4', '1'], a: 0, e: 'Non-root nodes need ≥ ⌈5/2⌉ = 3 children, which means ≥ 2 keys.' },
+    { q: 'Why do B+ trees beat B-trees at range queries like age BETWEEN 20 AND 40?',
+      o: ['All records sit in leaves that are linked in key order', 'They have no internal nodes', 'Their nodes hold fewer keys', 'They are binary'], a: 0, e: 'Descend once to the first key, then walk the leaf chain.' },
+    { q: 'A disk block is 4096 bytes; keys and pointers are 8 bytes each. Largest order M with M pointers and M − 1 keys in one block?',
+      o: ['256', '512', '255', '128'], a: 0, e: '8·256 + 8·255 = 4088 ≤ 4096. M = 257 would need 4104.' },
+    { q: 'Upper bound on the height of a red-black tree with n keys?',
+      o: ['2 log₂ n', '1.44 log₂ n', 'log₂ n', 'n − 1'], a: 0, e: 'Black height ≤ the 2-3 height ≤ log₂(n+1) − 1, and reds at most double it.' }
+  ]
+},
+{
+  id: 'l07', title: 'L07 Heaps and heapsort', sub: 'array layout, swim/sink, heapify Θ(n), heapsort',
+  cram: `<ul>
+<li>Max-heap: complete + every parent ≥ children. Array a[1..n]: parent k/2, children 2k, 2k + 1. Height ⌊log₂ n⌋.</li>
+<li>insert: append, swim up. delMax: swap a[1] with a[n], n−−, sink down (swap with the LARGER child).</li>
+<li>Heapify: sink k = n/2 down to 1. Θ(n). n inserts: Θ(n log n).</li>
+<li>Leaves are a[n/2 + 1 .. n]; the min is some leaf.</li>
+<li>Heapsort: heapify, then n − 1 × (swap max to end, sink). Θ(n log n), Θ(1) space, not stable.</li>
+</ul>`,
+  lesson: `
+<h3>The structure</h3>
+<ul>
+<li>PQ options: unordered array (insert Θ(1), delMax Θ(n)), ordered (the reverse), <b>heap: both Θ(log n)</b>.</li>
+<li>Binary max-heap = <b>complete</b> tree + <b>heap order</b> (parent ≥ children). Max at the root. Every subtree is a heap.</li>
+<li>Stored 1-indexed in a[1..n]: <b>parent(k) = k/2, left = 2k, right = 2k + 1</b>. Children of 6 → 12, 13. Parent of 11 → 5.</li>
+<li>Height ⌊log₂ n⌋ (n = 100 → 6). Internal nodes 1..n/2, leaves n/2 + 1..n. The min is at some leaf: Θ(n) to find.</li>
+<li>Paths are sorted, levels are not.</li>
+</ul>
+<h3>swim and sink</h3>
+<pre>insert: a[++n] = key; swim(n)       // while k &gt; 1 &amp;&amp; a[k/2] &lt; a[k]: swap, k /= 2
+delMax: swap(a[1], a[n--]); sink(1) // swap with the LARGER child while smaller</pre>
+<ul>
+<li>Insert 85 into [90 80 70 30 60 50]: lands at a[7] under 70, beats 70, loses to 90 → [90 80 85 30 60 50 70].</li>
+<li>Insert 95 into the same heap → [95 80 90 30 60 50 70].</li>
+<li>delMax on [95 90 70 80 60 50]: 50 to the top, sinks past 90 then 80 → returns 95, heap [90 80 70 50 60].</li>
+<li>delMax on [95 80 90 30 60 50 70] → returns 95, heap [90 80 70 30 60 50].</li>
+</ul>
+<h3>Heapify in Θ(n)</h3>
+<pre>for (k = n/2; k &gt;= 1; k--) sink(a, k, n);</pre>
+<ul>
+<li>[30 60 50 90 85 40 70 45 20] → [90 85 70 60 30 40 50 45 20].</li>
+<li>[10 20 30 40 50 60 70] → [70 50 60 40 20 10 30].</li>
+<li>Sink costs height, and half the nodes are leaves with height 0: total swaps S = 2^(h+1) − h − 2 &lt; n. <b>Θ(n).</b></li>
+<li>n inserts pay depth (swim): <b>Θ(n log n)</b>.</li>
+<li>Θ(n) build doesn't beat the sorting bound: a heap is not sorted.</li>
+</ul>
+<h3>Heapsort</h3>
+<pre>heapify(a, n);
+for (end = n; end &gt; 1; end--) { swap(a[1], a[end]); sink(a, 1, end - 1); }</pre>
+<ul>
+<li>[95 90 70 80 60] → after round 1: [90 80 70 60 | 95], round 2: [80 60 70 | 90 95].</li>
+<li>Θ(n log n) worst case, Θ(1) extra space, not stable. std::sort (introsort) falls back to it.</li>
+<li>Mergesort Θ(n log n), Θ(n) space, stable. Quicksort worst Θ(n²).</li>
+<li>Libraries: C++ priority_queue = max-heap; Java PriorityQueue, Python heapq = min-heap.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: '1-indexed heap a[1..15]. Children of a[6], and parent of a[11]?',
+      o: ['Children 12, 13; parent 5', 'Children 13, 14; parent 5', 'Children 12, 13; parent 6', 'Children 7, 8; parent 5'], a: 0, e: 'Children 2k and 2k + 1; parent ⌊k/2⌋ = ⌊11/2⌋ = 5.' },
+    { c: 1, q: 'Insert 85 into the max-heap [90 80 70 30 60 50]. Resulting array?',
+      o: ['[90 80 85 30 60 50 70]', '[90 85 70 80 60 50 30]', '[85 90 80 70 30 60 50]', '[90 80 70 30 60 50 85]'], a: 0, e: 'Append at a[7] under 70. 85 > 70: swap. 85 < 90: stop.' },
+    { q: 'delMax on [95 90 70 80 60 50]. What is returned and what remains?',
+      o: ['95; [90 80 70 50 60]', '95; [90 70 80 60 50]', '95; [50 90 70 80 60]', '90; [95 80 70 50 60]'], a: 0,
+      e: '50 moves to the root, swaps with the larger child 90, then with the larger child 80, and stops as a leaf.' },
+    { c: 1, q: 'Heapify (bottom-up sink) [30 60 50 90 85 40 70 45 20]. Result?',
+      o: ['[90 85 70 60 30 40 50 45 20]', '[90 85 70 45 60 40 50 30 20]', '[90 60 85 30 50 40 70 45 20]', '[85 90 70 60 30 40 50 45 20]'], a: 0,
+      e: 'Sink k = 4, 3, 2, 1. 50 swaps with 70; 60 swaps with 90; 30 swaps with 90 then 85.' },
+    { q: 'Heapify [10 20 30 40 50 60 70] (sink k = 3, 2, 1). Result?',
+      o: ['[70 50 60 40 20 10 30]', '[70 60 50 40 30 20 10]', '[70 50 60 10 20 30 40]', '[60 50 70 40 20 10 30]'], a: 0,
+      e: 'k = 3: 30 ↔ 70. k = 2: 20 ↔ 50. k = 1: 10 ↔ 70, then 10 ↔ 30.' },
+    { c: 1, q: 'Cost of building a heap by heapify vs by n repeated inserts?',
+      o: ['Θ(n) vs Θ(n log n)', 'Θ(n log n) vs Θ(n)', 'Both Θ(n)', 'Both Θ(n log n)'], a: 0, e: 'Sink pays height (most nodes near the bottom pay ~0). Swim pays depth (half the nodes pay ~log n).' },
+    { q: 'In a max-heap of n keys, where is the minimum?',
+      o: ['At some leaf, index n/2 + 1 to n', 'Always a[n]', 'Always a[2]', 'At the root\'s left child'], a: 0, e: 'Any node with a child is ≥ that child, so the min is a leaf, but any leaf can hold it.' },
+    { q: 'Which sort is Θ(n log n) worst case AND uses Θ(1) extra space?',
+      o: ['Heapsort', 'Mergesort', 'Quicksort', 'Insertion sort'], a: 0, e: 'Mergesort needs a Θ(n) buffer; quicksort is Θ(n²) worst case.' },
+    { q: 'In sink, why swap with the LARGER child?',
+      o: ['So the new parent is ≥ both children', 'To keep the tree complete', 'It needs fewer compares', 'To keep the heap stable'], a: 0, e: 'Promoting the smaller child would put it above a larger sibling.' }
+  ]
+},
+{
+  id: 'l08', title: 'L08 Hashing', sub: 'hash functions, chaining, probing, deletion, resizing',
+  cram: `<ul>
+<li>Horner: h = (31h + c) mod M per char. CAT, M = 100 → 67, 42, 86. M prime.</li>
+<li>Chaining: α = n/M = chain length. Miss ≈ α, hit ≈ 1 + α/2.</li>
+<li>Linear probing: h, h+1, … mod M. Stop at EMPTY. Naive delete loses keys; use tombstones, re-insert the cluster, or shift with d(r, i) &lt; d(r, j).</li>
+<li>Quadratic h + i²: secondary clustering. Double h + i·h₂ (h₂ ≠ 0): ~none.</li>
+<li>Ideal miss 1/(1 − α); linear ½(1 + 1/(1 − α)²). Keep α ≤ ~0.5 linear, ~1 chaining.</li>
+<li>Resize: double M, rehash all. Θ(1) expected / amortized, Θ(n) worst. No order ops.</li>
+</ul>`,
+  lesson: `
+<h3>Hash functions</h3>
+<ul>
+<li>h(k) → [0, M). Θ(1) expected, Θ(n) worst. Gives up order: no min, max, floor, range.</li>
+<li>Collisions are unavoidable (pigeonhole). Birthday bound: 50% at n ≈ 1.18√M (M = 365 → 23).</li>
+<li>Good hash: deterministic, uniform, quick, uses the whole key.</li>
+<li>k mod M with <b>M prime</b>. M = 2ᵖ keeps only the low p bits (multiples of 8 into M = 64 use 1/8 of slots).</li>
+<li>Horner: <code>h = (31·h + c) % M</code>. hash("CAT"), M = 100: 67 → 42 → 86.</li>
+</ul>
+<h3>Separate chaining</h3>
+<ul>
+<li>α = n/M = expected chain length. Miss ≈ α compares, hit ≈ 1 + α/2. At α = 1, ~37% of buckets empty.</li>
+<li>Delete = unlink. α can pass 1.</li>
+</ul>
+<h3>Linear probing</h3>
+<ul>
+<li>Probe h, h+1, … mod M to the first EMPTY. Invariant: no hole between h(k) and k.</li>
+<li>M = 11, insert 22, 33, 44, 1 → [22 33 44 1 _ …]; search 12 (home 1) = 4 probes, miss.</li>
+<li>Delete: naive emptying breaks searches. <b>Tombstone</b> (search passes, insert reuses). <b>Re-insert</b> the rest of the cluster until EMPTY (Θ(L²)). <b>Shift</b>: key in slot j with home r moves to hole i iff (i − r) mod M &lt; (j − r) mod M (Θ(L)).</li>
+<li>M = 11 [11 53 _ … _ 31 42], delete 31 → [11 _ … _ 42 53].</li>
+</ul>
+<h3>Better probes</h3>
+<ul>
+<li>Primary clustering (linear). Quadratic (h + i²) leaves secondary clustering; needs M prime, α &lt; ½.</li>
+<li>Double hashing (h + i·h₂(k)) mod M, h₂ = 7 − (k mod 7), never 0. M = 11: 89 → 1, 18 → 7, 40 → 9, 29 → 2.</li>
+<li>Miss cost: ideal 1/(1 − α) (α = ½ → 2, ¾ → 4); linear ½(1 + 1/(1 − α)²) (½ → 2.5, ¾ → 8.5).</li>
+<li>α ceilings: chaining ~1, double ~0.7, linear ~0.5. Resize = double M and rehash (homes change). Amortized Θ(1).</li>
+<li>std::map (RB tree, sorted, operator&lt;) vs unordered_map (hash, std::hash + ==).</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'Horner\'s method, R = 31, M = 100. hash("DOG")? (D = 68, O = 79, G = 71)',
+      o: ['68', '87', '71', '18'], a: 0, e: '68 → (31·68 + 79) mod 100 = 87 → (31·87 + 71) mod 100 = 68.' },
+    { c: 1, q: 'Chaining, n = 60 keys, M = 20 buckets. Expected compares for an UNSUCCESSFUL search?',
+      o: ['About 3', 'About 2.5', 'About 60', 'About 1'], a: 0, e: 'α = 3; a miss walks a full chain.' },
+    { c: 1, q: 'M = 7, h(k) = k mod 7, linear probing. Insert 13, 20, 6, 27 into an empty table. Where does 27 land?',
+      o: ['Slot 2', 'Slot 6', 'Slot 3', 'Slot 0'], a: 0, e: '13 → 6. 20 wraps to 0. 6 → 1. 27 tries 6, 0, 1, lands in 2.' },
+    { q: 'M = 11. Slots: 0 = 9, 1 = 42, 2 = 10, 9 = 20, 10 = 31. Delete 20 by RE-INSERTING the rest of its cluster. Final table?',
+      o: ['0 = 42, 1 = 10, 9 = 31, 10 = 9', '0 = 9, 1 = 42, 2 = 10, 9 = 31', '0 = 9, 1 = 42, 9 = 31, 10 = 10', '0 = 42, 1 = 9, 9 = 10, 10 = 31'], a: 0,
+      e: 'Hole 9. 31 → 9. 9 (home 9) → 10. 42 (home 9) → 0. 10 (home 10) → 1. Slot 2 empties.' },
+    { q: 'M = 7: [20 7 27 _ _ _ 13]. Delete 13 by SHIFTING. Which keys move?',
+      o: ['All three: 20, 7, 27', 'Only 20', '20 and 7', 'None'], a: 0, e: 'Each one\'s home comes at or before the hole along its probe path; d(6,1) = 2 < d(6,2) = 3 moves 27.' },
+    { c: 1, q: 'M = 11, h₂(k) = 7 − (k mod 7). Table: 89 at 1, 29 at 2, 18 at 7, 40 at 9. Insert 51 by double hashing. Slot?',
+      o: ['6', '8', '1', '3'], a: 0, e: 'h = 7 taken; h₂ = 5; 12 mod 11 = 1 taken; 17 mod 11 = 6.' },
+    { q: 'At α = 0.75, linear probing\'s expected miss cost vs the ideal 1/(1 − α)?',
+      o: ['8.5 vs 4', '4 vs 4', '2.5 vs 2', '50.5 vs 10'], a: 0, e: '½(1 + 1/0.25²) = ½(1 + 16) = 8.5.' },
+    { q: 'Which scheme suffers SECONDARY clustering?',
+      o: ['Quadratic probing', 'Linear probing', 'Double hashing', 'Separate chaining'], a: 0, e: 'Same-home keys follow the same 1, 4, 9, … offsets.' },
+    { q: 'Why does a resize have to rehash instead of copying slots?',
+      o: ['k mod M changes when M changes', 'The new array is uninitialized', 'Tombstones must be cleared', 'It doesn\'t; copying works'], a: 0, e: '33 mod 10 = 3 but 33 mod 20 = 13.' },
+    { q: 'Keys are all multiples of 8 and M = 64. What fraction of slots get used?',
+      o: ['1/8', 'All', '1/2', '1/64'], a: 0, e: 'k mod 64 keeps the low 6 bits; the low 3 are always 0.' }
+  ]
+},
+{
+  id: 'l09', title: 'L09 Graphs, BFS, DFS', sub: 'handshake, matrix vs list, traversal orders, BFS distances',
+  cram: `<ul>
+<li>Σ deg = 2E. Max E = V(V − 1)/2. Tree: connected, acyclic, V − 1 edges.</li>
+<li>List Θ(V + E) space, O(deg) neighbors. Matrix Θ(V²), O(1) edge query.</li>
+<li>DFS: stack/recursion. BFS: queue, mark on enqueue, dist = fewest edges. Both Θ(V + E).</li>
+<li>Course DAG 0→1,3,5 · 1→2,3 · 2→3 · 3→4,7 · 4→5,7 · 5→6.</li>
+<li>Recursive DFS 0 1 2 3 4 5 6 7 · iterative 0 5 6 3 7 4 1 2 · BFS 0 1 3 5 2 4 7 6.</li>
+<li>Diamond: DFS 0 1 3 2, BFS 0 1 2 3.</li>
+</ul>`,
+  lesson: `
+<h3>Vocabulary and counting</h3>
+<ul>
+<li>G = (V, E). Undirected or directed. Degree, path, cycle, connected.</li>
+<li><b>Handshake:</b> Σ deg = 2E (digraph: Σ in = Σ out = E). Degrees 4, 3, 3, 2, 2 → E = 7. An even sum is necessary, not sufficient.</li>
+<li>Simple undirected: E ≤ V(V − 1)/2. Sparse E = O(V), dense Θ(V²).</li>
+<li>Tree: connected + acyclic + V − 1 edges (any two imply the third). The directed diamond is a DAG, not a tree.</li>
+</ul>
+<h3>Representations</h3>
+<div class="tbl"><table>
+<tr><th></th><th>Matrix</th><th>List</th></tr>
+<tr><td>space</td><td>Θ(V²)</td><td>Θ(V + E)</td></tr>
+<tr><td>edge query</td><td>O(1)</td><td>O(deg u)</td></tr>
+<tr><td>neighbors</td><td>O(V)</td><td>O(deg u)</td></tr>
+</table></div>
+<p>V = 10,000, average degree 6: E = 30,000, list = 70,000 slots, matrix = 10⁸ cells.</p>
+<h3>DFS</h3>
+<ul>
+<li>Mark, recurse into each unseen neighbor. One call visits exactly the reachable set. Restart loop over all vertices; restarts = components (undirected).</li>
+<li>Cost Σ(1 + deg v) = V + 2E = Θ(V + E). On a matrix Θ(V²).</li>
+<li>Iterative (explicit stack) pops lists reversed. Deep recursion can overflow the call stack.</li>
+</ul>
+<h3>BFS</h3>
+<ul>
+<li>Queue; <b>mark on enqueue</b> (else a vertex can enter twice); dist[v] = dist[u] + 1.</li>
+<li>The queue holds at most two distances, d and d + 1. dist = fewest edges.</li>
+<li>DFS memory O(longest path), BFS O(widest layer).</li>
+<li>Grid maze = implicit graph, 4 neighbors, Θ(rows·cols).</li>
+<li>Same loop: stack → DFS, queue → BFS, PQ by cost → Dijkstra, PQ by estimate → A*.</li>
+</ul>
+<div class="tbl"><table>
+<tr><th>Graph</th><th>DFS rec</th><th>DFS iter</th><th>BFS</th></tr>
+<tr><td>diamond 0→1,2; 1→3; 2→3</td><td>0 1 3 2</td><td>0 2 3 1</td><td>0 1 2 3</td></tr>
+<tr><td>course DAG</td><td>0 1 2 3 4 5 6 7</td><td>0 5 6 3 7 4 1 2</td><td>0 1 3 5 2 4 7 6</td></tr>
+</table></div>
+<p>Course DAG BFS from 0: layers {0}, {1, 3, 5}, {2, 4, 6, 7}. From 1: dist[6] = 4.</p>`,
+  qs: [
+    { c: 1, q: 'An undirected graph has degrees 4, 3, 3, 2, 2. How many edges?',
+      o: ['7', '14', '5', '10'], a: 0, e: 'Σ deg = 14 = 2E.' },
+    { q: 'Can a simple graph on 4 vertices have degrees 3, 3, 3, 1?',
+      o: ['No: three degree-3 vertices force the 4th to degree 3', 'Yes: the sum is even', 'Yes, as a tree', 'No: the sum is odd'], a: 0, e: 'Degree 3 on 4 vertices touches every other vertex.' },
+    { q: 'Max edges in a simple undirected graph on 20 vertices?',
+      o: ['190', '380', '400', '19'], a: 0, e: '20·19/2 = 190.' },
+    { c: 1, q: 'Recursive DFS from 0 on the course DAG (0→1,3,5; 1→2,3; 2→3; 3→4,7; 4→5,7; 5→6), lists ascending. Visit order?',
+      o: ['0 1 2 3 4 5 6 7', '0 1 3 5 2 4 7 6', '0 5 6 3 7 4 1 2', '0 1 2 3 7 4 5 6'], a: 0, e: 'Go deep 0→1→2→3→4→5→6, back up to 4, take 7.' },
+    { c: 1, q: 'BFS from 0 on the course DAG, lists ascending. Visit order?',
+      o: ['0 1 3 5 2 4 7 6', '0 1 2 3 4 5 6 7', '0 1 3 5 2 4 6 7', '0 5 6 3 7 4 1 2'], a: 0, e: 'Dequeue 0: add 1, 3, 5. Then 1 adds 2; 3 adds 4, 7; 5 adds 6.' },
+    { q: 'BFS from vertex 1 on the course DAG. dist[6]?',
+      o: ['4', '2', '3', 'Unreachable'], a: 0, e: '1 → 3 → 4 → 5 → 6.' },
+    { q: 'Iterative DFS (stack, push in list order) from 0 on the diamond 0→[1,2], 1→[3], 2→[3]. Order?',
+      o: ['0 2 3 1', '0 1 3 2', '0 1 2 3', '0 3 2 1'], a: 0, e: 'Push 1, 2; pop 2; push 3; pop 3; pop 1.' },
+    { q: 'BFS marks on DEQUEUE instead of enqueue, on the diamond. What goes wrong?',
+      o: ['3 is enqueued twice', 'BFS never reaches 3', '3 visits before 1', 'Nothing'], a: 0, e: 'Both 1 and 2 see 3 unmarked and push it.' },
+    { q: 'DFS cost on an adjacency list vs an adjacency matrix?',
+      o: ['Θ(V + E) vs Θ(V²)', 'Θ(V²) vs Θ(V + E)', 'Both Θ(V + E)', 'Both Θ(E log V)'], a: 0, e: 'A matrix scans a full row per vertex.' }
+  ]
+},
+{
+  id: 'l10', title: 'L10 DFS apps, topo sort, SCCs', sub: 'pre/post, edge types, cycles, Kahn, Kosaraju',
+  cram: `<ul>
+<li>pre[u] = ++timer on entry (gray), post[u] = ++timer on exit (black). Intervals nest or are disjoint.</li>
+<li>Edge u→v by v's color: white tree, gray BACK, black with pre[u] &lt; pre[v] forward, else cross.</li>
+<li>Cycle ⟺ back edge. Needs 3 colors (one bit can't tell forward/cross from back).</li>
+<li>Kahn: queue of in-degree 0, output, decrement. &lt; V output → cycle. Course DAG: 0 1 2 3 4 5 7 6.</li>
+<li>DFS topo = reverse post-order. Diamond → 0 2 1 3.</li>
+<li>Kosaraju: DFS on G for reverse post-order, DFS on Gᵀ in that order; each restart = one SCC. Θ(V + E). Component graph is a DAG.</li>
+</ul>`,
+  lesson: `
+<h3>DFS clock</h3>
+<pre>dfs(u): color[u] = GRAY;  pre[u]  = ++timer;
+        for v in adj[u]: if WHITE, dfs(v)
+        color[u] = BLACK; post[u] = ++timer;</pre>
+<ul>
+<li><b>Parenthesis property:</b> [pre, post] intervals are nested (descendant) or disjoint, never overlapping.</li>
+<li>Example: 0→1, 0→2, 1→2, 2→0, 3→1, 3→4, 4→5, 5→3 from 0, then 3: pre 1 2 3 7 8 9, post 6 5 4 12 11 10.</li>
+</ul>
+<h3>Edge types (color of v when u→v is examined)</h3>
+<div class="tbl"><table>
+<tr><th>v is</th><th>Type</th></tr>
+<tr><td>white</td><td>tree</td></tr>
+<tr><td>gray (on the stack)</td><td><b>back</b></td></tr>
+<tr><td>black, pre[u] &lt; pre[v]</td><td>forward</td></tr>
+<tr><td>black, pre[v] &lt; pre[u]</td><td>cross</td></tr>
+</table></div>
+<ul>
+<li>Example above: tree 0→1, 1→2, 3→4, 4→5; back 2→0, 5→3; forward 0→2; cross 3→1.</li>
+<li><b>Cycle ⟺ DFS finds a back edge.</b> Three colors are needed: one visited bit makes forward and cross edges look like back edges.</li>
+<li>Undirected: every non-tree edge is a back edge; skip the parent edge.</li>
+</ul>
+<h3>Topological sort (DAGs only)</h3>
+<ul>
+<li>Every edge points forward. A cycle makes it impossible. Every DAG has a source (in-degree 0).</li>
+<li><b>Kahn:</b> compute in-degrees, queue the sources, output and decrement; push when a count hits 0. Fewer than V output → cycle. Θ(V + E).</li>
+<li>Course DAG in-degrees 0..7: 0, 1, 1, 3, 1, 2, 1, 2. Kahn (queue): <b>0 1 2 3 4 5 7 6</b>.</li>
+<li><b>DFS:</b> reverse post-order. Diamond: post 3 1 2 0 → topo <b>0 2 1 3</b>. Course DAG: post 6 5 7 4 3 2 1 0 → topo 0 1 2 3 4 7 5 6.</li>
+<li>Why: for every edge u→v in a DAG, v finishes before u. Orders aren't unique unless the DAG is a chain.</li>
+</ul>
+<h3>Strongly connected components</h3>
+<ul>
+<li>u, v strongly connected: paths both ways. An equivalence relation → SCCs. The component graph is a DAG.</li>
+<li><b>Kosaraju:</b> (1) DFS on G, record reverse post-order. (2) Build Gᵀ (reverse every edge). (3) DFS on Gᵀ in that order; each restart marks one SCC. Θ(V + E).</li>
+<li>Slide example (11 edges): reverse post-order 3 7 5 0 2 4 1 6 → SCCs {3, 5, 7}, {0, 1, 6}, {2, 4}.</li>
+<li>0↔1, 1→2, 2→3→4→2, 4→5 → SCCs {0, 1}, {2, 3, 4}, {5}.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'During DFS, edge u → v is examined while v is GRAY. What kind of edge is it?',
+      o: ['Back edge: a cycle', 'Tree edge', 'Forward edge', 'Cross edge'], a: 0, e: 'Gray means v is on the recursion stack, an ancestor of u.' },
+    { c: 1, q: 'DFS from 0 (lists ascending) on 0→1, 0→2, 1→3, 1→4, 2→3, 3→4. How are 1→4 and 2→3 classified?',
+      o: ['1→4 forward, 2→3 cross', '1→4 tree, 2→3 back', '1→4 cross, 2→3 forward', 'Both back'], a: 0,
+      e: 'Order 0, 1, 3, 4 (via 3), then 2. 4 is already black and a descendant of 1 (forward). 3 is black, discovered before 2 (cross). No back edges: it is a DAG.' },
+    { q: 'DFS from 0 on 0→1, 0→4, 1→2, 2→3, 3→1, 4→3, 4→5, 5→0 (lists ascending). What are pre[0] and post[0]?',
+      o: ['1 and 12', '1 and 6', '0 and 11', '1 and 7'], a: 0, e: '0 is the first discovered and the last to finish among 6 vertices: 2·6 = 12 stamps.' },
+    { q: 'Which pair of [pre, post] intervals is IMPOSSIBLE in one DFS?',
+      o: ['[2, 6] and [4, 9]', '[2, 9] and [4, 6]', '[2, 4] and [6, 9]', '[1, 12] and [2, 7]'], a: 0, e: 'Parenthesis property: intervals nest or are disjoint. [2, 6] and [4, 9] overlap.' },
+    { c: 1, q: 'Kahn\'s algorithm (FIFO queue, neighbors in ascending order) on the course DAG. Output order?',
+      o: ['0 1 2 3 4 5 7 6', '0 1 3 5 2 4 7 6', '0 1 2 3 4 7 5 6', '0 5 6 3 7 4 1 2'], a: 0,
+      e: 'In-degrees 0, 1, 1, 3, 1, 2, 1, 2. 0 frees 1; 1 frees 2; 2 frees 3; 3 frees 4; 4 frees 5 and 7; 5 frees 6.' },
+    { c: 1, q: 'Topological order by DFS reverse post-order on the diamond 0→1, 0→2, 1→3, 2→3 (DFS from 0, ascending)?',
+      o: ['0 2 1 3', '0 1 2 3', '3 1 2 0', '0 1 3 2'], a: 0, e: 'Post-order 3, 1, 2, 0. Reverse it.' },
+    { q: 'Kahn\'s algorithm outputs fewer than V vertices. What does that mean?',
+      o: ['The graph has a cycle', 'The graph is disconnected', 'The queue was too small', 'The graph is a tree'], a: 0, e: 'Vertices on a cycle wait on each other and never reach in-degree 0.' },
+    { c: 1, q: 'Edges 0→1, 1→2, 2→0, 2→3, 3→4, 4→3, 4→5, 5→6, 6→5. How many SCCs?',
+      o: ['3', '1', '4', '7'], a: 0, e: '{0, 1, 2}, {3, 4}, {5, 6}. The component graph is a chain of three.' },
+    { q: 'In Kosaraju\'s second pass, what graph is searched and in what order?',
+      o: ['The transpose Gᵀ, starting vertices in reverse post-order from pass 1', 'G again, in vertex order', 'Gᵀ, in vertex order', 'G, in post-order'], a: 0,
+      e: 'The latest finisher lies in a source SCC of G, which is a sink of Gᵀ, so the search can\'t leak out.' },
+    { q: 'Why does cycle detection need three colors instead of one visited bit?',
+      o: ['A visited bit can\'t tell a back edge from a forward or cross edge', 'To save memory', 'Two colors suffice for digraphs', 'To compute distances'], a: 0, e: 'Only an edge to a vertex still on the stack proves a cycle.' }
+  ]
+},
+{
+  id: 'l11', title: 'L11 Shortest paths, Dijkstra', sub: 'relaxation, greedy, Dijkstra trace, cost, negatives',
+  cram: `<ul>
+<li>Relax u→v: if dist[u] + w &lt; dist[v], set dist[v] and parent[v] = u. dist never goes below the true distance.</li>
+<li>Dijkstra: pop nearest unsettled from a min-PQ, settle it (final), relax out-edges. Skip stale entries. Settle on POP.</li>
+<li>Needs w ≥ 0. O((V + E) log V) with a heap; O(V²) array scan wins on dense graphs.</li>
+<li>Bellman-Ford: relax all edges V − 1 rounds, O(VE), handles negatives; a V-th round relaxing → negative cycle.</li>
+<li>Greedy needs proof: coins {1, 3, 4} for 6 → greedy 3 coins, best 2.</li>
+<li>BFS = Dijkstra with weights 1. Fewest edges ≠ least weight.</li>
+</ul>`,
+  lesson: `
+<h3>Weighted shortest paths</h3>
+<ul>
+<li>Path cost = sum of weights. Fewest edges ≠ least weight: direct 0→3 (9) vs 0→1→3 (2 + 4 = 6). BFS picks 9.</li>
+<li>Single-source shortest paths: dist[v] for every v, plus parent[] for the tree.</li>
+<li>Optimal substructure: a prefix of a shortest path is a shortest path.</li>
+<li>Exponentially many paths: never enumerate.</li>
+</ul>
+<h3>Relaxation</h3>
+<pre>if (dist[u] + w &lt; dist[v]) { dist[v] = dist[u] + w; parent[v] = u; }</pre>
+<ul>
+<li>dist[u] = 3, w = 4, dist[v] = 10 → dist[v] = 7.</li>
+<li>Invariant: δ(v) ≤ dist[v] always (a real path). When nothing relaxes, dist = δ.</li>
+<li>BFS (layers), DAG paths (topo order, Θ(V + E)), Dijkstra (nearest first), Bellman-Ford (all edges V − 1 times).</li>
+</ul>
+<h3>Greedy method</h3>
+<ul>
+<li>Take the locally best choice, commit, never reconsider. Needs a proof (greedy-choice property + optimal substructure).</li>
+<li>US coins {25, 10, 5, 1}: greedy optimal (41 → 4 coins). Coins {1, 3, 4} for 6: greedy 4 + 1 + 1 = 3 coins, optimal 3 + 3 = 2. DP fixes it.</li>
+</ul>
+<h3>Dijkstra</h3>
+<pre>dist[s] = 0; pq.push({0, s});
+while pq not empty: u = pop min; if settled[u] continue;
+  settled[u] = true; relax every u→v (push the new dist)</pre>
+<ul>
+<li>Practice: 0→1 (4), 0→2 (1), 2→1 (2), 1→3 (3). Settle 0, 2, 1, 3. dist[1] = 3, dist[3] = 6.</li>
+<li>Course graph: 0→1(4) 0→3(6) 1→2(1) 1→3(5) 2→3(8) 0→5(20) 3→4(2) 3→7(11) 4→5(3) 5→6(9) 4→7(7). Settle 0, 1, 2, 3, 4, 5, 7, 6. dist[5] = 11 (0→3→4→5), dist[7] = 15, dist[6] = 20.</li>
+<li>Lazy deletion: push a new entry instead of decrease-key; skip stale pops.</li>
+<li>Cost O((V + E) log V) = O(E log V). Array scan version O(V²): better when E ≈ V².</li>
+<li>Bugs: no stale skip, negative weights, not pushing after lowering dist, settling on push.</li>
+</ul>
+<h3>Correctness and limits</h3>
+<ul>
+<li>Proof: any path to u leaves the settled set at x→y; cost ≥ dist[x] + w ≥ dist[y] ≥ dist[u]. The step "rest of path ≥ 0" needs <b>w ≥ 0</b>.</li>
+<li>s→a (1), s→b (2), b→a (−4): Dijkstra settles a at 1, but the true answer is −2.</li>
+<li><b>Bellman-Ford:</b> relax every edge V − 1 times, O(VE). Round i fixes paths of ≤ i edges. If anything still relaxes on round V → negative cycle (shortest paths undefined).</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'dist[u] = 3, dist[v] = 10, edge u → v has weight 4. After relaxing u → v?',
+      o: ['dist[v] = 7, parent[v] = u', 'dist[v] = 10, unchanged', 'dist[v] = 4', 'dist[v] = 13'], a: 0, e: '3 + 4 = 7 < 10, so lower it and record the parent.' },
+    { c: 1, q: 'Dijkstra from 0 on 0→1 (4), 0→2 (1), 2→1 (2), 1→3 (3). Settle order and dist[1]?',
+      o: ['0, 2, 1, 3; dist[1] = 3', '0, 1, 2, 3; dist[1] = 4', '0, 2, 1, 3; dist[1] = 4', '0, 1, 3, 2; dist[1] = 3'], a: 0, e: '2 is nearest after 0 (dist 1). Relaxing 2→1 gives 1 + 2 = 3 < 4.' },
+    { c: 1, q: 'Course graph from 0: 0→1(4) 0→3(6) 1→2(1) 1→3(5) 2→3(8) 0→5(20) 3→4(2) 3→7(11) 4→5(3) 5→6(9) 4→7(7). What is dist[5]?',
+      o: ['11', '20', '13', '9'], a: 0, e: '0 → 3 → 4 → 5 = 6 + 2 + 3 = 11, beating the direct edge of 20.' },
+    { q: 'Same course graph. dist[7]?',
+      o: ['15', '17', '18', '11'], a: 0, e: '0 → 3 → 4 → 7 = 6 + 2 + 7 = 15, vs 0 → 3 → 7 = 17.' },
+    { q: 'Dijkstra from 0 on 0→1 (7), 0→2 (2), 2→1 (3), 1→3 (1), 2→3 (8), 3→4 (2), 2→4 (10). What is dist[4]?',
+      o: ['8', '12', '10', '9'], a: 0, e: '0 → 2 → 1 → 3 → 4 = 2 + 3 + 1 + 2 = 8. Settle order 0, 2, 1, 3, 4.' },
+    { c: 1, q: 'Why can Dijkstra give a wrong answer with a negative edge weight?',
+      o: ['A settled vertex could later be reached more cheaply', 'The heap breaks on negative keys', 'It loops forever', 'Relaxation becomes undefined'], a: 0,
+      e: 'The proof uses "the rest of the path costs ≥ 0". With s→a (1), s→b (2), b→a (−4), a is settled at 1 but the truth is −2.' },
+    { q: 'Running time of Dijkstra with a binary-heap priority queue?',
+      o: ['O((V + E) log V)', 'O(V + E)', 'O(VE)', 'O(V²) always'], a: 0, e: '≤ E pushes and pops at O(log V) each, plus V settles. The array-scan version is O(V²).' },
+    { q: 'Bellman-Ford: how many rounds, what cost, and how does it spot a negative cycle?',
+      o: ['V − 1 rounds, O(VE), an edge still relaxes on round V', 'V rounds, O(E log V), the heap empties early', '1 round, O(V + E), a back edge', 'log V rounds, O(V²), dist goes to 0'], a: 0,
+      e: 'Round i finalizes paths of at most i edges; a simple path has at most V − 1.' },
+    { q: 'Coins {1, 3, 4}, amount 6. Greedy (largest coin that fits) vs optimal?',
+      o: ['Greedy 3 coins, optimal 2', 'Both 2 coins', 'Greedy 2, optimal 3', 'Both 3 coins'], a: 0, e: 'Greedy 4 + 1 + 1. Optimal 3 + 3. Greedy needs a proof per problem.' },
+    { q: 'In lazy-deletion Dijkstra, a vertex is marked settled when it is…',
+      o: ['Popped from the PQ (first time)', 'First pushed', 'First relaxed', 'Last relaxed'], a: 0, e: 'Settling on push freezes a vertex that could still improve.' }
+  ]
+}
+];
+
+const EXTRA = {
+l01: {
+  cram: `<ul><li>HW1 lowerBound: first index with a[i] ≥ key, else one past the end. [1 3 3 5 7]: key 3 → 1, key 4 → 3, key 8 → 5.</li></ul>`,
+  lesson: `
+<h3>Homework 1 patterns</h3>
+<ul>
+<li><b>IntList</b> keeps head, tail and count. The copy constructor and operator= must leave all three consistent; self-assignment leaves the list unchanged.</li>
+<li><b>Recursion on a chain</b> (sum, occurrences): base case nullptr returns 0; otherwise this node's part + the call on <code>p-&gt;next</code>. No loops.</li>
+<li><b>lowerBound</b>: the first index whose element is ≥ key, or one past the range. Halve the range every call. [1 3 3 5 7]: key 3 → 1, key 4 → 3, key 8 → 5, key 0 → 0.</li>
+<li><b>findK</b>: the k-sum recursion, but collecting the chosen elements instead of counting them. The number of complete choices tested is still C(n, k).</li>
+<li>Recursion that never shrinks its argument never reaches the base case: an infinite recursion, then a stack overflow.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'HW1 lowerBound returns the first index i with a[i] ≥ key (or one past the end). For a = [1, 3, 3, 5, 7], what does it return for key 4 and for key 8?',
+      o: ['3 and 5', '2 and 4', '3 and −1', '4 and 5'], a: 0, e: 'a[3] = 5 is the first element ≥ 4. Nothing is ≥ 8, so it returns one past the end: 5.' },
+    { q: 'Same array [1, 3, 3, 5, 7]. lowerBound for key 3?',
+      o: ['1', '2', '0', '3'], a: 0, e: 'The FIRST index holding a value ≥ 3 is 1; the repeat doesn\'t matter.' },
+    { q: 'A recursive function calls itself with the same argument it received (it forgot to shrink it). What happens?',
+      o: ['The base case is never reached: the stack overflows', 'It returns the base case value', 'The compiler rejects it', 'It runs once and stops'], a: 0, e: 'Each call pushes a frame until the call stack runs out.' }
+  ]
+},
+l02: {
+  cram: `<ul><li>Non-doubling sizes: b = log(T₂/T₁) / log(N₂/N₁). N ×3 and count ×9 → b = 2.</li></ul>`,
+  lesson: `
+<h3>Homework 2: when sizes don't double</h3>
+<ul>
+<li>With T = aNᵇ and any two sizes: <b>b = log(T₂/T₁) / log(N₂/N₁)</b>. N 1000 → 3000, count 2 × 10⁶ → 1.8 × 10⁷: ratio 9 over size ratio 3 → b = 2.</li>
+<li>Predict at a bigger size: T(N′) = T(N) · (N′/N)ᵇ. At N = 9000: 1.8 × 10⁷ · 3² = 1.62 × 10⁸.</li>
+<li><b>countPairsWithDifference</b> (pairs with y − x = d, distinct values): sort, then binary-search x + d for each x, or walk two pointers. Θ(N log N), not the N² of all pairs. [1 5 3 4 2], d = 2 → 3 pairs.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'A count is 2,000,000 at N = 1000 and 18,000,000 at N = 3000. Assuming T = aNᵇ, what is b?',
+      o: ['2', '3', '9', '1.5'], a: 0, e: 'b = log(18/2) / log(3) = log 9 / log 3 = 2.' },
+    { q: 'Same data (b = 2, T(3000) = 1.8 × 10⁷). Predicted count at N = 9000?',
+      o: ['1.62 × 10⁸', '5.4 × 10⁷', '4.86 × 10⁸', '3.6 × 10⁷'], a: 0, e: 'Size grows ×3, so the count grows ×3² = 9.' },
+    { q: 'Count pairs of distinct values with y − x = d among N values, in N log N time. Which approach?',
+      o: ['Sort, then binary-search x + d for each x', 'Check every pair', 'Sort, then check adjacent elements only', 'A triple loop'], a: 0, e: 'Sorting is N log N and N searches are N log N. Every pair would be N².' }
+  ]
+},
+l03: {
+  cram: `<ul><li>Θ witnesses: 3n² − 5n + 2: c₁ = 2, c₂ = 3, n₀ = 5. 5n³ + 2n: 5, 7, 1.</li>
+<li>Same machine, constant cost per access → same exponent (swap = huge constant). Amdahl: 1/((1 − f) + f/s): 80% sped up 10× → 3.6×.</li>
+<li>Record {char, double, char, int, short} = 32 bytes; reordered largest first = 16.</li></ul>`,
+  lesson: `
+<h3>More witness proofs</h3>
+<div class="tbl"><table>
+<tr><th>Claim</th><th>c₁</th><th>c₂</th><th>n₀</th></tr>
+<tr><td>3n² − 5n + 2 ∈ Θ(n²)</td><td>2</td><td>3</td><td>5 (root of n² − 5n + 2 ≈ 4.56)</td></tr>
+<tr><td>½n² − 3n ∈ Θ(n²)</td><td>1/14</td><td>½</td><td>7</td></tr>
+<tr><td>5n³ + 2n ∈ Θ(n³)</td><td>5</td><td>7</td><td>1</td></tr>
+<tr><td>(n + 1)² ∈ Θ(n²)</td><td>1</td><td>4</td><td>1</td></tr>
+</table></div>
+<ul>
+<li>Non-membership: n² ∉ O(n log n), since dividing gives n / log n ≤ c, but n / log n grows without bound.</li>
+<li>Exponentials beat polynomials: 2ⁿ ≥ n² from n = 4, ≥ n³ from 10, ≥ n¹⁰ from 59.</li>
+<li>Sum rule as sets: f₁ ∈ O(g₁), f₂ ∈ O(g₂) → f₁ + f₂ ∈ O(max). Product: f₁f₂ ∈ O(g₁g₂).</li>
+<li>Some costs have no single Θ: grid BFS memory over all mazes is O(n²) and Ω(1).</li>
+</ul>
+<h3>Machine models</h3>
+<ul>
+<li>RAM model: every operation costs 1. If every real operation costs between two constants that don't depend on N, the order of growth is the same on every machine.</li>
+<li>Swap and thrashing: up to 50,000× slower per access, but still a constant. Θ(N²) stays Θ(N²). A doubling experiment shows a spike at the RAM boundary, then returns toward 2.</li>
+<li>The exponent changes only when one access gets more expensive as N grows: 2-D physical distance (N² accesses → N^2.5), hierarchical memory (scan → N log N).</li>
+<li>External-memory model: cost = block transfers of size B. Scan N items = N/B. Locality becomes part of the order of growth.</li>
+<li>Same count, different order: row-wise vs column-wise matrix sums differ by ~41×, a constant.</li>
+<li>N log₂ N random reads at 100 ns vs N² sequential at 0.3 ns: N² wins at 10³ (0.3 ms vs 1 ms), loses at 10⁴ and beyond.</li>
+<li><b>Amdahl's law:</b> speedup = 1 / ((1 − f) + f/s). f = 0.8, s = 10 → 3.6×. Even s = ∞ gives at most 5×.</li>
+<li>Only changing the algorithm moves the exponent. Layout and locality move the constant.</li>
+</ul>
+<h3>Homework 2: struct packing</h3>
+<pre>struct Record { char tag; double value; char flag; int id; short kind; };  // 32
+struct Packed { double value; int id; short kind; char tag; char flag; };  // 16</pre>
+<p>1 + 7 pad + 8 + 1 + 3 pad + 4 + 2 = 26, rounded up to a multiple of 8 = 32. Largest-first packs into 8 + 4 + 2 + 1 + 1 = 16.</p>`,
+  qs: [
+    { c: 1, q: 'Witnesses for 3n² − 5n + 2 ∈ Θ(n²) with c₁ = 2 and c₂ = 3. Smallest n₀ that works?',
+      o: ['5', '1', '3', '9'], a: 0, e: 'The lower bound needs n² − 5n + 2 ≥ 0, whose larger root is about 4.56. Check n = 5: 50 ≤ 52 ≤ 75.' },
+    { q: 'Which witnesses prove 5n³ + 2n ∈ Θ(n³)?',
+      o: ['c₁ = 5, c₂ = 7, n₀ = 1', 'c₁ = 5, c₂ = 5, n₀ = 1', 'c₁ = 7, c₂ = 5, n₀ = 1', 'c₁ = 1, c₂ = 2, n₀ = 5'], a: 0, e: 'For n ≥ 1: 5n³ ≤ 5n³ + 2n ≤ 5n³ + 2n³ = 7n³.' },
+    { c: 1, q: 'A Θ(N²) program runs so large that the OS starts swapping to disk (each access up to 50,000× slower). Its order of growth on that fixed machine becomes…',
+      o: ['Still Θ(N²), with a much bigger constant', 'Θ(N³)', 'Θ(N² log N)', 'Exponential'], a: 0, e: 'Every access still costs at most a constant (about 5 ms), so only the constant changes.' },
+    { q: 'A function takes 80% of a program\'s run time and you make it 10× quicker. Overall speedup (Amdahl)?',
+      o: ['About 3.6×', '10×', '8×', '5×'], a: 0, e: '1 / (0.2 + 0.08) ≈ 3.57. Even an infinitely quick function caps the speedup at 1/0.2 = 5.' },
+    { c: 1, q: 'sizeof(struct { char tag; double value; char flag; int id; short kind; }) on 64-bit, and after reordering largest first?',
+      o: ['32 and 16', '24 and 16', '16 and 16', '32 and 24'], a: 0, e: 'Padding after each char pushes it to 26, rounded to 32. double, int, short, char, char = 16 exactly.' },
+    { q: 'When does a machine change actually change the EXPONENT of a running time?',
+      o: ['When one access costs more as N grows (like 2-D physical distance)', 'When instructions get 10⁶× quicker', 'When memory is 100 ns instead of 1 ns', 'When the program swaps to SSD'], a: 0, e: 'Costs bounded by constants keep the exponent. Costs that grow with N change it.' },
+    { q: 'Why is n² NOT in O(n log n)?',
+      o: ['n² ≤ c·n log n gives n / log n ≤ c, but n / log n is unbounded', 'n² ≥ n log n at n = 2, so it fails', 'Log is always bigger than n', 'It is in O(n log n)'], a: 0, e: 'The standard non-membership argument: divide out and find a quantity no constant can bound.' }
+  ]
+},
+l04: {
+  cram: `<ul><li>isBST must pass a valid (lo, hi) range down; checking only children misses 50(30(20, 60), 70). LCA: first node where the two keys split. countInRange prunes subtrees.</li></ul>`,
+  lesson: `
+<h3>Homework 3 patterns</h3>
+<ul>
+<li><b>isBST</b>: checking each node against its two children is <b>not enough</b>. 50(30(20, 60), 70) passes the child check at 30, but 60 &gt; 50 sits in 50's left subtree. Pass an allowed range (lo, hi) down the recursion.</li>
+<li><b>lowestCommonAncestor</b> in a BST: walk from the root; go left if both keys are smaller, right if both are larger, otherwise stop. One path, Θ(height). In the running example (50, 30, 70, 20, 40, 60, 80, 45): LCA(20, 45) = 30, LCA(20, 60) = 50, LCA(40, 45) = 40.</li>
+<li><b>isAVL</b> in Θ(n): return the height from the same recursion (or −2 / a flag for "not AVL"), instead of recomputing heights at every node (Θ(n²)).</li>
+<li><b>toInfix</b>: fully parenthesized in-order: (2+(3*4)).</li>
+<li><b>countInRange</b>: recurse left only if lo &lt; key, right only if key &lt; hi. [25, 55] in the running example → 30, 40, 45, 50 = 4.</li>
+<li>select/rank use the <code>size</code> field: select(i) compares i to size(left); rank adds size(left) + 1 when going right.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'Tree: 50 with left child 30 (children 20 and 60) and right child 70. Is it a BST, and does a check of each node against only its children catch the problem?',
+      o: ['Not a BST; the child-only check misses it', 'A valid BST', 'Not a BST; the child-only check catches it', 'A BST only if 70 moves left'], a: 0, e: '60 is in 50\'s left subtree but 60 > 50. At node 30, 20 < 30 < 60 looks fine.' },
+    { c: 1, q: 'BST from 50, 30, 70, 20, 40, 60, 80, 45. Lowest common ancestor of 20 and 45?',
+      o: ['30', '50', '40', '20'], a: 0, e: 'At 50 both are smaller, go left. At 30, 20 < 30 < 45: they split here.' },
+    { q: 'Same BST. LCA of 40 and 45?',
+      o: ['40', '30', '45', '50'], a: 0, e: '45 is in 40\'s subtree, so 40 itself is the deepest common ancestor.' },
+    { q: 'Same BST. How many keys lie in [25, 55]?',
+      o: ['4', '3', '5', '6'], a: 0, e: '30, 40, 45, 50. The 20 and 60–80 subtrees are pruned.' },
+    { q: 'An isAVL that calls a separate height() at every node runs in Θ(n²) on a path-like tree. How do you get Θ(n)?',
+      o: ['Return the height from the same recursion that checks balance', 'Use a queue', 'Sort the keys first', 'Only check the root'], a: 0, e: 'One post-order pass computes each height once.' }
+  ]
+},
+l05: {
+  cram: `<ul><li>Delete rotation choice: left-heavy with left child bf ≥ 0 → single right; bf &lt; 0 → double (LR). Mirror on the right.</li></ul>`,
+  lesson: `
+<h3>Deletion, case by case</h3>
+<ul>
+<li>After a delete, a node at +2 looks at its left child: <b>bf ≥ 0 → single right rotation</b> (LL), <b>bf &lt; 0 → double</b> (LR). Mirror for −2.</li>
+<li>Note bf = 0 can happen on delete (never on insert) and takes the single rotation.</li>
+<li>A rotation lowers that subtree by 1, which can unbalance the parent: check every node up to the root.</li>
+<li>Rotations can only be needed on the path from the deleted node to the root.</li>
+</ul>
+<h3>Reading balance factors</h3>
+<pre>      8   bf +1          left height 1, right height 0
+     / \\
+    4   9                bf 0, 0
+   / \\
+  2   6                  bf 0, 0</pre>
+<p>Insert 1 under 2: 2 becomes height 1 and 4 height 2. bf(4) = +1 is fine, but bf(8) = 2 − 0 = +2. The path 8 → 4 → 2 goes left, left: LL, so rotate right at 8 → 4(2(1), 8(6, 9)).</p>`,
+  qs: [
+    { c: 1, q: 'After an AVL DELETE, node z has bf = +2 and its left child has bf = 0. Which fix?',
+      o: ['A single right rotation at z', 'A double rotation (left, then right)', 'No rotation', 'A left rotation at z'], a: 0, e: 'Left child bf ≥ 0 takes the single rotation. bf = 0 only happens on delete.' },
+    { q: 'Tree 8(4(2, 6), 9). Insert 1. Which node becomes unbalanced first, and which case?',
+      o: ['8, LL: rotate right at 8', '4, LL: rotate right at 4', '2, LR', '8, LR'], a: 0, e: 'bf(4) = 1 − 0 = +1 is fine; bf(8) = 2 − 0 = +2. The path goes left, left.' },
+    { q: 'Why can one AVL delete need rotations at several levels?',
+      o: ['A rotation can shorten the subtree, unbalancing its parent', 'Deletes always change the root', 'The successor is always a leaf', 'Heights are not stored'], a: 0, e: 'Insert rotations restore the old height. Delete rotations may leave the subtree one shorter.' }
+  ]
+},
+l06: {
+  cram: `<ul><li>LLRB delete: swap with predecessor; a red leaf just goes; a black leaf leaves a missing black → borrow (3-node sibling, rotations + recolor, done) or merge (2-node sibling, recolor, may move up).</li>
+<li>HW4: min keys, order M, height h = 2⌈M/2⌉ʰ − 1 (M = 3, h = 2 → 7).</li></ul>`,
+  lesson: `
+<h3>2-3 delete, worked</h3>
+<pre>Borrow:  [30] / [10] [40|50], delete 10 → [10] empty, sibling has 2 keys
+         → [40] / [30] [50]        (30 comes down, 40 goes up)
+Merge:   [20|50] / [10] [30] [60], delete 10 → siblings have 1 key
+         → [50] / [20|30] [60]     (parent key 20 comes down and merges)</pre>
+<ul>
+<li>A merge removes a key from the parent, which can underflow and cascade. An emptied root disappears: the tree loses a level.</li>
+<li>Delete an internal key by swapping with its in-order predecessor first (always in a leaf).</li>
+</ul>
+<h3>Red-black delete (left-leaning)</h3>
+<ul>
+<li>Step 1: BST search; two children → swap with the in-order predecessor. Now the key sits in a node with ≤ 1 child.</li>
+<li>Step 2: remove it. A <b>red</b> leaf or a node with one child: no rule breaks. Only a <b>black leaf</b> breaks black balance: a black link goes missing.</li>
+<li>Repair depends on the parent (2-node or 3-node), the empty spot (left, middle, right), and the sibling:</li>
+<li><b>Sibling is a 3-node → borrow</b>: 1 to 3 rotations lift a key, then a recolor. Done.</li>
+<li><b>Sibling is a 2-node → merge</b>: recolor (sibling turns red, a red parent key turns black), rotateLeft if it leans right. Under a 2-node parent the missing black <b>moves up</b>.</li>
+<li>Reaching above the root: drop the empty node, the tree is one level shorter.</li>
+<li>Totals: at most 2 rotations per insert, 3 per delete.</li>
+</ul>
+<h3>LLRB shapes to know</h3>
+<ul>
+<li>Insert 1..5: 4 is the root (black) with left child 2 (red), 2 has black children 1 and 3, and 5 is 4's black right child. 3 rotations, 2 flips.</li>
+<li>1..7: perfect, all black, 4 rotations, 4 flips.</li>
+</ul>
+<h3>B+ tree details</h3>
+<ul>
+<li>Routers [30 | 60]: k &lt; 30 → child 0; 30 ≤ k &lt; 60 → child 1; k ≥ 60 → child 2. <b>Equal goes right.</b></li>
+<li>A <b>leaf split copies</b> its new first key up (the key stays in the leaf). A <b>router split moves</b> the middle router up. So a key can appear twice.</li>
+</ul>
+<h3>Homework 4 patterns</h3>
+<ul>
+<li><b>llrbBlackHeight</b>: check no right-leaning red, no two reds in a row, equal black counts; return the black height or −1.</li>
+<li><b>minKeysBTree</b>: root has ≥ 1 key (2 children), every other node ≥ ⌈M/2⌉ − 1 keys and ⌈M/2⌉ children. With t = ⌈M/2⌉: <b>2tʰ − 1</b>. M = 3, h = 2 → 7. M = 5, h = 2 → 17.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: '2-3 tree [30] over [10], [40|50]. Delete 10. Result?',
+      o: ['[40] over [30], [50]', '[30|40|50]', '[40|50] over [30]', '[30] over [40], [50]'], a: 0, e: '[10] empties; the sibling [40|50] can lend. 30 comes down, 40 goes up.' },
+    { q: '2-3 tree [20|50] over [10], [30], [60]. Delete 10. Result?',
+      o: ['[50] over [20|30], [60]', '[30|50] over [20], [60]', '[20|50] over [30], [60]', '[30] over [20], [50|60]'], a: 0, e: 'No sibling has a spare key, so merge: parent key 20 comes down and joins [30].' },
+    { c: 1, q: 'In a left-leaning red-black tree, which deletion actually breaks a rule and needs repair?',
+      o: ['Removing a black leaf', 'Removing a red leaf', 'Removing a node with one child', 'Removing the in-order predecessor of a red node'], a: 0, e: 'A black leaf takes a black link with it, so one path is short. The other cases leave black balance intact.' },
+    { q: 'During red-black delete repair, the sibling of the empty spot is a 3-node. What happens?',
+      o: ['Borrow: rotations lift a key, recolor, done', 'Merge, and the problem moves up', 'The tree shrinks a level', 'Nothing; no repair needed'], a: 0, e: 'Mirror of the 2-3 borrow. Merging is for a 2-node sibling.' },
+    { c: 1, q: 'Fewest keys in a B-tree of order M = 5 with height h = 2 (root at depth 0)?',
+      o: ['17', '7', '26', '9'], a: 0, e: 't = ⌈5/2⌉ = 3. Keys = 2tʰ − 1 = 2·9 − 1 = 17: root 1 key, 2 nodes × 2 keys, 6 leaves × 2 keys.' },
+    { q: 'Fewest keys in a 2-3 tree (B-tree of order 3) of height 2?',
+      o: ['7', '3', '9', '8'], a: 0, e: 'All 2-nodes: 1 + 2 + 4 = 7 = 2·2² − 1.' },
+    { q: 'Insert 1, 2, 3, 4, 5 into an LLRB. Which node is red afterward?',
+      o: ['2', '4', '5', 'None'], a: 0, e: 'Root 4 black; 2 red (left-leaning, glued to 4: the 2-3 node [2|4]); 1, 3, 5 black.' },
+    { q: 'In a B+ tree, what happens on a LEAF split vs a ROUTER split?',
+      o: ['Leaf split copies a key up; router split moves a key up', 'Both move a key up', 'Both copy a key up', 'Leaf split moves; router split copies'], a: 0, e: 'Records must stay in leaves, so the leaf keeps its key; routers carry no records, so the middle one just moves.' },
+    { q: 'B+ routers [30 | 60]. A search for exactly 30 goes to…',
+      o: ['Child 1 (30 ≤ k < 60)', 'Child 0', 'Child 2', 'Either child 0 or 1'], a: 0, e: 'Equal goes right: a router copies the first key of the subtree to its right.' }
+  ]
+},
+l07: {
+  cram: `<ul><li>d-ary heap, 0-based: children d·i + 1 … d·i + d, parent (j − 1)/d. kth largest: min-heap of size k, Θ(n log k). Merge k lists: min-heap of k heads, Θ(N log k).</li></ul>`,
+  lesson: `
+<h3>Homework 4: d-ary heaps and PQ tricks</h3>
+<ul>
+<li><b>0-based d-ary heap:</b> children of i are d·i + 1, …, d·i + d; parent of j is (j − 1)/d. d = 2 is the binary heap written 0-based (children 2i + 1, 2i + 2).</li>
+<li>3-ary: children of 2 → 7, 8, 9; parent of 10 → 3.</li>
+<li>Height ≈ log_d n: wider heaps are shorter, but sink compares d children per level.</li>
+<li>buildDary: sink internal nodes from the last internal down to 0. Still linear.</li>
+<li><b>kthLargest</b>: keep a <b>min</b>-heap of at most k values; push each value, pop when size exceeds k; the top is the answer. Θ(n log k), no sort.</li>
+<li><b>mergeSorted</b> (k sorted lists, N total): a min-heap holds one entry (value, list, index) per list. Pop the smallest, push that list's next. Θ(N log k).</li>
+<li>Declare a C++ min-heap: <code>priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt;</code>.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: '0-based 3-ary max-heap. Children of index 2, and parent of index 10?',
+      o: ['Children 7, 8, 9; parent 3', 'Children 6, 7, 8; parent 3', 'Children 5, 6, 7; parent 5', 'Children 7, 8, 9; parent 4'], a: 0, e: 'Children d·i + 1..d·i + d = 7..9. Parent (10 − 1)/3 = 3.' },
+    { c: 1, q: 'Find the k-th largest of n values with a heap, without sorting. Best approach and cost?',
+      o: ['Min-heap capped at k values, Θ(n log k)', 'Max-heap of all n, then k pops: Θ(n log n) only', 'Sort descending: Θ(n log n)', 'Min-heap of all n: Θ(n²)'], a: 0, e: 'The k largest seen so far stay in the heap; the smallest of them, on top, is the k-th largest.' },
+    { q: 'Merge k sorted lists with N elements total using a min-heap with one entry per list. Cost?',
+      o: ['Θ(N log k)', 'Θ(N log N)', 'Θ(Nk)', 'Θ(k log N)'], a: 0, e: 'Every element is pushed and popped once, and the heap never holds more than k entries.' },
+    { q: 'In 0-based binary-heap indexing, what are the children of i?',
+      o: ['2i + 1 and 2i + 2', '2i and 2i + 1', 'i + 1 and i + 2', '2i − 1 and 2i'], a: 0, e: 'Shift the 1-based 2k, 2k + 1 down by one index.' }
+  ]
+},
+l08: {
+  cram: `<ul><li>Birthday: P(no collision) ≈ e^(−n(n−1)/2M). Java index = (hashCode &amp; 0x7fffffff) % M. Hash wins speed; BST wins order and worst case.</li></ul>`,
+  lesson: `
+<h3>Details that make good exam questions</h3>
+<ul>
+<li>Birthday derivation: P(no collision) ≈ exp(−n(n − 1)/2M) using 1 − x ≈ e⁻ˣ; equals ½ near n ≈ 1.18√M.</li>
+<li>Java: <code>(key.hashCode() &amp; 0x7fffffff) % M</code> clears the sign bit so the index can't be negative.</li>
+<li>Expected empty slots at α = 1: (1 − 1/M)ᴹ ≈ 1/e ≈ 37%.</li>
+<li>Re-insert delete costs Θ(L²) for a cluster of length L; shift delete (Knuth's Algorithm R) Θ(L). Comparing raw slot numbers breaks on clusters that wrap past M − 1.</li>
+<li>Primary clustering growth: a run of length L grows with probability ≈ (L + 2)/M.</li>
+<li>Total rehash work over N inserts with doubling: at most 2N, so amortized Θ(1).</li>
+<li>Hash table vs balanced BST: Θ(1) average vs Θ(log n); worst Θ(n) vs Θ(log n); no ordered ops vs floor/range/sorted iteration.</li>
+<li>HW5 chainInsert: append at the chain's end; when n/M &gt; 2, new M = 2M + 1, rehash chains 0..M − 1 front to back.</li>
+<li>HW5 dhInsert: probe (h + i·h₂) mod M for i = 0..M − 1; return the slot, or −1 if all fail (the table is fixed-size).</li>
+</ul>`,
+  qs: [
+    { q: 'Why does Java compute (key.hashCode() & 0x7fffffff) % M?',
+      o: ['hashCode can be negative; clearing the sign bit keeps the index ≥ 0', 'To make M prime', 'To use only the low bits', 'To avoid collisions'], a: 0, e: 'A negative % result would be a negative array index.' },
+    { q: 'Hash table vs balanced BST: which statement is right?',
+      o: ['Hash: Θ(1) average, Θ(n) worst, no ordered ops. BST: Θ(log n) guaranteed, ordered ops', 'Hash: Θ(1) worst case', 'BST: Θ(1) average', 'Both support floor and range'], a: 0, e: 'Pick by whether you need order or guaranteed worst case.' },
+    { c: 1, q: 'HW5 chainInsert starts at M = 3 and resizes to 2M + 1 when n/M becomes greater than 2. Insert keys 1..7. Final M?',
+      o: ['7', '3', '6', '15'], a: 0, e: 'After the 7th key, 7/3 > 2, so M = 7.' },
+    { q: 'Deleting from a cluster of length L by re-insertion vs by shifting. Costs?',
+      o: ['Θ(L²) vs Θ(L)', 'Θ(L) vs Θ(L²)', 'Both Θ(L)', 'Both Θ(1)'], a: 0, e: 'Each re-inserted key walks from its own home again. Shifting makes one pass.' }
+  ]
+},
+l09: {
+  cram: `<ul><li>HW5: componentSizes = restart loop, sizes in order of smallest vertex. gridSteps = BFS on cells. bfsPath = parent[], walk back from t, reverse.</li></ul>`,
+  lesson: `
+<h3>Proofs and patterns</h3>
+<ul>
+<li>DFS visits exactly the reachable set: if a reachable w were missed, take the first missed q on a path; its predecessor p was visited and scanned p → q. Contradiction.</li>
+<li>BFS distance theorem: the queue is sorted by distance (two values at most), so dist[v] = fewest edges.</li>
+<li>Edge query on an undirected list: scan the endpoint with the smaller degree.</li>
+<li>Reachability tweak: return true when s == t; otherwise recurse into unseen neighbors and pass a true up.</li>
+<li>HW5 <b>componentSizes</b>: loop v = 0..V − 1, restart at each unseen v, count the component. Order = by smallest vertex. Use an iterative search for long paths (V = 200,000).</li>
+<li>HW5 <b>gridSteps</b>: BFS over open cells with 4 neighbors; −1 if E is unreachable.</li>
+<li>HW5 <b>bfsPath</b>: BFS recording parent[v] at enqueue; walk from t back to s, reverse. {s} if s == t, empty if unreachable.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'Undirected graph, V = 9, edges 0–4, 4–7, 1–5, 2–6, 6–8, 8–2 (3 isolated). componentSizes returns?',
+      o: ['{3, 2, 3, 1}', '{3, 3, 2, 1}', '{1, 2, 3, 3}', '{4, 2, 3}'], a: 0, e: '{0, 4, 7}, {1, 5}, {2, 6, 8}, {3} in order of smallest vertex.' },
+    { q: 'Grid "S.#." / ".##." / "...E", 4-direction moves, # = wall. Fewest moves?',
+      o: ['5', '3', '4', '−1'], a: 0, e: 'Down, down, right, right, right.' },
+    { q: 'How does bfsPath rebuild the s → t path?',
+      o: ['parent[v] = u at enqueue; follow parents from t, then reverse', 'Re-run DFS from t', 'Sort by dist', 'Read the queue'], a: 0, e: 'Each vertex remembers who discovered it.' }
+  ]
+},
+l10: {
+  cram: `<ul><li>Undirected cycle: skip the parent edge; any other visited neighbor → cycle. HW6 Kahn with a min-heap: course DAG → 0 1 2 3 4 5 6 7, Θ((V + E) log V).</li></ul>`,
+  lesson: `
+<h3>Undirected cycle detection</h3>
+<pre>hasCycle(u, parent): visited[u] = true
+  for v in adj[u]:
+    if v == parent: continue        // the tree edge we came in on
+    if visited[v] or hasCycle(v, u): return true</pre>
+<ul>
+<li>Undirected graphs only have tree and back edges. Each edge shows up twice, so skip the one back to the parent.</li>
+<li>0–1, 1–2, 1–3: no cycle. Add 2–3: cycle.</li>
+</ul>
+<h3>Why Kosaraju works</h3>
+<ul>
+<li>If an edge goes from component C to component D, C's latest finish time beats D's (whichever DFS enters first).</li>
+<li>So the overall latest finisher is in a <b>source</b> component of G, which is a <b>sink</b> of Gᵀ: a search on Gᵀ from there can't leak into another component.</li>
+<li>Cost: two DFS passes plus building Gᵀ: Θ(V + E).</li>
+<li>Uses: dependency cycles in builds or spreadsheets, condensing a graph to its component DAG.</li>
+</ul>
+<h3>Homework 6</h3>
+<ul>
+<li><b>hasCycle</b>: three colors, restart at every white vertex; a self-loop counts.</li>
+<li><b>topoOrderMin</b>: Kahn with a <b>min-heap</b> of ready vertices, always output the smallest. Course DAG → <b>0 1 2 3 4 5 6 7</b> (a FIFO queue gives 0 1 2 3 4 5 7 6). Θ((V + E) log V). Empty result on a cycle.</li>
+<li><b>sccLabels</b>: Kosaraju; any labels work as long as same SCC ⟺ same label.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'Undirected DFS cycle check. Why skip the neighbor equal to parent?',
+      o: ['Each undirected edge appears twice; the parent edge is the tree edge seen from below', 'Parents are never part of a cycle', 'To make it iterative', 'To avoid self-loops'], a: 0, e: 'Without the skip, every tree edge would look like a cycle.' },
+    { c: 1, q: 'HW6 topoOrderMin (Kahn, always output the SMALLEST ready vertex) on the course DAG. Order?',
+      o: ['0 1 2 3 4 5 6 7', '0 1 2 3 4 5 7 6', '0 1 3 5 2 4 7 6', '0 1 2 3 4 7 5 6'], a: 0, e: 'After 4, both 5 and 7 are ready; the min-heap takes 5, which frees 6, and 6 < 7.' },
+    { q: 'In Kosaraju, the vertex that finishes LAST in the first DFS (on G) lies in…',
+      o: ['A source component of G (a sink of Gᵀ)', 'A sink component of G', 'The largest component', 'Any component'], a: 0, e: 'That is why searching Gᵀ from it stays inside one component.' },
+    { q: 'Undirected graph 0–1, 1–2, 1–3, 2–3. Does it have a cycle?',
+      o: ['Yes: 1–2–3–1', 'No: it is a tree', 'Only if directed', 'No: V = 4, E = 4 is allowed for trees'], a: 0, e: 'A tree on 4 vertices has 3 edges. The 4th edge closes a cycle.' }
+  ]
+},
+l11: {
+  cram: `<ul><li>DAG shortest paths: relax in topological order, Θ(V + E), negative weights OK. Bellman-Ford: round i fixes paths of ≤ i edges. Unweighted BFS · DAG topo · nonneg sparse Dijkstra+heap · dense Dijkstra+array · negative Bellman-Ford.</li></ul>`,
+  lesson: `
+<h3>Which shortest-path algorithm?</h3>
+<div class="tbl"><table>
+<tr><th>Situation</th><th>Use</th><th>Cost</th></tr>
+<tr><td>unweighted</td><td>BFS</td><td>Θ(V + E)</td></tr>
+<tr><td>DAG, any weights</td><td>relax in topological order</td><td>Θ(V + E)</td></tr>
+<tr><td>nonnegative, sparse</td><td>Dijkstra + heap</td><td>O(E log V)</td></tr>
+<tr><td>nonnegative, dense</td><td>Dijkstra + array scan</td><td>O(V²)</td></tr>
+<tr><td>negative weights</td><td>Bellman-Ford</td><td>O(VE)</td></tr>
+</table></div>
+<h3>DAG shortest paths (HW6 dagShortest)</h3>
+<ul>
+<li>Relax every vertex's out-edges in topological order. When a vertex's turn comes, every path into it has been relaxed, so its dist is final. Negative weights are fine (no cycles).</li>
+<li>Skip vertices whose dist is still unreachable.</li>
+</ul>
+<pre>0→1 (3), 0→2 (2), 1→3 (−4), 2→3 (1), 3→4 (2), 2→4 (5)
+topo 0 1 2 3 4 → dist 0, 3, 2, −1, 1</pre>
+<h3>Bellman-Ford, traced</h3>
+<pre>Edges in this order: 2→3 (2), 1→2 (−1), 0→1 (4), 0→2 (5); s = 0
+after round 1: [0, 4, 5, ∞]
+after round 2: [0, 4, 3, 7]
+after round 3: [0, 4, 3, 5]   (V − 1 = 3 rounds; nothing relaxes on round 4)</pre>
+<ul>
+<li>Round i finalizes every shortest path with at most i edges. Edge order changes how quickly, never the answer.</li>
+<li>Negative cycle: an edge still relaxes on round V. Example 1→2 (−3), 2→1 (1): the cycle sums to −2.</li>
+</ul>
+<h3>A* in one line</h3>
+<p>Point-to-point on a map: priority = dist[u] + h(u), with h the straight-line distance to the target. One changed push line; the frontier leans toward the goal.</p>
+<h3>Proof chain (know the step that needs w ≥ 0)</h3>
+<pre>cost(P) ≥ δ(x) + w(x,y) + 0     ← every weight ≥ 0
+        = dist[x] + w(x,y)       ← x settled correctly
+        ≥ dist[y]                ← x→y relaxed
+        ≥ dist[u]                ← u was the nearest unsettled</pre>`,
+  qs: [
+    { c: 1, q: 'DAG with edges 0→1 (3), 0→2 (2), 1→3 (−4), 2→3 (1), 3→4 (2), 2→4 (5). Shortest dist from 0 to 4 by topological-order relaxation?',
+      o: ['1', '7', '5', '3'], a: 0, e: 'dist[3] = min(3 − 4, 2 + 1) = −1, then dist[4] = min(−1 + 2, 2 + 5) = 1.' },
+    { c: 1, q: 'Bellman-Ford from 0, edges relaxed in the order 2→3 (2), 1→2 (−1), 0→1 (4), 0→2 (5). dist after ROUND 1?',
+      o: ['[0, 4, 5, ∞]', '[0, 4, 3, 5]', '[0, 4, 3, 7]', '[0, ∞, ∞, ∞]'], a: 0, e: '2→3 and 1→2 are skipped (their sources are still ∞); then 0→1 and 0→2 set 4 and 5.' },
+    { q: 'Same Bellman-Ford run. Final dist[3]?',
+      o: ['5', '7', '6', '4'], a: 0, e: 'Round 2 lowers dist[2] to 3 and sets dist[3] = 7; round 3 relaxes 2→3 again: 3 + 2 = 5.' },
+    { c: 1, q: 'Shortest paths on a DAG whose edges can be negative. Best choice?',
+      o: ['Relax in topological order, Θ(V + E)', 'Dijkstra with a heap', 'BFS', 'Bellman-Ford is the only option'], a: 0, e: 'No cycles means a topological order exists, and each vertex is final when its turn comes.' },
+    { q: 'Dense graph (E ≈ V²), nonnegative weights. Which Dijkstra is better?',
+      o: ['Array scan, O(V²)', 'Binary heap, O(E log V) = O(V² log V)', 'They tie', 'Bellman-Ford'], a: 0, e: 'With E ≈ V², the heap version pays an extra log V factor.' },
+    { q: 'In the Dijkstra proof, which step needs nonnegative weights?',
+      o: ['The rest of the path, y ⇝ u, costs at least 0', 'dist[x] is correct for settled x', 'x → y was relaxed', 'u is the nearest unsettled vertex'], a: 0, e: 'A negative tail could undercut u\'s label after u is settled.' },
+    { q: 'How does A* change Dijkstra?',
+      o: ['Priority = dist[u] + h(u), an estimate of the distance left', 'It uses a FIFO queue', 'It relaxes every edge V − 1 times', 'It allows negative weights'], a: 0, e: 'One changed push line; h is the straight-line distance to the target.' }
+  ]
+}
+};
+
+const PA_TOPIC = {
+  id: 'pa', title: 'PA1 + PA2 review', sub: 'BinTree modes and merge; GraphM / GraphL',
+  cram: `<ul>
+<li>PA1 treeHeight counts nodes (one node = 1) = stored AVL height + 1. Sorted 1..1023: VANILLA 1023; AVL 10 with 1013 rotations. Double rotation counts 2.</li>
+<li>PA1 == is keys + structure, not mode. remove: VANILLA only. Merge: flatten, merge, rebuild Θ(n + m); recompute AVL heights.</li>
+<li>PA2 GraphM: matrix, Dijkstra by linear scan from every source → O(V³) total. GraphL: list of EdgeNodes, iterative DFS (stack), BFS, destructor frees every node.</li>
+</ul>`,
+  lesson: `
+<h3>PA1: One Interface, Three Trees</h3>
+<ul>
+<li>BinTree with Mode VANILLA, AVL, REDBLACK (LLRB, extra credit). Duplicate insert → false.</li>
+<li><b>treeHeight()</b> counts nodes: empty 0, one node 1 = stored lecture height + 1.</li>
+<li>Sorted 1..1023: VANILLA height 1023; AVL 10, 1013 rotations; RB 10, 1013 rotations, 1013 flips. Single rotation counts 1, double counts 2.</li>
+<li>remove: VANILLA only (Hibbard, successor). Balanced modes return false, tree unchanged.</li>
+<li>Rule of Three; mode and counters copy. operator== = same keys and same structure, mode ignored.</li>
+<li>mergeWith: union, other unchanged, self-merge safe, height ≤ 2⌈log₂(n + 1)⌉ (n = 21 → 10), consistent for its mode. Insert-each Θ(m log(n + m)); flatten + merge + rebuild Θ(n + m) time and space. Recompute AVL heights after a rebuild.</li>
+</ul>
+<h3>PA2: one graph, two representations</h3>
+<ul>
+<li>File: n, then n vertex names (read with getline), then "from to cost" lines ending with 0. Several graphs per file. Vertices numbered 1..n.</li>
+<li><b>GraphM</b>: adjacency matrix (INF = no edge). findShortestPath runs Dijkstra from <b>every</b> source with a <b>linear scan</b> for the nearest unsettled vertex (no PQ): O(V²) per source, <b>O(V³)</b> all-pairs. Stores only prev_node; getPath rebuilds the path by walking back.</li>
+<li>insertEdge / removeEdge return −1 for an endpoint outside 1..n, a self-loop, or a negative cost.</li>
+<li><b>GraphL</b>: adjacency list of heap-allocated EdgeNodes. Iterative DFS with an explicit stack, BFS with a queue, and a destructor that frees every node (Valgrind clean).</li>
+<li>Part 4 race: matrix Dijkstra O(V²) vs HW6 heap Dijkstra O(E log V). Dense graphs favor the matrix; sparse graphs favor the heap.</li>
+</ul>`,
+  qs: [
+    { c: 1, q: 'PA1: what does treeHeight() return for a single-node tree?',
+      o: ['1', '0', '−1', '2'], a: 0, e: 'It counts nodes. Lecture height would be 0.' },
+    { c: 1, q: 'PA1: sorted keys 1..1023. treeHeight in VANILLA and in AVL?',
+      o: ['1023 and 10', '10 and 10', '1023 and 11', '512 and 10'], a: 0, e: 'A chain vs a perfect tree, at the cost of 1013 rotations.' },
+    { q: 'PA1: insert 1, 2, 3 into a VANILLA tree a and an AVL tree b. a == b?',
+      o: ['false: different shapes', 'true: same keys', 'true: mode ignored', 'Compile error'], a: 0, e: '== compares keys and structure.' },
+    { q: 'PA1: one double rotation adds how much to rotations()?',
+      o: ['2', '1', '0', '4'], a: 0, e: 'A double rotation is two singles.' },
+    { q: 'PA1: merge by flatten both trees, merge sorted arrays, rebuild. Time and extra space?',
+      o: ['Θ(n + m) and Θ(n + m)', 'Θ(m log(n + m)) and O(1)', 'Θ((n + m) log(n + m)) and Θ(1)', 'Θ(nm) and Θ(n + m)'], a: 0, e: 'Each step is linear; the arrays cost the space.' },
+    { c: 1, q: 'PA2 GraphM runs Dijkstra with a linear scan (no priority queue) from every one of V sources. Total cost?',
+      o: ['O(V³)', 'O(V²)', 'O(VE log V)', 'O(V + E)'], a: 0, e: 'Each source: V rounds of an O(V) scan = O(V²). Times V sources.' },
+    { q: 'PA2 Part 4: on a DENSE graph, which Dijkstra should win, matrix linear scan or HW6 heap?',
+      o: ['Matrix scan: O(V²) vs O(V² log V)', 'Heap: O(E log V) is always better', 'They tie', 'Neither runs on dense graphs'], a: 0, e: 'With E ≈ V², the heap pays an extra log factor.' },
+    { q: 'PA2 GraphM stores only each vertex\'s prev_node. How does getPath print the path from the source?',
+      o: ['Walk prev_node back from the target, then output in reverse', 'Store every path explicitly', 'Re-run BFS', 'Sort by dist'], a: 0, e: 'Same idea as parent[] in relaxation.' },
+    { q: 'PA2 insertEdge should return −1 for which input?',
+      o: ['A self-loop or a negative cost or an endpoint outside 1..n', 'An edge that already exists', 'A cost of 0', 'Vertex 1'], a: 0, e: 'A repeated edge overwrites the old one; it isn\'t an error.' },
+    { q: 'PA2 GraphL depth-first search must be…',
+      o: ['Iterative, with an explicit stack', 'Recursive only', 'A BFS with a queue', 'Built on the matrix'], a: 0, e: 'The spec asks for an explicit stack; BFS uses a queue.' }
+  ]
+};
+
+TOPICS.forEach(t => {
+  const x = EXTRA[t.id];
+  if (!x) return;
+  t.lesson += x.lesson;
+  t.cram += x.cram;
+  t.qs = t.qs.concat(x.qs);
+});
+TOPICS.push(PA_TOPIC);
+
+// Keep both complete lessons and quick summaries from the uploaded guides.
+const FULL_TOPICS = TOPICS;
+let mode = 'full';
+function setMode(which) {
+  mode = which;
+  TOPICS = FULL_TOPICS.map(t => ({...t, lesson: which === 'quick' ? t.cram : t.lesson,
+    qs: which === 'quick' ? t.qs.filter(q => q.c) : t.qs}));
+  document.getElementById('mode-full').classList.toggle('on', which === 'full');
+  document.getElementById('mode-quick').classList.toggle('on', which === 'quick');
+  document.getElementById('question-count').textContent = TOPICS.reduce((n,t) => n + t.qs.length, 0) + ' questions in ' + which + ' mode';
+  try { localStorage.setItem('css343mode', which); } catch (e) {}
+  passed = loadProgress();
+  renderHome();
+}
+
+const CRAM = "<p class=\"meta\" style=\"grid-column:1/-1\">Copy this onto your one-sided sheet by hand. A printed or photocopied sheet costs 50% of the exam.</p><section><h2>L01 Count + C++</h2><ul>\n<li>j = i+1..n: n(n\u22121)/2 \u00b7 halving: \u230alog\u2082n\u230b+1 (16\u21925, 1000\u219210)</li>\n<li>T=1+T(n\u22121) \u2192 n+1 \u00b7 1+T(n/2) \u2192 \u230alog\u2082n\u230b+1 \u00b7 Hanoi 1+2T(n\u22121) \u2192 2\u207f\u22121</li>\n<li>k-sum checks = C(n,k) \u00b7 print-recurse-print(3): 3 2 1 1 2 3</li>\n<li>Default copy = shallow \u2192 shared nodes \u2192 double delete</li>\n<li>Rule of 3: dtor, copy ctor, op= { if(this!=&amp;o){clear; copy} return *this; }</li>\n<li>val copy \u00b7 &amp;/* change caller \u00b7 const&amp; no copy \u00b7 lowerBound = 1st i with a[i] \u2265 key</li>\n</ul></section>\n<section><h2>L02 Time</h2><ul>\n<li>ratio = T(2N)/T(N) = 2\u1d47 \u00b7 b = log\u2082ratio \u00b7 a = T/N\u1d47</li>\n<li>~ keeps coeff: C(N,3) ~ N\u00b3/6 \u00b7 \u03a3N ~N\u00b2/2 \u00b7 \u03a3i\u00b2 ~N\u00b3/3 \u00b7 1+2+4+\u2026+N = 2N\u22121</li>\n<li>outer i*=2, inner j&lt;i \u2192 N (sum!) \u00b7 i*i&lt;N \u2192 \u221aN \u00b7 N\u00b7log loop \u2192 N log N</li>\n<li>Sum rule: max wins \u00b7 product rule: nested multiplies</li>\n<li>3-sum: N\u00b3 \u2192 sort+bsearch N\u00b2 log N \u2192 2 pointers N\u00b2 (ratios 8, ~4, 4)</li>\n<li>2\u00d7 machine: N \u00d72, N\u00b2 \u00d71.41, N\u00b3 \u00d71.26, 2\u1d3a +1</li><li>any sizes: b = log(T\u2082/T\u2081)/log(N\u2082/N\u2081)</li>\n</ul></section>\n<section><h2>L03 Asymptotics + memory</h2><ul>\n<li>O: f \u2264 c\u00b7g, n \u2265 n\u2080 \u00b7 \u03a9: f \u2265 c\u00b7g \u00b7 \u0398 = O \u2229 \u03a9</li>\n<li>2n\u00b2+8n+5: c=15,n\u2080=1 \u00b7 c=3,n\u2080=9 \u00b7 c=2 never \u00b7 3n\u00b2\u22125n+2: 2,3,n\u2080=5 \u00b7 5n\u00b3+2n: 5,7,1</li>\n<li>lim f/g: 0 \u2192 O not \u03a9 \u00b7 L&gt;0 \u2192 \u0398 \u00b7 \u221e \u2192 \u03a9 not O</li>\n<li>1 &lt; log &lt; \u221an &lt; n &lt; n log n \u2248 log(n!) &lt; n\u00b2 &lt; n\u00b3 &lt; 2\u207f &lt; n!</li>\n<li>5n \u2208 O(n\u00b3) true \u00b7 2\u00b2\u207f \u2209 O(2\u207f) \u00b7 log base = constant</li>\n<li>Ins sort: best n\u22121 \u00b7 worst n(n\u22121)/2 \u00b7 avg ~n\u00b2/4</li>\n<li>Amortized = total/n, no probability. push_back cap 1,2,4\u20261024; copies 1023</li>\n<li>Algorithm = upper bd on problem. Search LB \u2308log\u2082(N+1)\u2309</li>\n<li>char 1 int 4 ptr/long/double 8 \u00b7 {int;ptr}=16 \u00b7 {c;i;c}=12 \u00b7 {i;c;c}=8 \u00b7 vector 24</li>\n<li>Aux: fact \u0398(n) stack \u00b7 bsearch \u0398(log N) \u00b7 mergesort \u0398(N) \u00b7 Record 32 \u2192 16 packed</li><li>const cost/access \u2192 same exponent (swap = constant) \u00b7 Amdahl 1/((1\u2212f)+f/s): .8,10\u00d7 \u2192 3.6</li>\n</ul></section>\n<section><h2>L04 BST</h2><ul>\n<li>depth = links from root \u00b7 height \u230alog\u2082n\u230b \u2026 n\u22121</li>\n<li>full 0/2 kids \u00b7 perfect + same level \u00b7 complete: last level packed left</li>\n<li>pre NLR \u00b7 in LNR (sorted) \u00b7 post LRN (eval expr) \u00b7 level = queue</li>\n<li>ex 50 30 70 20 40 60 80 45 \u2192 pre 50 30 20 40 45 70 60 80 \u00b7 post 20 45 40 30 60 80 70 50</li>\n<li>floor \u2264k \u00b7 ceil \u2265k \u00b7 rank = #&lt;k \u00b7 select(i) 0-based</li>\n<li>Hibbard: 2 kids \u2192 succ = min(right), copy up, deleteMin right. del 50 \u2192 60 root</li>\n<li>random: avg depth 1.39 log\u2082N \u00b7 sorted input \u2192 path</li><li>isBST: pass (lo,hi) range \u00b7 LCA = where keys split</li>\n</ul></section>\n<section><h2>L05 AVL</h2><ul>\n<li>bf = h(L) \u2212 h(R) \u2208 {\u22121,0,1} \u00b7 null \u22121, leaf 0</li>\n<li>LL\u2192R \u00b7 RR\u2192L \u00b7 LR\u2192L(child),R \u00b7 RL\u2192R(child),L</li>\n<li>Insert \u2264 1 (single/double) \u00b7 delete up to O(log n)</li>\n<li>30,10,20 \u2192 LR root 20 \u00b7 1..7 \u2192 4(2(1,3),6(5,7))</li>\n<li>N(h)=1+N(h\u22121)+N(h\u22122): 1,2,4,7,12,20,33,54</li>\n<li>h \u2264 1.44 log\u2082n (10\u2079 \u2192 43) \u00b7 delete: kid bf \u2265 0 single, &lt; 0 double</li>\n</ul></section>\n<section><h2>L06 2-3 / RB / B</h2><ul>\n<li>2-3 insert at leaf; 4-node splits, middle up; root split = +1 height</li>\n<li>50,30,70,10,20 \u2192 [20|50] / [10][30][70]</li>\n<li>delete at leaf (pred); underflow: borrow from 3-node sib, else merge parent key</li>\n<li>LLRB: root black \u00b7 reds lean left \u00b7 no 2 reds at a node \u00b7 black balance</li>\n<li>new node RED \u00b7 fixUp: R red&amp;L black\u2192rotL \u00b7 L&amp;L.L red\u2192rotR \u00b7 both red\u2192flip</li>\n<li>RB h \u2264 2 log\u2082n \u00b7 1..1023: 1013 rot, 1013 flips</li>\n<li>B order M: \u2264 M\u22121 keys \u00b7 non-root \u2265 \u2308M/2\u2309 kids \u00b7 M=1000 \u2192 10\u2079 in 3 reads</li>\n<li>4096B, 8B keys+ptrs \u2192 M=256 \u00b7 B+: records in linked leaves, equal \u2192 right \u00b7 leaf split copies up, router moves</li><li>RB del: only black leaf breaks \u00b7 3-node sib borrow \u00b7 2-node merge (moves up) \u00b7 min keys 2\u2308M/2\u2309\u02b0\u22121</li>\n</ul></section>\n<section><h2>L07 Heaps</h2><ul>\n<li>complete + parent \u2265 kids \u00b7 a[1..n]: par k/2, kids 2k, 2k+1 \u00b7 h \u230alog\u2082n\u230b</li>\n<li>insert: append, swim \u00b7 delMax: swap a[1],a[n], n\u2212\u2212, sink (LARGER kid)</li>\n<li>ins 85 \u2192 [90 80 85 30 60 50 70]</li>\n<li>heapify k=n/2..1 sink: \u0398(n) \u00b7 n inserts \u0398(n log n)</li>\n<li>[30 60 50 90 85 40 70 45 20] \u2192 [90 85 70 60 30 40 50 45 20]</li>\n<li>min at a leaf (n/2+1..n) \u00b7 heapsort \u0398(n log n), \u0398(1), unstable</li><li>d-ary 0-based: kids di+1..di+d, par (j\u22121)/d \u00b7 kth largest: min-heap k, n log k \u00b7 merge k lists N log k</li>\n</ul></section>\n<section><h2>L08 Hashing</h2><ul>\n<li>Horner h=(31h+c)%M: CAT/100 \u2192 67, 42, 86 \u00b7 M prime</li>\n<li>chain: \u03b1=n/M \u00b7 miss \u2248 \u03b1 \u00b7 hit \u2248 1+\u03b1/2 \u00b7 \u03b1=1 \u2192 37% empty</li>\n<li>LP: h, h+1\u2026 wrap \u00b7 stop at EMPTY \u00b7 miss = cluster + 1</li>\n<li>del: tombstone \u00b7 re-insert cluster to EMPTY \u00b7 shift iff (i\u2212r)%M &lt; (j\u2212r)%M</li>\n<li>quad h+i\u00b2: secondary \u00b7 double h+i\u00b7h\u2082, h\u2082=7\u2212k%7 \u2260 0</li>\n<li>miss ideal 1/(1\u2212\u03b1) \u00b7 LP \u00bd(1+1/(1\u2212\u03b1)\u00b2): \u03b1=\u00be \u2192 4 vs 8.5</li>\n<li>\u03b1 max: chain ~1, double ~.7, LP ~.5 \u00b7 resize: double M, rehash</li>\n</ul></section>\n<section><h2>L09 Graphs</h2><ul>\n<li>\u03a3deg = 2E \u00b7 max E = V(V\u22121)/2 \u00b7 tree V\u22121</li>\n<li>list \u0398(V+E) \u00b7 matrix \u0398(V\u00b2), O(1) edge query</li>\n<li>BFS queue, mark on ENQUEUE, dist = fewest edges \u00b7 \u0398(V+E)</li>\n<li>DAG 0\u21921,3,5 1\u21922,3 2\u21923 3\u21924,7 4\u21925,7 5\u21926</li>\n<li>DFS 0 1 2 3 4 5 6 7 \u00b7 iter 0 5 6 3 7 4 1 2 \u00b7 BFS 0 1 3 5 2 4 7 6</li>\n<li>diamond DFS 0 1 3 2 \u00b7 BFS 0 1 2 3</li>\n</ul></section>\n<section><h2>L10 DFS apps</h2><ul>\n<li>pre = ++t gray \u00b7 post = ++t black \u00b7 intervals nest or disjoint</li>\n<li>v white tree \u00b7 GRAY BACK \u00b7 black + pre[u]&lt;pre[v] fwd \u00b7 else cross</li>\n<li>cycle \u27fa back edge (needs 3 colors)</li>\n<li>Kahn: indeg-0 queue \u00b7 &lt;V out = cycle \u00b7 DAG \u2192 0 1 2 3 4 5 7 6</li>\n<li>DFS topo = reverse post \u00b7 diamond \u2192 0 2 1 3</li>\n<li>Kosaraju: DFS G \u2192 rev post; DFS G\u1d40 in that order; each restart = 1 SCC</li><li>undirected cycle: skip parent \u00b7 Kahn min-heap \u2192 0 1 2 3 4 5 6 7</li>\n</ul></section>\n<section><h2>L11 Dijkstra</h2><ul>\n<li>relax: if d[u]+w &lt; d[v]: d[v]=d[u]+w, par[v]=u</li>\n<li>pop min, skip stale, settle on POP, relax out-edges \u00b7 w \u2265 0</li>\n<li>O((V+E) log V) heap \u00b7 O(V\u00b2) array (dense)</li>\n<li>neg edge breaks it: s\u2192a 1, s\u2192b 2, b\u2192a \u22124 \u2192 says 1, true \u22122</li>\n<li>Bellman-Ford: V\u22121 rounds, O(VE) \u00b7 round V relaxes \u2192 neg cycle</li>\n<li>greedy coins {1,3,4}, 6: 3 coins vs 3+3 \u00b7 BFS = Dijkstra w=1</li><li>DAG any w: topo-order relax \u0398(V+E) \u00b7 BF round i = paths \u2264 i edges</li></ul></section>\n<section><h2>PA1 + PA2</h2><ul><li>PA1 treeHeight nodes = h+1 \u00b7 double rot = 2 \u00b7 == keys+shape \u00b7 remove VANILLA only \u00b7 merge \u0398(n+m), recompute heights</li><li>PA2 GraphM matrix, scan Dijkstra all sources O(V\u00b3) \u00b7 GraphL iterative DFS + BFS, free EdgeNodes \u00b7 dense \u2192 matrix wins</li>\n</ul></section>\n";
+
+// ---------- state ----------
+function storageKey() { return mode === 'full' ? 'css343mt' : 'css343mtcram'; }
+function loadProgress() { try { return JSON.parse(localStorage.getItem(storageKey()) || '{}'); } catch (e) { return {}; } }
+let passed = loadProgress();
+function save() { try { localStorage.setItem(storageKey(), JSON.stringify(passed)); } catch (e) {} }
+
+const view = document.getElementById('view');
+const tabStudy = document.getElementById('tab-study');
+const tabCram = document.getElementById('tab-cram');
+let quiz = null; // {t, queue, cleared, total, cur, order, answered, misses}
+
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function setTab(which) { tabStudy.classList.toggle('on', which === 'study'); tabCram.classList.toggle('on', which === 'cram'); }
+
+function renderHome() {
+  setTab('study'); quiz = null;
+  const done = TOPICS.filter(t => passed[t.id]).length;
+  let h = '<div class="card"><div class="progress"><div class="qhead"><h2>Topics</h2><span class="chip ' + (done === TOPICS.length ? 'good' : 'idle') + '">' + done + ' of ' + TOPICS.length + ' passed</span></div>' +
+    '<div class="bar"><i style="width:' + (100 * done / TOPICS.length) + '%"></i></div>' +
+    '<p class="meta">Each topic: read the lesson, then answer one question at a time. A miss goes back into the queue until you get it right.</p></div>' +
+    '<div class="topics">';
+  TOPICS.forEach((t, i) => {
+    const st = passed[t.id] ? '<span class="chip good">Passed</span>' : '<span class="chip idle">' + t.qs.length + ' Qs</span>';
+    h += '<button class="topic" type="button" data-t="' + i + '"><span class="num">' + String(i + 1).padStart(2, '0') + '</span><span><span class="t">' + t.title + '</span><br><span class="s">' + t.sub + '</span></span>' + st + '</button>';
+  });
+  h += '</div>';
+  if (done) h += '<button type="button" id="reset">Reset progress</button>';
+  h += '</div>';
+  view.innerHTML = h;
+  view.querySelectorAll('.topic').forEach(b => b.onclick = () => renderLesson(+b.dataset.t));
+  const r = document.getElementById('reset'); if (r) r.onclick = () => { passed = {}; save(); renderHome(); };
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+}
+
+function renderLesson(i) {
+  setTab('study'); quiz = null;
+  const t = TOPICS[i];
+  view.innerHTML = '<div class="card lesson"><div class="qhead"><span class="chip">Topic ' + (i + 1) + ' of ' + TOPICS.length + '</span>' + (passed[t.id] ? '<span class="chip good">Passed</span>' : '') + '</div>' +
+    '<h2>' + t.title + '</h2>' + t.lesson +
+    '<div class="row"><button type="button" id="back">All topics</button><button type="button" class="primary" id="go">Quiz me on this (' + t.qs.length + ')</button></div></div>';
+  document.getElementById('back').onclick = renderHome;
+  document.getElementById('go').onclick = () => startQuiz(i);
+  window.scrollTo(0, 0);
+}
+
+function startQuiz(i) {
+  const t = TOPICS[i];
+  quiz = { i, t, queue: shuffle(t.qs.map((_, k) => k)), cleared: 0, total: t.qs.length, misses: 0, attempts: 0 };
+  renderQ();
+}
+
+function renderQ() {
+  const { t, i } = quiz;
+  if (!quiz.queue.length) return renderDone();
+  const qi = quiz.queue[0], q = t.qs[qi];
+  const order = shuffle(q.o.map((_, k) => k));
+  const letters = 'ABCD';
+  let h = '<div class="card"><div class="qhead"><span class="chip">' + t.title + '</span><span class="chip ' + (quiz.misses ? 'warn' : 'idle') + '">' + quiz.cleared + ' of ' + quiz.total + ' cleared</span></div>' +
+    '<div class="bar"><i style="width:' + (100 * quiz.cleared / quiz.total) + '%"></i></div>' +
+    '<p class="qtext">' + esc(q.q) + '</p><div class="opts">';
+  order.forEach((k, pos) => { h += '<button class="opt" type="button" data-k="' + k + '"><span class="k">' + letters[pos] + '</span><span>' + esc(q.o[k]) + '</span></button>'; });
+  h += '</div><div id="fb"></div><div class="row"><button type="button" id="lesson">Back to lesson</button></div></div>';
+  view.innerHTML = h;
+  document.getElementById('lesson').onclick = () => renderLesson(i);
+  view.querySelectorAll('.opt').forEach(b => b.onclick = () => answer(+b.dataset.k, q));
+}
+
+function answer(k, q) {
+  const ok = k === q.a;
+  quiz.attempts++;
+  view.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    const bk = +b.dataset.k;
+    if (bk === q.a) b.classList.add('right');
+    else if (bk === k) b.classList.add('wrong');
+  });
+  const cur = quiz.queue.shift();
+  if (ok) quiz.cleared++; else { quiz.misses++; quiz.queue.push(cur); }
+  const fb = document.getElementById('fb');
+  fb.innerHTML = '<div class="explain ' + (ok ? 'ok' : 'no') + '"><b>' + (ok ? 'Correct.' : 'Not quite. This one comes back later.') + '</b><span>' + esc(q.e) + '</span></div>' +
+    '<div class="row" style="margin-top:10px"><button type="button" class="primary" id="next">' + (quiz.queue.length ? 'Next question' : 'Finish topic') + '</button></div>';
+  const n = document.getElementById('next'); n.onclick = renderQ; n.focus();
+}
+
+function renderDone() {
+  const { t, i } = quiz;
+  passed[t.id] = true; save();
+  const first = quiz.total - Math.min(quiz.misses, quiz.total);
+  const next = TOPICS.findIndex((x, j) => j > i && !passed[x.id]);
+  const anyLeft = TOPICS.findIndex(x => !passed[x.id]);
+  const target = next >= 0 ? next : anyLeft;
+  let h = '<div class="card"><span class="chip good">Topic passed</span><h2>' + t.title + '</h2>' +
+    '<p>You cleared all ' + quiz.total + ' questions in ' + quiz.attempts + ' attempts' + (quiz.misses ? ' (' + quiz.misses + ' miss' + (quiz.misses > 1 ? 'es' : '') + ' requeued).' : ', no misses.') + '</p>' +
+    '<div class="row"><button type="button" id="home">All topics</button>';
+  if (target >= 0) h += '<button type="button" class="primary" id="nxt">Next: ' + TOPICS[target].title + '</button>';
+  else h += '<button type="button" class="primary" id="cram">Open the cheat sheet</button>';
+  h += '</div></div>';
+  view.innerHTML = h;
+  document.getElementById('home').onclick = renderHome;
+  if (target >= 0) document.getElementById('nxt').onclick = () => renderLesson(target);
+  else document.getElementById('cram').onclick = renderCram;
+  window.scrollTo(0, 0);
+}
+
+function renderCram() {
+  setTab('cram'); quiz = null;
+  view.innerHTML = '<div class="cram">' + CRAM + '</div>';
+  if (location.hash !== '#cram') history.replaceState(null, '', '#cram');
+  window.scrollTo(0, 0);
+}
+
+document.getElementById('mode-full').onclick = () => setMode('full');
+document.getElementById('mode-quick').onclick = () => setMode('quick');
+tabStudy.onclick = renderHome;
+tabCram.onclick = renderCram;
+window.addEventListener('hashchange', () => { if (location.hash === '#cram') renderCram(); });
+let initialMode = 'full';
+try { if (localStorage.getItem('css343mode') === 'quick') initialMode = 'quick'; } catch(e) {}
+setMode(initialMode);
+if (location.hash === '#cram') renderCram();
+</script>
+</body>
+</html>
